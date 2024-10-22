@@ -1,0 +1,9 @@
+spring:
+  profiles:
+    active: local
+  application:
+    name: nugul-ticket
+
+jwt:
+  secret:
+    key: ${JWT_SECRET_KEY}
