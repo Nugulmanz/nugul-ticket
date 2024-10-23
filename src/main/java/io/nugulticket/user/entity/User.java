@@ -23,12 +23,11 @@ public class User extends Timestamped {
 
     private String password;
 
-    @Column(nullable = false)
     private String username;
 
     private String nickname;
 
-    @Column(name = "phone_number", nullable = false)
+    @Column(name = "phone_number")
     private String phoneNumber;
 
     private String address;
