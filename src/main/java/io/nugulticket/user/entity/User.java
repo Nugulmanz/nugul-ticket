@@ -42,9 +42,9 @@ public class User extends Timestamped {
     private LoginType loginType;
 
     @Column(name = "social_id")
-    private String socialId;
+    private Long socialId;
 
-    @Column(name = "deleted_at", nullable = false)
+    @Column(name = "deleted_at")
     private LocalDateTime deletedAt;
 
 }

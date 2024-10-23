@@ -9,9 +9,9 @@ import java.util.Arrays;
 @RequiredArgsConstructor
 public enum UserRole {
 
-    USER(Authority.USER),
+    ADMIN(Authority.ADMIN),
     SELLER(Authority.SELLER),
-    ADMIN(Authority.ADMIN);
+    USER(Authority.USER);
 
     private final String userRole;
 
@@ -23,8 +23,8 @@ public enum UserRole {
     }
 
     public static class Authority {
-        public static final String USER = "USER";
-        public static final String SELLER = "SELLER";
-        public static final String ADMIN = "ADMIN";
+        public static final String ADMIN = "ROLE_ADMIN";
+        public static final String SELLER = "ROLE_SELLER";
+        public static final String USER = "ROLE_USER";
     }
 }
