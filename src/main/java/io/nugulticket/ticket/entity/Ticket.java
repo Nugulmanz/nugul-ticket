@@ -1,5 +1,7 @@
 package io.nugulticket.ticket.entity;
 
+import io.nugulticket.event.entity.Event;
+import io.nugulticket.seat.entity.Seat;
 import io.nugulticket.ticket.enums.TicketStatus;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -20,9 +22,10 @@ public class Ticket {
     @Column(nullable = false)
     private Long buyerId;
 
-    // @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    // private Seat seat;
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
+    private Seat seat;
 
+    @Column(nullable = false)
     private String qrCode;
 
     @Column(nullable = false)
@@ -31,6 +34,10 @@ public class Ticket {
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private TicketStatus status;
+
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
+    @JoinColumn(name = "event_id")
+    private Event event;
 
     // 양방향 ? 단방향 ? 의논 후
     //@OneToMany(mappedBy = "ticket", cascade = CascadeType.ALL)

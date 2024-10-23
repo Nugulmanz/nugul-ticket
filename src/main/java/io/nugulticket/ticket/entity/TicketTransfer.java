@@ -32,8 +32,7 @@ public class TicketTransfer {
     public TicketTransfer(Ticket ticket, Long userId) {
         this.ticket = ticket;
         this.userId = userId;
-        // 좌석 추가시 변경
-        // this.price = ticket.getSeat().price();
+        this.price = ticket.getSeat().getPrice();
         this.transferAt = LocalDateTime.now();
     }
 }
