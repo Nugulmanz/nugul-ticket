@@ -23,12 +23,11 @@ public class User extends Timestamped {
 
     private String password;
 
-    @Column(nullable = false)
     private String username;
 
     private String nickname;
 
-    @Column(name = "phone_number", nullable = false)
+    @Column(name = "phone_number")
     private String phoneNumber;
 
     private String address;
@@ -42,9 +41,9 @@ public class User extends Timestamped {
     private LoginType loginType;
 
     @Column(name = "social_id")
-    private String socialId;
+    private Long socialId;
 
-    @Column(name = "deleted_at", nullable = false)
+    @Column(name = "deleted_at")
     private LocalDateTime deletedAt;
 
 }
