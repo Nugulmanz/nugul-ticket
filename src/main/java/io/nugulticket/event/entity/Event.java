@@ -7,6 +7,10 @@ import io.nugulticket.user.entity.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+import org.hibernate.annotations.SQLDelete;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -14,8 +18,10 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @NoArgsConstructor
+//@SQLDelete(sql = "UPDATE event SET is_deleted = true WHERE event_id = ?")
+//@OnDelete( action = OnDeleteAction.CASCADE)
 @Table(name = "event")
-public class Event extends Timestamped{
+public class Event extends Timestamped {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long eventId;
@@ -34,8 +40,11 @@ public class Event extends Timestamped{
     private Double rating;
     private String place;
     private Boolean bookAble;
+    @Setter
+    private Boolean is_deleted = false;
 
-    public Event(User user,CreateEventRequest createEventRequest){
+
+    public Event(User user, CreateEventRequest createEventRequest) {
         this.user = user;
         this.category = createEventRequest.getCategory();
         this.title = createEventRequest.getTitle();
@@ -49,16 +58,38 @@ public class Event extends Timestamped{
         this.bookAble = createEventRequest.getBookAble();
     }
 
-    public void updateEvent(UpdateEventRequest updateEventRequest){
-        this.category = updateEventRequest.getCategory();
-        this.title = updateEventRequest.getTitle();
-        this.description = updateEventRequest.getDescription();
-        this.startDate = updateEventRequest.getStartDate();
-        this.endDate = updateEventRequest.getEndDate();
-        this.runtime = updateEventRequest.getRuntime();
-        this.viewRating = updateEventRequest.getViewRating();
-        this.rating = updateEventRequest.getRating();
-        this.place = updateEventRequest.getPlace();
-        this.bookAble = updateEventRequest.getBookAble();
+    public void updateEvent(UpdateEventRequest updateEventRequest) {
+        if (updateEventRequest.getCategory() != null) {
+            this.category = updateEventRequest.getCategory();
+        }
+        if (updateEventRequest.getTitle() != null) {
+            this.title = updateEventRequest.getTitle();
+        }
+        if (updateEventRequest.getDescription() != null) {
+            this.description = updateEventRequest.getDescription();
+        }
+        if (updateEventRequest.getStartDate() != null) {
+            this.startDate = updateEventRequest.getStartDate();
+        }
+        if (updateEventRequest.getEndDate() != null) {
+            this.endDate = updateEventRequest.getEndDate();
+        }
+        if (updateEventRequest.getRuntime() != null) {
+            this.runtime = updateEventRequest.getRuntime();
+        }
+        if (updateEventRequest.getViewRating() != null) {
+            this.viewRating = updateEventRequest.getViewRating();
+        }
+        if (updateEventRequest.getRating() != null) {
+            this.rating = updateEventRequest.getRating();
+        }
+        if (updateEventRequest.getPlace() != null) {
+            this.place = updateEventRequest.getPlace();
+        }
+        if (updateEventRequest.getBookAble() != null) {
+            this.bookAble = updateEventRequest.getBookAble();
+        }
     }
+
+
 }
