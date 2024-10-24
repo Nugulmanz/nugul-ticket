@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/events/v1")
+@RequestMapping("api/events/v1")
 @RequiredArgsConstructor
 public class EventController {
 
@@ -67,7 +67,7 @@ public class EventController {
         return ApiResponse.ok(response);
     }
 
-    @GetMapping
+    @GetMapping("/calender")
     public ApiResponse<CalenderEventResponse> calenderEvents(
             @RequestParam(required = true) Integer year,
             @RequestParam(required = true) Integer month) {

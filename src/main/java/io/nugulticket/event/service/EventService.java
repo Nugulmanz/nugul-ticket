@@ -17,13 +17,12 @@ import io.nugulticket.user.enums.UserRole;
 import io.nugulticket.user.service.UserService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cglib.core.Local;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.Time;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 
@@ -133,5 +132,9 @@ public class EventService {
 
         List<EventSimpleResponse> simpleResponses = events.stream().map(EventSimpleResponse::of).toList();
         return CalenderEventResponse.of(simpleResponses);
+    }
+
+    public Page<Event> getEventsFromKeywords(String keyword, LocalDate eventDate, String place, String category, Pageable pageable) {
+        return eventRepository.findByKeywords(keyword, eventDate, place, category, pageable);
     }
 }

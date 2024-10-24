@@ -39,7 +39,7 @@ public class EventTimeService {
             EventTime savedEventTime = eventTimeRepository.save(eventTime);
 
             eventTimes.add(savedEventTime);
-            seatService.creatSeat(savedEventTime, price, vipSeatSize, rSeatSize, aSeatSize);
+            seatService.creatSeat(savedEventTime, price, vipSeatSize, rSeatSize, aSeatSize, aSeatSize);
 
             mid = mid.plusDays(1);
         }
