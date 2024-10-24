@@ -8,6 +8,8 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.time.LocalDate;
 
+import java.util.List;
+
 public interface EventRepository extends JpaRepository<Event,Long> {
 
     /**
@@ -27,4 +29,5 @@ public interface EventRepository extends JpaRepository<Event,Long> {
             "ORDER BY e.eventId, e.title")
     Page<Event> findByKeywords(String keyword, LocalDate eventDate, String place, String category, Pageable pageable);
 
+    List<Event> findByUser_Id(Long id);
 }

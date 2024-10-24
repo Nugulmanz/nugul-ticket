@@ -29,7 +29,7 @@ public class TicketUtil {
     }
 
     public boolean isMineTicket(Ticket ticket, Long userId) {
-        return ticket.getBuyerId().equals(userId);
+        return ticket.getUser().getId().equals(userId);
     }
 
     /**
