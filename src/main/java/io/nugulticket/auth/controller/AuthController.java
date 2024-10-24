@@ -10,6 +10,9 @@ import io.nugulticket.auth.dto.updateKakaoUserInfo.UpdateKakaoUserInfoResponse;
 import io.nugulticket.auth.service.AuthService;
 import io.nugulticket.auth.service.KakaoService;
 import io.nugulticket.common.AuthUser;
+import io.nugulticket.common.apipayload.ApiResponse;
+import io.nugulticket.common.apipayload.BaseCode;
+import io.nugulticket.common.apipayload.status.ErrorStatus;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -26,13 +29,13 @@ public class AuthController {
     public final KakaoService kakaoService;
 
     @PostMapping("/v1/signup")
-    public ResponseEntity<SignupResponse> signup(@Valid @RequestBody SignupRequest signupRequest) {
-        return ResponseEntity.ok(authService.createUser(signupRequest));
+    public ApiResponse<SignupResponse> signup(@Valid @RequestBody SignupRequest signupRequest) {
+        return ApiResponse.ok(authService.createUser(signupRequest));
     }
 
     @PostMapping("/v1/signup-admin")
-    public ResponseEntity<SignupResponse> signupAdmin(@Valid @RequestBody SignupRequest signupRequest) {
-        return ResponseEntity.ok(authService.createUser(signupRequest));
+    public ApiResponse<SignupResponse> signupAdmin(@Valid @RequestBody SignupRequest signupRequest) {
+        return ApiResponse.ok(authService.createUser(signupRequest));
     }
 
     @PostMapping("/v1/login")
@@ -41,26 +44,26 @@ public class AuthController {
     }
 
     @DeleteMapping("/v1/signout/{userId}")
-    public ResponseEntity<Void> deleteUser(@AuthenticationPrincipal AuthUser authUser,
+    public ApiResponse<String> deleteUser(@AuthenticationPrincipal AuthUser authUser,
                                            @PathVariable Long userId) {
         // 현재 로그인한 사용자가 탈퇴하려는 계정과 동일한지 확인
         if(!authUser.getId().equals(userId)) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+            return ApiResponse.fail(ErrorStatus._NOT_AUTHENTICATIONPRINCIPAL_USER);
         }
         authService.deleteUser(userId);
-        return ResponseEntity.noContent().build();
+        return ApiResponse.ok("탈퇴 되었습니다.");
     }
 
     @GetMapping("/v1/login/kakao")
-    public ResponseEntity<KakaoLoginResponse> kakaoLogin (@RequestParam String code) throws JsonProcessingException {
-        return ResponseEntity.ok(kakaoService.kakaoLogin(code));
+    public ApiResponse<KakaoLoginResponse> kakaoLogin (@RequestParam String code) throws JsonProcessingException {
+        return ApiResponse.ok(kakaoService.kakaoLogin(code));
     }
 
 
     @PutMapping("/v1/login/kakao")
-    public ResponseEntity<UpdateKakaoUserInfoResponse> updateKakaoUserInfo (@AuthenticationPrincipal AuthUser authUser,
+    public ApiResponse<UpdateKakaoUserInfoResponse> updateKakaoUserInfo (@AuthenticationPrincipal AuthUser authUser,
                                                                             @RequestBody UpdateKakaoUserInfoRequest updateKakaoUserInfoRequest) {
-        return ResponseEntity.ok(kakaoService.updateKakaoUserInfo(authUser, updateKakaoUserInfoRequest));
+        return ApiResponse.ok(kakaoService.updateKakaoUserInfo(authUser, updateKakaoUserInfoRequest));
     }
 
 }
