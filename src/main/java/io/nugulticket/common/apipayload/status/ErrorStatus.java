@@ -20,8 +20,14 @@ public enum ErrorStatus implements BaseCode {
     // common
     _PERMISSION_DENIED(HttpStatus.FORBIDDEN, "403", "권한이 없습니다."),
 
+    // auction
+    _Lower_Than_Current_Bid(HttpStatus.BAD_REQUEST, "400", "최근 입찰가 보다 높아야 합니다."),
+    _EXPIRED_ACTION(HttpStatus.BAD_REQUEST, "400", "종료된 경매입니다."),
+    _NOT_FOUND_AUCTION(HttpStatus.NOT_FOUND,"404", "존재하지 않는 경매입니다."),
+
     // user
     _NOT_FOUND_USER(HttpStatus.NOT_FOUND, "404", "존재하지 않는 유저입니다");
+
 
 
 

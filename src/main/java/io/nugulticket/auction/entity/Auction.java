@@ -2,10 +2,9 @@ package io.nugulticket.auction.entity;
 
 import io.nugulticket.auction.dto.createAction.CreateAuctionRequest;
 import io.nugulticket.common.Timestamped;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import io.nugulticket.ticket.entity.Ticket;
+import io.nugulticket.user.entity.User;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -25,10 +24,15 @@ public class Auction extends Timestamped {
     private LocalDate startAt;
     private LocalDate endAt;
 
-    public Auction(CreateAuctionRequest reqDto){
+    @ManyToOne
+    @JoinColumn(name = "ticket_id", nullable = false)
+    private Ticket ticket;
+
+    public Auction(CreateAuctionRequest reqDto, Ticket ticket){
         this.startingBid=reqDto.getStartingBid();
         this.startAt=reqDto.getStartAt();
         this.endAt=reqDto.getEndAt();
+        this.ticket=ticket;
     }
 
     public void setBid(int bid){
