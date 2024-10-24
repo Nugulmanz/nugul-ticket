@@ -1,5 +1,6 @@
 package io.nugulticket.event.controller;
 
+import io.nugulticket.common.AuthUser;
 import io.nugulticket.event.dto.createEvent.CreateEventRequest;
 import io.nugulticket.event.dto.createEvent.CreateEventResponse;
 import io.nugulticket.event.dto.getAllEvent.GetAllEventResponse;
@@ -10,6 +11,7 @@ import io.nugulticket.event.service.EventService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,10 +25,10 @@ public class EventController {
 
     @PostMapping
     public ResponseEntity<CreateEventResponse> createEvent(
-            @RequestParam Long userId,
+            @AuthenticationPrincipal AuthUser authUser,
             @RequestBody CreateEventRequest eventRequest) {
 
-        CreateEventResponse response = eventService.createEvent(userId, eventRequest);
+        CreateEventResponse response = eventService.createEvent(authUser.getId(), eventRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 

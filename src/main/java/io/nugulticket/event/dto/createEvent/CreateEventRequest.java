@@ -12,8 +12,18 @@ public class CreateEventRequest {
     private String description;
     private LocalDate startDate;
     private LocalDate endDate;
+    //상영시간
     private String runtime;
     private String viewRating;
     private Double rating;
     private Boolean bookAble;
+    private int vipSeatCount;
+    private int rSeatCount;
+    private int sSeatCount;
+    private int aSeatCount;
+
+    private int vipSeatPrice;
+    private int rSeatPrice;
+    private int sSeatPrice;
+    private int aSeatPrice;
 }
