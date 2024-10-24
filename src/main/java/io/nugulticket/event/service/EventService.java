@@ -98,4 +98,8 @@ public class EventService {
     public Event getEventFromId(Long eventId) {
         return eventRepository.findById(eventId).orElseThrow(EntityNotFoundException::new);
     }
+
+    public List<Event> getEventFromUserId(Long userId) {
+        return eventRepository.findByUser_Id(userId);
+    }
 }

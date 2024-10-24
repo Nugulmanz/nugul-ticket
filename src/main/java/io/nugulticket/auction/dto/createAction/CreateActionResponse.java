@@ -7,6 +7,7 @@ import java.time.LocalDate;
 
 @Getter
 public class CreateActionResponse {
+    private Long auctionId;
     private int startingBid;
     private int currentBid;
     private LocalDate startAt;
@@ -14,6 +15,7 @@ public class CreateActionResponse {
     private LocalDate createdAt;
 
     public CreateActionResponse(Auction auction) {
+        this.auctionId = auction.getAuctionId();
         this.startingBid = auction.getStartingBid();
         this.currentBid = auction.getCurrentBid();
         this.startAt = auction.getStartAt();

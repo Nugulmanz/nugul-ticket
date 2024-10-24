@@ -81,4 +81,8 @@ public class User extends Timestamped {
         this.address = address;
     }
 
+    public void becomeSeller(){
+        this.userRole = UserRole.SELLER;
+    }
+
 }
