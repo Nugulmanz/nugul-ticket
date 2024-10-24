@@ -28,7 +28,7 @@ public class EventService {
     @Transactional
     public CreateEventResponse createEvent(Long userId, CreateEventRequest eventRequest) {
 
-        User user = userService.getUserById(userId);
+        User user = userService.getUser(userId);
 
         Event event = new Event(user,eventRequest);
 
@@ -40,7 +40,7 @@ public class EventService {
     @Transactional
     public UpdateEventResponse updateEvent(Long userId, Long eventId, UpdateEventRequest eventRequest) {
 
-        User user = userService.getUserById(userId);
+        User user = userService.getUser(userId);
 
         if (!user.getUserRole().equals(UserRole.SELLER)) {
             throw new RuntimeException("수정 권한이 없습니다. SELLER 권한이 필요합니다.");
@@ -62,7 +62,7 @@ public class EventService {
     @Transactional
     public void deleteEvent(Long adminId, Long eventId) {
 
-        User adminUser = userService.getUserById(adminId);
+        User adminUser = userService.getUser(adminId);
 
         if (!adminUser.getUserRole().equals(UserRole.ADMIN)) {
             throw new RuntimeException("삭제 권한이 없습니다. ADMIN 권한이 필요합니다.");
