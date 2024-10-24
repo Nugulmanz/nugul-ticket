@@ -1,5 +1,5 @@
 package io.nugulticket.ticket.enums;
 
 public enum TicketStatus {
-    RESERVED, CANCELLED, WAITTRANSFER, TRANSFERRED, AUCTION;
+    RESERVED, CANCELLED, WAITTRANSFER, TRANSFERRED, AUCTION, WAIT_CANCEL;
 }

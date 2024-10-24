@@ -22,8 +22,9 @@ public class Ticket {
     @Column(name = "ticket_id")
     private Long ticketId;
 
-    @Column(nullable = false)
-    private Long buyerId;
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
     private Seat seat;
@@ -57,13 +58,17 @@ public class Ticket {
         this.status = newStatus;
     }
 
-    public void createTicket(Event event, Seat seat, Long buyerId, String qrCode){
+    public void createTicket(Event event, Seat seat, User user, String qrCode){
         this.event = event;
         this.seat = seat;
         this.qrCode = qrCode;
         this.purchaseDate = LocalDateTime.now();
-        this.buyerId = buyerId;
+        this.user = user;
         this.status=TicketStatus.RESERVED;
 
+    }
+
+    public void requestRefund(){
+        this.status=TicketStatus.WAIT_CANCEL;
     }
 }

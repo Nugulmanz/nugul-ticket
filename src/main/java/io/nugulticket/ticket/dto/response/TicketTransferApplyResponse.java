@@ -15,7 +15,7 @@ public class TicketTransferApplyResponse {
 
     public TicketTransferApplyResponse(final TicketTransfer ticketTransfer) {
         this.ticketId = ticketTransfer.getTicket().getTicketId();
-        this.sellerId = ticketTransfer.getTicket().getBuyerId();
+        this.sellerId = ticketTransfer.getTicket().getUser().getId();
         this.ticketTransferId = ticketTransfer.getId();
         this.price = ticketTransfer.getPrice();
         this.transferAt = ticketTransfer.getTransferAt();
