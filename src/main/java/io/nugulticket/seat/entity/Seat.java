@@ -5,10 +5,12 @@ import io.nugulticket.eventtime.entity.EventTime;
 import io.nugulticket.seat.enums.SeatType;
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
 @Entity
 @Table(name = "seat")
+@NoArgsConstructor
 public class Seat {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,5 +38,13 @@ public class Seat {
 
     public void seatReserved() {
         this.isReserved = true;
+    }
+
+    public Seat(EventTime eventTime, String seatNumber, int price, SeatType seatType) {
+        this.eventTime = eventTime;
+        this.seatNumber = seatNumber;
+        this.isReserved = false;
+        this.price = price;
+        this.seatType = seatType;
     }
 }

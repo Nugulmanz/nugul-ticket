@@ -1,9 +1,9 @@
 package io.nugulticket.ticket.service;
 
 import io.nugulticket.ticket.config.TicketUtil;
-import io.nugulticket.ticket.dto.response.GetMyTransferTicketsResponse;
+import io.nugulticket.ticket.dto.response.MyTransferTicketsResponse;
 import io.nugulticket.ticket.dto.response.TicketTransferApplyResponse;
-import io.nugulticket.ticket.dto.response.TicketTransferCancleResponse;
+import io.nugulticket.ticket.dto.response.TicketTransferCancelResponse;
 import io.nugulticket.ticket.dto.response.TicketTransferResponse;
 import io.nugulticket.ticket.entity.Ticket;
 import io.nugulticket.ticket.entity.TicketTransfer;
@@ -31,7 +31,7 @@ public class TicketTransferService {
     @Transactional
     public TicketTransferApplyResponse applyTransfer(Long ticketId) {
         Long userId = 1L;
-        Ticket ticket = ticketService.findTicketById(ticketId);
+        Ticket ticket = ticketService.getTicket(ticketId);
 
         // 해당 티켓 상태가 양도 가능한 상태인지 확인
         if(!ticketUtil.isAbleTicketApplyTransfer(ticket)) {
@@ -45,7 +45,7 @@ public class TicketTransferService {
         TicketTransfer ticketTransfer = new TicketTransfer(ticket, userId);
         TicketTransfer savedTicketTransfer = ticketTransferRepository.save(ticketTransfer);
 
-        return new TicketTransferApplyResponse(savedTicketTransfer);
+        return TicketTransferApplyResponse.of(savedTicketTransfer);
     }
 
     /**
@@ -54,9 +54,9 @@ public class TicketTransferService {
      * @return 양도 취소한 Id가 담긴 Dto객체
      */
     @Transactional
-    public TicketTransferCancleResponse cancelTransfer(Long ticketId) {
+    public TicketTransferCancelResponse cancelTransfer(Long ticketId) {
         Long userId = 1L;
-        Ticket ticket = ticketService.findTicketById(ticketId);
+        Ticket ticket = ticketService.getTicket(ticketId);
 
         // 해당 티켓이 양도 가능 상태인지 확인
         if (!ticketUtil.isAbleTicketCancelTransfer(ticket, userId)) {
@@ -66,7 +66,7 @@ public class TicketTransferService {
         // 티켓을 양도 대기 -> 예약 상태로 변화
         ticket.changeStatus(TicketStatus.RESERVED);
 
-        return new TicketTransferCancleResponse(ticket.getTicketId());
+        return TicketTransferCancelResponse.of(ticket.getTicketId());
     }
 
     /**
@@ -77,7 +77,7 @@ public class TicketTransferService {
     @Transactional
     public TicketTransferResponse ticketTransfer(Long ticketId) {
         Long userId = 1L;
-        Ticket ticket = ticketService.findTicketById(ticketId);
+        Ticket ticket = ticketService.getTicketJoinFetchSeat(ticketId);
 
         // 해당 티켓이 양도 가능 상태인지 확인
         if (!ticketUtil.isAbleTicketTransfer(ticket, userId)) {
@@ -87,18 +87,18 @@ public class TicketTransferService {
         // 티켓을 양도 대기 -> 예약 상태로 변화
         ticket.changeStatus(TicketStatus.WAITTRANSFER);
 
-        return new TicketTransferResponse(ticket);
+        return TicketTransferResponse.of(ticket);
     }
 
     /**
      * 내가 양도하거나, 양도 받은 Ticket 이력을 조회하는 메서드
      * @return 내가 양도하거나, 양도 받은 Ticket 이력이 담긴 Dto객체
      */
-    public GetMyTransferTicketsResponse getMyTransferTicket() {
+    public MyTransferTicketsResponse getMyTransferTicket() {
         Long userId = 1L;
-        List<Ticket> tickets = ticketService.findAllTicketByUserAndStatus(TicketStatus.WAITTRANSFER, userId);
+        List<Ticket> tickets = ticketService.getAllTicketJoinFetchEventSeat(TicketStatus.WAITTRANSFER, userId);
 
-        return new GetMyTransferTicketsResponse(tickets);
+        return MyTransferTicketsResponse.of(tickets);
     }
 
 }

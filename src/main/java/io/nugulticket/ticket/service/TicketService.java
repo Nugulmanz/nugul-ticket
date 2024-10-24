@@ -34,19 +34,32 @@ public class TicketService {
      * @param id 조회할 Id
      * @return 해당 Id를 가진 티켓 / 없을 경우 NotFoundException 발생
      */
-    public Ticket findTicketById(Long id) {
+    public Ticket getTicket(Long id) {
         return ticketRepository.findById(id).orElseThrow(EntityNotFoundException::new);
     }
 
     /**
-     * 해당 유저가 구매한 Ticket중에 Reserved 상태인 Ticket만 반환하는 메서드
+     * 해당 Id를 가진 티켓을 반환하는 메서드
+     * @param id 조회할 Id
+     * @return 해당 Id를 가진 티켓 / 없을 경우 NotFoundException 발생
+     */
+    public Ticket getTicketJoinFetchSeat(Long id) {
+        return ticketRepository.findByIdJoinFetchSeat(id).orElseThrow(EntityNotFoundException::new);
+    }
+
+    /**
+     * 해당 유저가 구매한 Ticket중에 status가 동일한 상태인 Ticket에 대해
+     * Event, Seat를 fetch join하여 반환하는 메서드
      * @param status 티켓 상태
      * @param userId 구매자 Id
      * @return 해당 구매자가 구매한 티켓 중 해당 상태인 티켓 리스트
      */
+    public List<Ticket> getAllTicketJoinFetchEventSeat(TicketStatus status, Long userId) {
+        return ticketRepository.findAllEqualParamIdJoinFetchSeatAndEvent(status.name(), userId);
+    }
     public List<Ticket> findAllTicketByUserAndStatus(TicketStatus status, Long userId) {
         return ticketRepository.findAllByStatusAndUser_Id(status, userId);
-    }
+        }
 
     @Transactional
     public CreateTicketResponse createTicket(CreateTicketRequest reqDto, Long userId) {

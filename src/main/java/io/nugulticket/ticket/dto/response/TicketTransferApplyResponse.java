@@ -1,10 +1,14 @@
 package io.nugulticket.ticket.dto.response;
 
 import io.nugulticket.ticket.entity.TicketTransfer;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
+@AllArgsConstructor
+@NoArgsConstructor
 @Getter
 public class TicketTransferApplyResponse {
     private Long ticketId;
@@ -13,11 +17,13 @@ public class TicketTransferApplyResponse {
     private Integer price;
     private LocalDateTime transferAt;
 
-    public TicketTransferApplyResponse(final TicketTransfer ticketTransfer) {
-        this.ticketId = ticketTransfer.getTicket().getTicketId();
-        this.sellerId = ticketTransfer.getTicket().getUser().getId();
-        this.ticketTransferId = ticketTransfer.getId();
-        this.price = ticketTransfer.getPrice();
-        this.transferAt = ticketTransfer.getTransferAt();
+    public static TicketTransferApplyResponse of(TicketTransfer ticketTransfer) {
+        return new TicketTransferApplyResponse(
+                ticketTransfer.getTicket().getTicketId(),
+                ticketTransfer.getTicket().getUser().getId(),
+                ticketTransfer.getId(),
+                ticketTransfer.getPrice(),
+                ticketTransfer.getTransferAt()
+        );
     }
 }

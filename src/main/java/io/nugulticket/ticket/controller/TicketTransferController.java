@@ -1,8 +1,8 @@
 package io.nugulticket.ticket.controller;
 
-import io.nugulticket.ticket.dto.response.GetMyTransferTicketsResponse;
+import io.nugulticket.ticket.dto.response.MyTransferTicketsResponse;
 import io.nugulticket.ticket.dto.response.TicketTransferApplyResponse;
-import io.nugulticket.ticket.dto.response.TicketTransferCancleResponse;
+import io.nugulticket.ticket.dto.response.TicketTransferCancelResponse;
 import io.nugulticket.ticket.dto.response.TicketTransferResponse;
 import io.nugulticket.ticket.service.TicketTransferService;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +26,7 @@ public class TicketTransferController {
     }
 
     @PatchMapping(value = "/{ticketId}")
-    public TicketTransferCancleResponse cancelTransfer(@PathVariable("ticketId") Long ticketId) {
+    public TicketTransferCancelResponse cancelTransfer(@PathVariable("ticketId") Long ticketId) {
         return ticketTransferService.cancelTransfer(ticketId);
     }
 
@@ -36,12 +36,8 @@ public class TicketTransferController {
     }
 
     @GetMapping(value = "/transfer")
-    public GetMyTransferTicketsResponse getMyTransferTickets() {
+    public MyTransferTicketsResponse getMyTransferTickets() {
+
         return ticketTransferService.getMyTransferTicket();
     }
-    // AuthUser 추가시 옮길 내용
-//    @PostMapping(value = "{ticketId}/transfer/apply")
-//    public String applyTransfer(@AuthenticationPrincipal AuthUser, @PathVariable("ticketId") Long ticketId) {
-//        ticketTransferService.applyTransfer(ticketId)
-//    }
 }

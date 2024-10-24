@@ -1,5 +1,6 @@
 package io.nugulticket.config.security;
 
+import io.nugulticket.common.utils.JwtUtil;
 import io.nugulticket.user.enums.UserRole;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -20,7 +21,13 @@ import org.springframework.security.web.servletapi.SecurityContextHolderAwareReq
 @EnableMethodSecurity(securedEnabled = true)
 public class WebSecurityConfig {
 
-    private final JwtSecurityFilter jwtSecurityFilter;
+    private final JwtUtil jwtUtil;  // JwtUtil 주입
+
+    // JwtSecurityFilter를 수동으로 빈으로 등록
+    @Bean
+    public JwtSecurityFilter jwtSecurityFilter() {
+        return new JwtSecurityFilter(jwtUtil);
+    }
 
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
@@ -33,7 +40,8 @@ public class WebSecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .addFilterBefore(jwtSecurityFilter, SecurityContextHolderAwareRequestFilter.class)
+                // JwtSecurityFilter 에 @Component 를 붙이면 두번 호출되므로 둘 중 하나만 적용해야함! 둘 모두 빈으로 등록하고 있음
+                .addFilterBefore(jwtSecurityFilter(), SecurityContextHolderAwareRequestFilter.class)
                 .formLogin(AbstractHttpConfigurer::disable)
                 .anonymous(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
