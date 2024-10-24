@@ -9,7 +9,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Getter
 @Entity
@@ -68,7 +67,10 @@ public class Ticket {
 
     }
 
-    public void requestRefund(){
+    public void requestCancel(){
         this.status=TicketStatus.WAIT_CANCEL;
+    }
+    public void cancel(){
+        this.status=TicketStatus.CANCELLED;
     }
 }

@@ -25,7 +25,7 @@ public class TicketController {
         return ResponseEntity.ok().body(resDto);
     }
 
-    @PatchMapping("/{ticketId}/payment")
+    @PatchMapping("/{ticketId}/refund")
     public ResponseEntity<RefundTicketResponse> refundTicket(@PathVariable Long ticketId,
                              @AuthenticationPrincipal AuthUser authUser){
         RefundTicketResponse resDto = ticketService.refundTicket(ticketId, authUser);

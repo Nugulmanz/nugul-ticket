@@ -1,10 +1,14 @@
 package io.nugulticket.dashboard.service;
 
 import io.nugulticket.common.AuthUser;
+import io.nugulticket.dashboard.dto.acceptRefund.AcceptRefundRequest;
+import io.nugulticket.dashboard.dto.acceptRefund.AcceptRefundResponse;
 import io.nugulticket.dashboard.dto.authorityAccept.AuthorityAcceptResponse;
 import io.nugulticket.dashboard.dto.getMyEvents.getMyEventsResponse;
 import io.nugulticket.event.entity.Event;
 import io.nugulticket.event.service.EventService;
+import io.nugulticket.ticket.entity.Ticket;
+import io.nugulticket.ticket.service.TicketService;
 import io.nugulticket.user.entity.User;
 import io.nugulticket.user.enums.UserRole;
 import io.nugulticket.user.service.UserService;
@@ -24,6 +28,7 @@ public class DashboardService {
 
     private final UserService userService;
     private final EventService eventService;
+    private final TicketService ticketService;
 
     @Transactional
     public AuthorityAcceptResponse authorityAccept(AuthUser authUser,Long userId) {
@@ -44,7 +49,17 @@ public class DashboardService {
 
     }
 
-    public void acceptRefund(AuthUser authUser, long eventId, long ticketId){
+    public AcceptRefundResponse acceptRefund(AuthUser authUser, long eventId, long ticketId, AcceptRefundRequest reqDto){
+//        System.out.println(authUser.getAuthorities());
+//
+//        if(!authUser.getAuthorities().equals(UserRole.Authority.SELLER)){
+//            throw new RuntimeException(); // 판매자가 아닌 사람인 경우
+//        }
+        Ticket ticket = ticketService.getRefundTicket(reqDto.getUserId(),eventId,ticketId);
+
+        ticket.cancel();
+
+        return new AcceptRefundResponse(ticket);
 
     }
 }

@@ -12,7 +12,6 @@ import io.nugulticket.ticket.entity.Ticket;
 import io.nugulticket.ticket.enums.TicketStatus;
 import io.nugulticket.ticket.repository.TicketRepository;
 import io.nugulticket.user.entity.User;
-import io.nugulticket.user.repository.UserRepository;
 import io.nugulticket.user.service.UserService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -73,10 +72,17 @@ public class TicketService {
     public RefundTicketResponse refundTicket(Long ticketId, AuthUser authUser) {
         Ticket ticket = ticketRepository.findByUser_IdAndTicketId(authUser.getId(), ticketId)
                 .orElseThrow(IllegalArgumentException::new);
-        ticket.requestRefund();
+        ticket.requestCancel();
         ticketRepository.save(ticket);
 
         return new RefundTicketResponse(ticket);
+    }
+
+    public Ticket getRefundTicket(long userId, long eventId, long ticketId) {
+        Ticket ticket = ticketRepository
+                .findByUser_IdAndTicketIdAndEvent_EventId( userId,ticketId, eventId)
+                .orElseThrow(IllegalArgumentException::new);
+        return ticket;
     }
 
     private String createQRCode(){
