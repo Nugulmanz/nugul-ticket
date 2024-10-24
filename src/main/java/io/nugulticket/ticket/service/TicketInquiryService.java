@@ -1,5 +1,6 @@
 package io.nugulticket.ticket.service;
 
+import io.nugulticket.common.AuthUser;
 import io.nugulticket.ticket.dto.response.TicketCancelledResponse;
 import io.nugulticket.ticket.dto.response.TicketCompletedResponse;
 import io.nugulticket.ticket.dto.response.TicketReservedResponse;
@@ -19,7 +20,9 @@ public class TicketInquiryService {
     private final TicketRepository ticketRepository;
 
     @Transactional(readOnly = true)
-    public List<TicketReservedResponse> reservedTicket(Long buyerId) {
+    public List<TicketReservedResponse> reservedTicket(AuthUser authUser) {
+
+        Long buyerId = authUser.getId();
 
         List<Ticket> reservedTickets = ticketRepository.findAllByStatusAndBuyerId(TicketStatus.RESERVED, buyerId);
 
@@ -29,7 +32,9 @@ public class TicketInquiryService {
     }
 
     @Transactional(readOnly = true)
-    public List<TicketCancelledResponse> cancelledTicket(Long buyerId) {
+    public List<TicketCancelledResponse> cancelledTicket(AuthUser authUser) {
+
+        Long buyerId = authUser.getId();
 
         List<Ticket> cancelledTickets = ticketRepository.findAllByStatusAndBuyerId(TicketStatus.CANCELLED, buyerId);
 
@@ -39,7 +44,9 @@ public class TicketInquiryService {
     }
 
     @Transactional(readOnly = true)
-    public List<TicketCompletedResponse> completedTicket(Long buyerId) {
+    public List<TicketCompletedResponse> completedTicket(AuthUser authUser) {
+
+        Long buyerId = authUser.getId();
 
         List<Ticket> completedTickets = ticketRepository.findAllByStatusAndBuyerId(TicketStatus.COMPLETE, buyerId);
 

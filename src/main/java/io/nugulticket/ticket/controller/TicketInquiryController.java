@@ -1,11 +1,14 @@
 package io.nugulticket.ticket.controller;
 
+import io.nugulticket.common.AuthUser;
+import io.nugulticket.common.apipayload.ApiResponse;
 import io.nugulticket.ticket.dto.response.TicketCancelledResponse;
 import io.nugulticket.ticket.dto.response.TicketCompletedResponse;
 import io.nugulticket.ticket.dto.response.TicketReservedResponse;
 import io.nugulticket.ticket.service.TicketInquiryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -20,30 +23,30 @@ public class TicketInquiryController {
     private final TicketInquiryService ticketInquiryService;
 
     @GetMapping("/reserved")
-    public ResponseEntity<List<TicketReservedResponse>> reservedTicket(
-            @RequestParam Long buyerId) {
+    public ApiResponse<List<TicketReservedResponse>> reservedTicket(
+            @AuthenticationPrincipal AuthUser authUser) {
 
-        List<TicketReservedResponse> response = ticketInquiryService.reservedTicket(buyerId);
+        List<TicketReservedResponse> response = ticketInquiryService.reservedTicket(authUser);
 
-        return ResponseEntity.ok(response);
+        return ApiResponse.ok(response);
     }
 
     @GetMapping("/cancelled")
-    public ResponseEntity<List<TicketCancelledResponse>> cancelledTicket(
-            @RequestParam Long buyerId) {
+    public ApiResponse<List<TicketCancelledResponse>> cancelledTicket(
+            @AuthenticationPrincipal AuthUser authUser) {
 
-        List<TicketCancelledResponse> response = ticketInquiryService.cancelledTicket(buyerId);
+        List<TicketCancelledResponse> response = ticketInquiryService.cancelledTicket(authUser);
 
-        return ResponseEntity.ok(response);
+        return ApiResponse.ok(response);
     }
 
     @GetMapping("/completed")
-    public ResponseEntity<List<TicketCompletedResponse>> completedTicket(
-            @RequestParam Long buyerId) {
+    public ApiResponse<List<TicketCompletedResponse>> completedTicket(
+            @AuthenticationPrincipal AuthUser authUser) {
 
-        List<TicketCompletedResponse> response = ticketInquiryService.completedTicket(buyerId);
+        List<TicketCompletedResponse> response = ticketInquiryService.completedTicket(authUser);
 
-        return ResponseEntity.ok(response);
+        return ApiResponse.ok(response);
     }
 
 }
