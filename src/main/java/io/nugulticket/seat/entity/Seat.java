@@ -13,11 +13,14 @@ public class Seat {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "seat_id")
-    private int id;
+    private Long id;
 
     @ManyToOne
     @JoinColumn(name = "event_time_id", nullable = false)
     private EventTime eventTime;
+
+    @Column(name = "seat_number", nullable = false)
+    private String seatNumber;
 
     @Column(name = "is_reserved", nullable = false)
     boolean isReserved;
@@ -28,4 +31,6 @@ public class Seat {
     @Column(name = "category_type", nullable = false)
     @Enumerated(EnumType.STRING)
     private SeatType seatType;
+
+    private boolean isDelete=false;
 }
