@@ -2,6 +2,7 @@ package io.nugulticket.event.controller;
 
 import io.nugulticket.common.AuthUser;
 import io.nugulticket.common.apipayload.ApiResponse;
+import io.nugulticket.event.dto.CalenderEventResponse;
 import io.nugulticket.event.dto.createEvent.CreateEventRequest;
 import io.nugulticket.event.dto.createEvent.CreateEventResponse;
 import io.nugulticket.event.dto.getAllEvent.GetAllEventResponse;
@@ -64,5 +65,13 @@ public class EventController {
     public ApiResponse<List<GetAllEventResponse>> getAllEvents() {
         List<GetAllEventResponse> response = eventService.getAllEvents();
         return ApiResponse.ok(response);
+    }
+
+    @GetMapping
+    public ApiResponse<CalenderEventResponse> calenderEvents(
+            @RequestParam(required = true) Integer year,
+            @RequestParam(required = true) Integer month) {
+
+        return ApiResponse.ok(eventService.calenderEvents(year, month));
     }
 }

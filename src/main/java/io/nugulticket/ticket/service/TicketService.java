@@ -55,7 +55,7 @@ public class TicketService {
      * @return 해당 구매자가 구매한 티켓 중 해당 상태인 티켓 리스트
      */
     public List<Ticket> getAllTicketJoinFetchEventSeat(TicketStatus status, Long userId) {
-        return ticketRepository.findAllEqualParamIdJoinFetchSeatAndEvent(status.name(), userId);
+        return ticketRepository.findAllEqualParamIdJoinFetchSeatAndEvent(status, userId);
     }
     public List<Ticket> findAllTicketByUserAndStatus(TicketStatus status, Long userId) {
         return ticketRepository.findAllByStatusAndUser_Id(status, userId);

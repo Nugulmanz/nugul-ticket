@@ -1,5 +1,6 @@
 package io.nugulticket.ticket.service;
 
+import io.nugulticket.common.AuthUser;
 import io.nugulticket.ticket.config.TicketUtil;
 import io.nugulticket.ticket.dto.response.MyTransferTicketsResponse;
 import io.nugulticket.ticket.dto.response.TicketTransferApplyResponse;
@@ -29,12 +30,11 @@ public class TicketTransferService {
      * @return 양도 결과가 담긴 Dto객체
      */
     @Transactional
-    public TicketTransferApplyResponse applyTransfer(Long ticketId) {
-        Long userId = 1L;
+    public TicketTransferApplyResponse applyTransfer(AuthUser user, Long ticketId) {
         Ticket ticket = ticketService.getTicket(ticketId);
 
         // 해당 티켓 상태가 양도 가능한 상태인지 확인
-        if(!ticketUtil.isAbleTicketApplyTransfer(ticket)) {
+        if(!ticketUtil.isAbleTicketApplyTransfer(ticket, user.getId())) {
             throw new IllegalArgumentException();
         }
 
@@ -42,7 +42,7 @@ public class TicketTransferService {
         ticket.changeStatus(TicketStatus.TRANSFERRED);
 
         // 티켓 양도 결과를 DB에 저장
-        TicketTransfer ticketTransfer = new TicketTransfer(ticket, userId);
+        TicketTransfer ticketTransfer = new TicketTransfer(ticket, user.getId());
         TicketTransfer savedTicketTransfer = ticketTransferRepository.save(ticketTransfer);
 
         return TicketTransferApplyResponse.of(savedTicketTransfer);
@@ -54,12 +54,11 @@ public class TicketTransferService {
      * @return 양도 취소한 Id가 담긴 Dto객체
      */
     @Transactional
-    public TicketTransferCancelResponse cancelTransfer(Long ticketId) {
-        Long userId = 1L;
+    public TicketTransferCancelResponse cancelTransfer(AuthUser user, Long ticketId) {
         Ticket ticket = ticketService.getTicket(ticketId);
 
         // 해당 티켓이 양도 가능 상태인지 확인
-        if (!ticketUtil.isAbleTicketCancelTransfer(ticket, userId)) {
+        if (!ticketUtil.isAbleTicketCancelTransfer(ticket, user.getId())) {
             throw new IllegalArgumentException();
         }
 
@@ -75,12 +74,11 @@ public class TicketTransferService {
      * @return 양도 내용이 담긴 Dto 객체
      */
     @Transactional
-    public TicketTransferResponse ticketTransfer(Long ticketId) {
-        Long userId = 1L;
+    public TicketTransferResponse ticketTransfer(AuthUser user, Long ticketId) {
         Ticket ticket = ticketService.getTicketJoinFetchSeat(ticketId);
 
         // 해당 티켓이 양도 가능 상태인지 확인
-        if (!ticketUtil.isAbleTicketTransfer(ticket, userId)) {
+        if (!ticketUtil.isAbleTicketTransfer(ticket, user.getId())) {
             throw new IllegalArgumentException();
         }
 
@@ -94,11 +92,9 @@ public class TicketTransferService {
      * 내가 양도하거나, 양도 받은 Ticket 이력을 조회하는 메서드
      * @return 내가 양도하거나, 양도 받은 Ticket 이력이 담긴 Dto객체
      */
-    public MyTransferTicketsResponse getMyTransferTicket() {
-        Long userId = 1L;
-        List<Ticket> tickets = ticketService.getAllTicketJoinFetchEventSeat(TicketStatus.WAITTRANSFER, userId);
+    public MyTransferTicketsResponse getMyTransferTicket(AuthUser user) {
+        List<Ticket> tickets = ticketService.getAllTicketJoinFetchEventSeat(TicketStatus.WAITTRANSFER, user.getId());
 
         return MyTransferTicketsResponse.of(tickets);
     }
-
 }
