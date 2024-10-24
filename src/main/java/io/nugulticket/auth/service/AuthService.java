@@ -31,10 +31,10 @@ public class AuthService {
 
     /**
      * 회원가입 기능(USER, ADMIN 모두 수행)
-     * @param signupRequest
+     * @param signupRequest 회원가입 정보
      * - USER : adminKey = null
      * - ADMIN : adminKey = ADMIN_KEY
-     * @return SignupResponse
+     * @return SignupResponse 회원가입 된 사용자 정보
      */
     @Transactional
     public SignupResponse createUser(SignupRequest signupRequest) {
@@ -69,7 +69,7 @@ public class AuthService {
 
     /**
      * 로그인 기능
-     * @param loginRequest
+     * @param loginRequest 로그인 정보
      * @return jwt token
      */
     public String login(LoginRequest loginRequest) {
@@ -91,7 +91,7 @@ public class AuthService {
 
     /**
      * 회원탈퇴 기능
-     * @param userId
+     * @param userId 탈퇴할 User id
      */
     @Transactional
     public void deleteUser (Long userId) {

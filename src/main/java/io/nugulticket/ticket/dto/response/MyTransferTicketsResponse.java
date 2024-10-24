@@ -7,14 +7,15 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
+@AllArgsConstructor
 @NoArgsConstructor
 @Getter
-public class GetMyTransferTicketsResponse {
+public class MyTransferTicketsResponse {
 
-    List<Ticket> ticketList;
+    List<TicketDetailResponse> tickets;
 
     // Ticket 정보를 정제 하기 전 / Join fetch 꼭 진행 해야함!
-    public GetMyTransferTicketsResponse(final List<Ticket> ticketList) {
-        this.ticketList = ticketList;
+    public static MyTransferTicketsResponse of(final List<Ticket> ticketList) {
+        return new MyTransferTicketsResponse(ticketList.stream().map(TicketDetailResponse::of).toList());
     }
 }
