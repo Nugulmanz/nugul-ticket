@@ -55,4 +55,8 @@ public class User extends Timestamped {
         this.userRole = userRole;
         this.loginType = loginType;
     }
+
+    public void deleteAccount(){
+        this.deletedAt = LocalDateTime.now();
+    }
 }
