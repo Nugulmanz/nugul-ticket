@@ -46,4 +46,39 @@ public class User extends Timestamped {
     @Column(name = "deleted_at")
     private LocalDateTime deletedAt;
 
+    public User(String email, String password, String username, String nickname, String phoneNumber, UserRole userRole, LoginType loginType) {
+        this.email = email;
+        this.password = password;
+        this.username = username;
+        this.nickname = nickname;
+        this.phoneNumber = phoneNumber;
+        this.userRole = userRole;
+        this.loginType = loginType;
+    }
+
+    public void deleteAccount(){
+        this.deletedAt = LocalDateTime.now();
+    }
+
+    public User(String nickname, String kakaoEmail, Long socialId, String encodedPassword, UserRole userRole, LoginType loginType) {
+        this.nickname = nickname;
+        this.email = kakaoEmail;
+        this.socialId = socialId;
+        this.password = encodedPassword;
+        this.userRole = userRole;
+        this.loginType = loginType;
+    }
+
+    public User updateSocialIdAndLoginType(Long socialId, LoginType loginType) {
+        this.socialId = socialId;
+        this.loginType = loginType;
+        return this;
+    }
+
+    public void updateUserInfo(String username, String phoneNumber, String address) {
+        this.username = username;
+        this.phoneNumber = phoneNumber;
+        this.address = address;
+    }
+
 }
