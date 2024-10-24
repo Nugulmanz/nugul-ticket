@@ -7,6 +7,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-public class TicketTransferCancleResponse {
+public class TicketTransferCancelResponse {
     Long ticketId;
+
+    public static TicketTransferCancelResponse of(Long ticketId) {
+        return new TicketTransferCancelResponse(ticketId);
+    }
 }
