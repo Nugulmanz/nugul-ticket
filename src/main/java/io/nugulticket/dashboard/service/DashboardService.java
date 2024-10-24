@@ -50,11 +50,9 @@ public class DashboardService {
     }
 
     public AcceptRefundResponse acceptRefund(AuthUser authUser, long eventId, long ticketId, AcceptRefundRequest reqDto){
-//        System.out.println(authUser.getAuthorities());
-//
-//        if(!authUser.getAuthorities().equals(UserRole.Authority.SELLER)){
-//            throw new RuntimeException(); // 판매자가 아닌 사람인 경우
-//        }
+        if(!authUser.getAuthorities().equals(UserRole.Authority.SELLER)){
+            throw new RuntimeException(); // 판매자가 아닌 사람인 경우
+        }
         Ticket ticket = ticketService.getRefundTicket(reqDto.getUserId(),eventId,ticketId);
 
         ticket.cancel();

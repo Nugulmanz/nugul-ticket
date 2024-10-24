@@ -1,6 +1,7 @@
 package io.nugulticket.ticket.controller;
 
 import io.nugulticket.common.AuthUser;
+import io.nugulticket.common.apipayload.ApiResponse;
 import io.nugulticket.ticket.dto.createTicket.CreateTicketRequest;
 import io.nugulticket.ticket.dto.createTicket.CreateTicketResponse;
 import io.nugulticket.ticket.dto.refundTicket.RefundTicketResponse;
@@ -19,16 +20,16 @@ public class TicketController {
     private final TicketService ticketService;
 
     @PostMapping
-    public ResponseEntity<CreateTicketResponse> createTicket(@RequestBody CreateTicketRequest reqDto,
-                                             @RequestParam Long userId) {
+    public ApiResponse<CreateTicketResponse> createTicket(@RequestBody CreateTicketRequest reqDto,
+                                                          @RequestParam Long userId) { // 프린시펄 @AuthenticationPrincipal AuthUser authUser
         CreateTicketResponse resDto =ticketService.createTicket(reqDto, userId);
-        return ResponseEntity.ok().body(resDto);
+        return ApiResponse.ok(resDto);
     }
 
     @PatchMapping("/{ticketId}/refund")
-    public ResponseEntity<RefundTicketResponse> refundTicket(@PathVariable Long ticketId,
+    public ApiResponse<RefundTicketResponse> refundTicket(@PathVariable Long ticketId,
                              @AuthenticationPrincipal AuthUser authUser){
         RefundTicketResponse resDto = ticketService.refundTicket(ticketId, authUser);
-        return ResponseEntity.ok().body(resDto);
+        return ApiResponse.ok(resDto);
     }
 }
