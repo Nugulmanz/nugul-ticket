@@ -32,6 +32,7 @@ public class AuctionController {
     // 경매 종료 : 이거 필요 없는 것 같은데
     @PutMapping("/{auctionId}")
     public void endAction(@PathVariable long auctionId) {
+        auctionService.endAuction(auctionId);
 
     }
 

@@ -11,12 +11,12 @@ import io.nugulticket.event.repository.EventRepository;
 import io.nugulticket.user.entity.User;
 import io.nugulticket.user.enums.UserRole;
 import io.nugulticket.user.service.UserService;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -93,5 +93,9 @@ public class EventService {
         return events.stream()
                 .map(GetAllEventResponse::new)
                 .toList();
+    }
+
+    public Event getEventFromId(Long eventId) {
+        return eventRepository.findById(eventId).orElseThrow(EntityNotFoundException::new);
     }
 }

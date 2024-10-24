@@ -34,4 +34,8 @@ public class Auction extends Timestamped {
     public void setBid(int bid){
         this.currentBid=bid;
     }
+
+    public void endAuction(){
+        this.isCompleted=true;
+    }
 }
