@@ -1,6 +1,8 @@
 package io.nugulticket.event.service;
 
 import io.nugulticket.common.AuthUser;
+import io.nugulticket.common.apipayload.status.ErrorStatus;
+import io.nugulticket.common.exception.ApiException;
 import io.nugulticket.event.dto.createEvent.CreateEventRequest;
 import io.nugulticket.event.dto.createEvent.CreateEventResponse;
 import io.nugulticket.event.dto.getAllEvent.GetAllEventResponse;
@@ -60,14 +62,14 @@ public class EventService {
         User user = userService.getUser(authUser.getId());
 
         if (!user.getUserRole().equals(UserRole.SELLER)) {
-            throw new RuntimeException("수정 권한이 없습니다. SELLER 권한이 필요합니다.");
+            throw new ApiException(ErrorStatus.SELLER_ROLE_REQUIRED);
         }
 
         Event event = eventRepository.findById(eventId)
-                .orElseThrow(() -> new RuntimeException("해당 공연을 찾을 수 없습니다."));
+                .orElseThrow(() -> new ApiException(ErrorStatus.EVENT_NOT_FOUND));
 
         if (!event.getUser().equals(user)) {
-            throw new RuntimeException("수정 권한이 없습니다.");
+            throw new ApiException(ErrorStatus._PERMISSION_DENIED);
         }
 
 
@@ -82,11 +84,11 @@ public class EventService {
         User adminUser = userService.getUser(authUser.getId());
 
         if (!adminUser.getUserRole().equals(UserRole.ADMIN)) {
-            throw new RuntimeException("삭제 권한이 없습니다. ADMIN 권한이 필요합니다.");
+            throw new ApiException(ErrorStatus.ADMIN_ROLE_REQUIRED);
         }
 
         Event event = eventRepository.findById(eventId)
-                .orElseThrow(() -> new RuntimeException("해당 공연을 찾을 수 없습니다."));
+                .orElseThrow(() -> new ApiException(ErrorStatus.EVENT_NOT_FOUND));
 
         event.setIs_deleted(true);
 
@@ -97,7 +99,7 @@ public class EventService {
     public GetEventResponse getEvent(Long eventId) {
 
         Event event = eventRepository.findById(eventId)
-                .orElseThrow(() -> new RuntimeException("해당 공연을 찾을 수 없습니다."));
+                .orElseThrow(() -> new ApiException(ErrorStatus.EVENT_NOT_FOUND));
 
         return new GetEventResponse(event);
     }
