@@ -15,13 +15,13 @@ public class TicketUtil {
      */
     public boolean isValidTicket(Ticket ticket) {
         LocalDateTime now = LocalDateTime.now();
-
+        LocalDateTime purchaseTime = ticket.getSeat().getEventTime().getDateTime();
         // Seat, EventTime 나올 경우
-        if (ticket.getSeat().getEventTime().getDateTime().isAfter(now)) {
+        if (purchaseTime.isBefore(now)) {
             throw new IllegalArgumentException();
         }
 
-        return now.isBefore(ticket.getPurchaseDate());
+        return purchaseTime.isAfter(now);
     }
 
     public boolean isNowStatus(Ticket ticket, TicketStatus status) {
@@ -29,7 +29,7 @@ public class TicketUtil {
     }
 
     public boolean isMineTicket(Ticket ticket, Long userId) {
-        return ticket.getBuyerId().equals(userId);
+        return ticket.getUser().getId().equals(userId);
     }
 
     /**
@@ -49,11 +49,12 @@ public class TicketUtil {
      * 해당 티켓에 양도 신청을 넣을 수 있는 상태인지 확인하는 메서드
      *  1. 해당 티켓이 아직 유효한 경우
      *  2. 해당 티켓이 양도 대기중인 경우
+     *  3. 구매자와 양도하는 사람이 동일한 경우
      * @param ticket 확인할 티켓
      * @return True : 양도 신청이 가능한 상태 / False : 양도 신청이 불가능한 상태
      */
-    public boolean isAbleTicketApplyTransfer(Ticket ticket) {
-        return isValidTicket(ticket) && isNowStatus(ticket, TicketStatus.WAITTRANSFER);
+    public boolean isAbleTicketApplyTransfer(Ticket ticket, Long userId) {
+        return isValidTicket(ticket) && isNowStatus(ticket, TicketStatus.WAITTRANSFER) && !isMineTicket(ticket, userId);
     }
 
     /**

@@ -28,9 +28,4 @@ public class SearchController {
                                                                 @RequestParam(required = false) String category) {
         return ApiResponse.ok(searchService.searchEvents(page, size, keyword, eventDate, place, category));
     }
-
-
-
-
-
 }

@@ -1,14 +1,18 @@
 package io.nugulticket.ticket.service;
 
+import io.nugulticket.common.AuthUser;
 import io.nugulticket.event.entity.Event;
 import io.nugulticket.event.service.EventService;
 import io.nugulticket.seat.entity.Seat;
 import io.nugulticket.seat.service.SeatService;
 import io.nugulticket.ticket.dto.createTicket.CreateTicketRequest;
 import io.nugulticket.ticket.dto.createTicket.CreateTicketResponse;
+import io.nugulticket.ticket.dto.refundTicket.RefundTicketResponse;
 import io.nugulticket.ticket.entity.Ticket;
 import io.nugulticket.ticket.enums.TicketStatus;
 import io.nugulticket.ticket.repository.TicketRepository;
+import io.nugulticket.user.entity.User;
+import io.nugulticket.user.service.UserService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -23,6 +27,7 @@ public class TicketService {
     private final TicketRepository ticketRepository;
     private final SeatService seatService;
     private final EventService eventService;
+    private final UserService userService;
 
     /**
      * 해당 Id를 가진 티켓을 반환하는 메서드
@@ -50,14 +55,17 @@ public class TicketService {
      * @return 해당 구매자가 구매한 티켓 중 해당 상태인 티켓 리스트
      */
     public List<Ticket> getAllTicketJoinFetchEventSeat(TicketStatus status, Long userId) {
-        return ticketRepository.findAllEqualParamIdJoinFetchSeatAndEvent(status.name(), userId);
+        return ticketRepository.findAllEqualParamIdJoinFetchSeatAndEvent(status, userId);
+    }
+    public List<Ticket> findAllTicketByUserAndStatus(TicketStatus status, Long userId) {
+        return ticketRepository.findAllByStatusAndUser_Id(status, userId);
     }
 
     @Transactional
     public CreateTicketResponse createTicket(CreateTicketRequest reqDto, Long userId) {
         Seat seat = seatService.findSeatById(reqDto.getSeatId()); // 락 필요
         if(seat.isReserved()){
-            throw new IllegalArgumentException("이미 예약된 좌석입니다.");
+            throw new IllegalArgumentException("이미 예약된 좌석입니다."); // res에 메세지 보이지 않음
         }
         // 결제 기능 구현 필요
 
@@ -65,11 +73,29 @@ public class TicketService {
         Event event = eventService.getEventFromId(eventId);
         String qrCode = createQRCode();
         Ticket ticket = new Ticket();
-        ticket.createTicket(event, seat, userId, qrCode);
+        User user = userService.getUser(userId);
+        ticket.createTicket(event, seat, user, qrCode);
+        seat.seatReserved();
         ticketRepository.save(ticket);
 
         CreateTicketResponse resDto = new CreateTicketResponse(seat, event, ticket, userId);
         return resDto;
+    }
+
+    public RefundTicketResponse refundTicket(Long ticketId, AuthUser authUser) {
+        Ticket ticket = ticketRepository.findByUser_IdAndTicketId(authUser.getId(), ticketId)
+                .orElseThrow(IllegalArgumentException::new);
+        ticket.requestCancel();
+        ticketRepository.save(ticket);
+
+        return new RefundTicketResponse(ticket);
+    }
+
+    public Ticket getRefundTicket(long userId, long eventId, long ticketId) {
+        Ticket ticket = ticketRepository
+                .findByUser_IdAndTicketIdAndEvent_EventId( userId,ticketId, eventId)
+                .orElseThrow(IllegalArgumentException::new);
+        return ticket;
     }
 
     private String createQRCode(){
