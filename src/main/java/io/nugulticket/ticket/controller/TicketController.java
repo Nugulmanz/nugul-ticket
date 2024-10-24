@@ -21,8 +21,8 @@ public class TicketController {
 
     @PostMapping
     public ApiResponse<CreateTicketResponse> createTicket(@RequestBody CreateTicketRequest reqDto,
-                                                          @RequestParam Long userId) { // 프린시펄 @AuthenticationPrincipal AuthUser authUser
-        CreateTicketResponse resDto =ticketService.createTicket(reqDto, userId);
+                                                          @AuthenticationPrincipal AuthUser authUser){
+        CreateTicketResponse resDto =ticketService.createTicket(reqDto, authUser);
         return ApiResponse.ok(resDto);
     }
 

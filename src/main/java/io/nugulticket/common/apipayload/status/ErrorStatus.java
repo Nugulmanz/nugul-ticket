@@ -25,6 +25,10 @@ public enum ErrorStatus implements BaseCode {
     _EXPIRED_ACTION(HttpStatus.BAD_REQUEST, "400", "종료된 경매입니다."),
     _NOT_FOUND_AUCTION(HttpStatus.NOT_FOUND,"404", "존재하지 않는 경매입니다."),
 
+    // ticket
+    _ALREADY_RESERVED(HttpStatus.NOT_ACCEPTABLE,"406", "이미 예약된 좌석입니다."),
+    _NOT_FOUND_TICKET(HttpStatus.NOT_FOUND, "404", "존재하지 않는 티켓입니다"),
+
     // user
     _FORBIDDEN_USER(HttpStatus.FORBIDDEN,"403", "어드민 유저만 접근할 수 있습니다."),
     _FORBIDDEN_ROLE(HttpStatus.FORBIDDEN,"403", "접근할 수 없는 권한입니다."),

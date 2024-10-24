@@ -72,7 +72,7 @@ public class DashboardService {
      */
     public AcceptRefundResponse acceptRefund(AuthUser authUser, long eventId, long ticketId, AcceptRefundRequest reqDto){
         if(!authUser.getAuthorities().equals(UserRole.Authority.SELLER)){
-            throw new ApiException(ErrorStatus._FORBIDDEN_ROLE);// 판매자가 아닌 사람인 경우
+            throw new ApiException(ErrorStatus._FORBIDDEN_ROLE);
         }
         Ticket ticket = ticketService.getRefundTicket(reqDto.getUserId(),eventId,ticketId);
         ticket.cancel();
