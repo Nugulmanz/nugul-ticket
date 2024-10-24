@@ -59,7 +59,7 @@ public class TicketService {
     }
     public List<Ticket> findAllTicketByUserAndStatus(TicketStatus status, Long userId) {
         return ticketRepository.findAllByStatusAndUser_Id(status, userId);
-        }
+    }
 
     @Transactional
     public CreateTicketResponse createTicket(CreateTicketRequest reqDto, Long userId) {
