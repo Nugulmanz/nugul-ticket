@@ -1,6 +1,8 @@
 package io.nugulticket.event.service;
 
 import io.nugulticket.common.AuthUser;
+import io.nugulticket.event.dto.CalenderEventResponse;
+import io.nugulticket.event.dto.EventSimpleResponse;
 import io.nugulticket.event.dto.createEvent.CreateEventRequest;
 import io.nugulticket.event.dto.createEvent.CreateEventResponse;
 import io.nugulticket.event.dto.getAllEvent.GetAllEventResponse;
@@ -15,10 +17,13 @@ import io.nugulticket.user.enums.UserRole;
 import io.nugulticket.user.service.UserService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Time;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 
@@ -118,5 +123,15 @@ public class EventService {
 
     public List<Event> getEventFromUserId(Long userId) {
         return eventRepository.findByUser_Id(userId);
+    }
+
+    public CalenderEventResponse calenderEvents(Integer year, Integer month) {
+        LocalDate beginDate = LocalDate.of(year, month, 1);
+        LocalDate endDate = LocalDate.of(year, month, beginDate.lengthOfMonth());
+
+        List<Event> events = eventRepository.findByBetweenTwoDate(beginDate, endDate);
+
+        List<EventSimpleResponse> simpleResponses = events.stream().map(EventSimpleResponse::of).toList();
+        return CalenderEventResponse.of(simpleResponses);
     }
 }

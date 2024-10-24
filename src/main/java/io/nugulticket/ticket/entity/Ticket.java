@@ -64,7 +64,6 @@ public class Ticket {
         this.purchaseDate = LocalDateTime.now();
         this.user = user;
         this.status=TicketStatus.RESERVED;
-
     }
 
     public void requestCancel(){
