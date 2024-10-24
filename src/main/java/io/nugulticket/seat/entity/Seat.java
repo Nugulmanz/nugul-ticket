@@ -33,4 +33,12 @@ public class Seat {
     private SeatType seatType;
 
     private boolean isDelete=false;
+
+    public Seat(EventTime eventTime, String seatNumber, int price, SeatType seatType) {
+        this.eventTime = eventTime;
+        this.seatNumber = seatNumber;
+        this.isReserved = false;
+        this.price = price;
+        this.seatType = seatType;
+    }
 }

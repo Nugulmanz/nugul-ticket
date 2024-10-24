@@ -8,6 +8,7 @@ import io.nugulticket.event.dto.updateEvent.UpdateEventRequest;
 import io.nugulticket.event.dto.updateEvent.UpdateEventResponse;
 import io.nugulticket.event.entity.Event;
 import io.nugulticket.event.repository.EventRepository;
+import io.nugulticket.eventtime.service.EventTimeService;
 import io.nugulticket.user.entity.User;
 import io.nugulticket.user.enums.UserRole;
 import io.nugulticket.user.service.UserService;
@@ -16,6 +17,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Time;
+import java.time.LocalTime;
 import java.util.List;
 
 @Service
@@ -24,15 +27,28 @@ public class EventService {
 
     private final UserService userService;
     private final EventRepository eventRepository;
+    private final EventTimeService eventTimeService;
 
-    @Transactional
     public CreateEventResponse createEvent(Long userId, CreateEventRequest eventRequest) {
+        int price = 140000;
+        int vipSeatCount = 20;
+        int rSeatCount = 20;
+        int aSeatCount = 20;
 
         User user = userService.getUser(userId);
 
         Event event = new Event(user,eventRequest);
 
         Event savedEvent = eventRepository.save(event);
+
+        eventTimeService.createEventTimes(event,
+                eventRequest.getStartDate(),
+                eventRequest.getEndDate(),
+                LocalTime.now(),
+                price,
+                vipSeatCount,
+                rSeatCount,
+                aSeatCount);
 
         return new CreateEventResponse(savedEvent);
     }
