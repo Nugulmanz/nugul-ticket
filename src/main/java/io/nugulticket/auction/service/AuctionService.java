@@ -45,4 +45,10 @@ public class AuctionService {
         return new BidActionResponse(saveAuction);
 
     }
+
+    public void endAuction(long auctionId) {
+        Auction auction = auctionRepository.findById(auctionId).orElse(null);
+        auction.endAuction();
+        auctionRepository.save(auction);
+    }
 }
