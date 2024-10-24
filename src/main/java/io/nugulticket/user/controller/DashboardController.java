@@ -1,15 +1,14 @@
-package io.nugulticket.dashboard.controller;
+package io.nugulticket.user.controller;
 
 import io.nugulticket.common.AuthUser;
 import io.nugulticket.common.apipayload.ApiResponse;
-import io.nugulticket.dashboard.dto.acceptRefund.AcceptRefundRequest;
-import io.nugulticket.dashboard.dto.acceptRefund.AcceptRefundResponse;
-import io.nugulticket.dashboard.dto.authorityAccept.AuthorityAcceptRequest;
-import io.nugulticket.dashboard.dto.authorityAccept.AuthorityAcceptResponse;
-import io.nugulticket.dashboard.dto.getMyEvents.getMyEventsResponse;
-import io.nugulticket.dashboard.service.DashboardService;
+import io.nugulticket.user.dto.acceptRefund.AcceptRefundRequest;
+import io.nugulticket.user.dto.acceptRefund.AcceptRefundResponse;
+import io.nugulticket.user.dto.authorityAccept.AuthorityAcceptRequest;
+import io.nugulticket.user.dto.authorityAccept.AuthorityAcceptResponse;
+import io.nugulticket.user.dto.getMyEvents.getMyEventsResponse;
+import io.nugulticket.user.service.DashboardService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 

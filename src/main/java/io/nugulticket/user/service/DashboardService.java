@@ -1,22 +1,20 @@
-package io.nugulticket.dashboard.service;
+package io.nugulticket.user.service;
 
 import io.nugulticket.common.AuthUser;
-import io.nugulticket.dashboard.dto.acceptRefund.AcceptRefundRequest;
-import io.nugulticket.dashboard.dto.acceptRefund.AcceptRefundResponse;
-import io.nugulticket.dashboard.dto.authorityAccept.AuthorityAcceptResponse;
-import io.nugulticket.dashboard.dto.getMyEvents.getMyEventsResponse;
+import io.nugulticket.user.dto.acceptRefund.AcceptRefundRequest;
+import io.nugulticket.user.dto.acceptRefund.AcceptRefundResponse;
+import io.nugulticket.user.dto.authorityAccept.AuthorityAcceptResponse;
+import io.nugulticket.user.dto.getMyEvents.getMyEventsResponse;
 import io.nugulticket.event.entity.Event;
 import io.nugulticket.event.service.EventService;
 import io.nugulticket.ticket.entity.Ticket;
 import io.nugulticket.ticket.service.TicketService;
 import io.nugulticket.user.entity.User;
 import io.nugulticket.user.enums.UserRole;
-import io.nugulticket.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 

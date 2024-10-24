@@ -1,4 +1,4 @@
-package io.nugulticket.dashboard.dto.acceptRefund;
+package io.nugulticket.user.dto.acceptRefund;
 
 import lombok.Getter;
 
