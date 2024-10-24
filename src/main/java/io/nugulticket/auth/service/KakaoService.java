@@ -7,6 +7,8 @@ import io.nugulticket.auth.dto.kakaoLogin.KakaoLoginResponse;
 import io.nugulticket.auth.dto.updateKakaoUserInfo.UpdateKakaoUserInfoRequest;
 import io.nugulticket.auth.dto.updateKakaoUserInfo.UpdateKakaoUserInfoResponse;
 import io.nugulticket.common.AuthUser;
+import io.nugulticket.common.apipayload.status.ErrorStatus;
+import io.nugulticket.common.exception.ApiException;
 import io.nugulticket.common.utils.JwtUtil;
 import io.nugulticket.user.dto.KakaoUserDto;
 import io.nugulticket.user.entity.User;
@@ -193,11 +195,11 @@ public class KakaoService {
     @Transactional
     public UpdateKakaoUserInfoResponse updateKakaoUserInfo (AuthUser authUser, UpdateKakaoUserInfoRequest updateKakaoUserInfoRequest) {
         User kakaoUser = userRepository.findById(authUser.getId())
-                .orElseThrow(()-> new IllegalArgumentException("해당하는 ID의 유저가 없습니다."));
+                .orElseThrow(()-> new ApiException(ErrorStatus._NOT_FOUND_USER));
 
         // 카카오 로그인한 사람이 아닐 경우 예외 처리
         if (kakaoUser.getLoginType() != LoginType.SOCIAL) {
-            throw new IllegalArgumentException("소셜 로그인 사용자만 정보를 업데이트할 수 있습니다.");
+            throw new ApiException(ErrorStatus._PERMISSION_DENIED);
         }
 
         kakaoUser.updateUserInfo(updateKakaoUserInfoRequest.getUsername(),
