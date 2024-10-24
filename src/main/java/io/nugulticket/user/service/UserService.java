@@ -1,5 +1,7 @@
 package io.nugulticket.user.service;
 
+import io.nugulticket.user.dto.UserResponse;
+import io.nugulticket.user.dto.UserUpdateRequest;
 import io.nugulticket.user.entity.User;
 import io.nugulticket.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +13,13 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class UserService {
     private final UserRepository userRepository;
+
+    @Transactional
+    public UserResponse updateUser(Long userId, UserUpdateRequest updateRequest){
+        User user = userRepository.findUserById(userId);
+        user.updateUser(updateRequest.getNickname(), updateRequest.getAddress());
+        return UserResponse.from(user);
+    }
 
     /**
      * 주어진 email로 해당 유저가 이미 존재하는지 확인
@@ -27,9 +36,7 @@ public class UserService {
      * @return User
      */
     public User getUser(Long userId) {
-        return userRepository.findById(userId).orElseThrow(
-                () -> new RuntimeException("User with id " + userId + " not found")
-        );
+        return userRepository.findUserById(userId);
     }
 
     /**
@@ -38,9 +45,7 @@ public class UserService {
      * @return User
      */
     public User getUserFromEmail(String email) {
-        return userRepository.findByEmail(email).orElseThrow(
-                () -> new RuntimeException("User with email " + email + " not found")
-        );
+        return userRepository.findUserByEmail(email);
     }
 
     public User addUser(User user) {
