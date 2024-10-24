@@ -1,6 +1,8 @@
 package io.nugulticket.user.service;
 
 import io.nugulticket.common.AuthUser;
+import io.nugulticket.common.apipayload.status.ErrorStatus;
+import io.nugulticket.common.exception.ApiException;
 import io.nugulticket.user.dto.acceptRefund.AcceptRefundRequest;
 import io.nugulticket.user.dto.acceptRefund.AcceptRefundResponse;
 import io.nugulticket.user.dto.authorityAccept.AuthorityAcceptResponse;
@@ -28,18 +30,31 @@ public class DashboardService {
     private final EventService eventService;
     private final TicketService ticketService;
 
+    /**
+     * 판매자 승인
+     *
+     * @param authUser : 로그인 유저
+     * @param userId : 판매자로 만들어줄 유저
+     * @return : 판매자로 바뀐 user, userRole
+     */
     @Transactional
     public AuthorityAcceptResponse authorityAccept(AuthUser authUser,Long userId) {
         if(!authUser.getAuthorities().equals(UserRole.Authority.ADMIN)){
-            log.info("어드민 유저만 접근할 수 있습니다.");
+            throw new ApiException(ErrorStatus._FORBIDDEN_USER);
         }
-        // 신청한 유저가 아닌 경우 확인 필요
+
         User user = userService.getUser(userId);
         user.becomeSeller();
         return new AuthorityAcceptResponse(user.getId(),user.getUserRole());
     }
 
 
+    /**
+     * 판매자가 소유한 공연 리스트 조회
+     *
+     * @param authUser : 로그인 유저
+     * @return : 로그인 유저가 소유한 공연 리스트
+     */
     public List<getMyEventsResponse> getMyEvent(AuthUser authUser) {
         List<Event> eventList = eventService.getEventFromUserId(authUser.getId());
         List<getMyEventsResponse> resDto = eventList.stream().map(getMyEventsResponse::new).toList();
@@ -47,12 +62,19 @@ public class DashboardService {
 
     }
 
+    /**
+     *
+     * @param authUser : 로그인 유저
+     * @param eventId : 이벤트 아이디
+     * @param ticketId : 티켓 아이디
+     * @param reqDto : 환불한 유저
+     * @return : 티켓 아이디와 상태
+     */
     public AcceptRefundResponse acceptRefund(AuthUser authUser, long eventId, long ticketId, AcceptRefundRequest reqDto){
         if(!authUser.getAuthorities().equals(UserRole.Authority.SELLER)){
-            throw new RuntimeException(); // 판매자가 아닌 사람인 경우
+            throw new ApiException(ErrorStatus._FORBIDDEN_ROLE);// 판매자가 아닌 사람인 경우
         }
         Ticket ticket = ticketService.getRefundTicket(reqDto.getUserId(),eventId,ticketId);
-
         ticket.cancel();
 
         return new AcceptRefundResponse(ticket);

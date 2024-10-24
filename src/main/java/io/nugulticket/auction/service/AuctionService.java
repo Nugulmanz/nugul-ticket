@@ -36,7 +36,9 @@ public class AuctionService {
 
     @Transactional
     public BidActionResponse updateAction(long auctionId, BidActionRequest reqDto) {
-        Auction auction = auctionRepository.findById(auctionId).orElse(null);
+        Auction auction = auctionRepository.findById(auctionId).orElseThrow(
+                ()-> new ApiException(ErrorStatus._NOT_FOUND_AUCTION));
+
         if(auction.getCurrentBid()>=reqDto.getBid()) {
             throw new ApiException(ErrorStatus._Lower_Than_Current_Bid);
         }
