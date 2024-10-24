@@ -1,7 +1,6 @@
 package io.nugulticket.auth.service;
 
 import io.nugulticket.auth.dto.LoginRequest;
-import io.nugulticket.auth.dto.SignoutRequest;
 import io.nugulticket.auth.dto.SignupRequest;
 import io.nugulticket.auth.dto.SignupResponse;
 import io.nugulticket.common.utils.JwtUtil;
@@ -11,6 +10,7 @@ import io.nugulticket.user.enums.UserRole;
 import io.nugulticket.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,13 +21,21 @@ import java.util.Objects;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class AuthService {
-    private static final String ADMIN_KEY = "adminKey";
+
+    @Value("${ADMIN_KEY}")
+    private static String ADMIN_KEY; // 관리자 가입 시 사용
 
     private final BCryptPasswordEncoder passwordEncoders;
     private final JwtUtil jwtUtil;
     private final UserService userService;
 
-
+    /**
+     * 회원가입 기능(USER, ADMIN 모두 수행)
+     * @param signupRequest
+     * - USER : adminKey = null
+     * - ADMIN : adminKey = ADMIN_KEY
+     * @return SignupResponse
+     */
     @Transactional
     public SignupResponse createUser(SignupRequest signupRequest) {
         String encodedPassword = passwordEncoders.encode(signupRequest.getPassword());
@@ -36,7 +44,16 @@ public class AuthService {
             throw new RuntimeException("해당 유저가 이미 존재합니다.");
         }
 
-        UserRole userRole = Objects.equals(signupRequest.getAdminKey(), ADMIN_KEY) ? UserRole.ADMIN : UserRole.USER;
+        // 사용자 역할을 설정하기 위한 변수 설정
+        UserRole userRole;
+        if (signupRequest.getAdminKey().isEmpty()) {
+            userRole = UserRole.USER;
+        } else if (Objects.equals(signupRequest.getAdminKey(), ADMIN_KEY)) {
+            userRole = UserRole.ADMIN;
+        } else {
+            throw new RuntimeException("adminKey가 일치하지 않습니다.");
+        }
+
         User user = new User(
                 signupRequest.getEmail(),
                 encodedPassword,
@@ -50,6 +67,11 @@ public class AuthService {
         return SignupResponse.of(savedUser);
     }
 
+    /**
+     * 로그인 기능
+     * @param loginRequest
+     * @return jwt token
+     */
     public String login(LoginRequest loginRequest) {
         User user = userService.getUserFromEmail(loginRequest.getEmail());
 
@@ -67,6 +89,10 @@ public class AuthService {
         );
     }
 
+    /**
+     * 회원탈퇴 기능
+     * @param userId
+     */
     @Transactional
     public void deleteUser (Long userId) {
         User user = userService.getUser(userId);
