@@ -1,5 +1,7 @@
 package io.nugulticket.user.repository;
 
+import io.nugulticket.common.apipayload.status.ErrorStatus;
+import io.nugulticket.common.exception.ApiException;
 import io.nugulticket.user.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -14,13 +16,13 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     default User findUserById(Long id) {
         return findById(id).orElseThrow(
-                () -> new RuntimeException("사용자를 찾을 수 없습니다.")
+                () -> new ApiException(ErrorStatus._NOT_FOUND_USER)
         );
     }
 
     default User findUserByEmail(String email) {
         return findByEmail(email).orElseThrow(
-                () -> new RuntimeException("해당 이메일의 사용자를 찾을 수 없습니다.")
+                () -> new ApiException(ErrorStatus._NOT_FOUND_USER)
         );
     }
 }
