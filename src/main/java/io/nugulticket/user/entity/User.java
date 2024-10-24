@@ -46,4 +46,13 @@ public class User extends Timestamped {
     @Column(name = "deleted_at")
     private LocalDateTime deletedAt;
 
+    public User(String email, String password, String username, String nickname, String phoneNumber, UserRole userRole, LoginType loginType) {
+        this.email = email;
+        this.password = password;
+        this.username = username;
+        this.nickname = nickname;
+        this.phoneNumber = phoneNumber;
+        this.userRole = userRole;
+        this.loginType = loginType;
+    }
 }
