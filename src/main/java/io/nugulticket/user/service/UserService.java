@@ -14,6 +14,12 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserService {
     private final UserRepository userRepository;
 
+    /**
+     * 사용자의 닉네임, 주소를 업데이트 하는 메서드
+     * @param userId 사용자 id
+     * @param updateRequest 업데이트 내용
+     * @return UserResponse
+     */
     @Transactional
     public UserResponse updateUser(Long userId, UserUpdateRequest updateRequest){
         User user = userRepository.findUserById(userId);
