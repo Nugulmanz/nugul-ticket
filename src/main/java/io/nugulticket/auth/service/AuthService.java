@@ -25,7 +25,7 @@ import java.util.Objects;
 public class AuthService {
 
     @Value("${ADMIN_KEY}")
-    private static String ADMIN_KEY; // 관리자 가입 시 사용
+    private String ADMIN_KEY; // 관리자 가입 시 사용
 
     private final BCryptPasswordEncoder passwordEncoders;
     private final JwtUtil jwtUtil;
@@ -48,7 +48,7 @@ public class AuthService {
 
         // 사용자 역할을 설정하기 위한 변수 설정
         UserRole userRole;
-        if (signupRequest.getAdminKey().isEmpty()) {
+        if (signupRequest.getAdminKey() == null || signupRequest.getAdminKey().isEmpty()) {
             userRole = UserRole.USER;
         } else if (Objects.equals(signupRequest.getAdminKey(), ADMIN_KEY)) {
             userRole = UserRole.ADMIN;
