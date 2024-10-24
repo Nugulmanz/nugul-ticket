@@ -1,9 +1,14 @@
 package io.nugulticket.auth.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import io.nugulticket.auth.dto.LoginRequest;
 import io.nugulticket.auth.dto.SignupRequest;
 import io.nugulticket.auth.dto.SignupResponse;
+import io.nugulticket.auth.dto.kakaoLogin.KakaoLoginResponse;
+import io.nugulticket.auth.dto.updateKakaoUserInfo.UpdateKakaoUserInfoRequest;
+import io.nugulticket.auth.dto.updateKakaoUserInfo.UpdateKakaoUserInfoResponse;
 import io.nugulticket.auth.service.AuthService;
+import io.nugulticket.auth.service.KakaoService;
 import io.nugulticket.common.AuthUser;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 public class AuthController {
 
     private final AuthService authService;
+    public final KakaoService kakaoService;
 
     @PostMapping("/v1/signup")
     public ResponseEntity<SignupResponse> signup(@Valid @RequestBody SignupRequest signupRequest) {
@@ -43,6 +49,18 @@ public class AuthController {
         }
         authService.deleteUser(userId);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/v1/login/kakao")
+    public ResponseEntity<KakaoLoginResponse> kakaoLogin (@RequestParam String code) throws JsonProcessingException {
+        return ResponseEntity.ok(kakaoService.kakaoLogin(code));
+    }
+
+
+    @PutMapping("/v1/login/kakao")
+    public ResponseEntity<UpdateKakaoUserInfoResponse> updateKakaoUserInfo (@AuthenticationPrincipal AuthUser authUser,
+                                                                            @RequestBody UpdateKakaoUserInfoRequest updateKakaoUserInfoRequest) {
+        return ResponseEntity.ok(kakaoService.updateKakaoUserInfo(authUser, updateKakaoUserInfoRequest));
     }
 
 }
