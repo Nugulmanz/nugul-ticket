@@ -121,6 +121,10 @@ public class EventService {
         return eventRepository.findById(eventId).orElseThrow(EntityNotFoundException::new);
     }
 
+    public List<Event> getEventFromUserId(Long userId) {
+        return eventRepository.findByUser_Id(userId);
+    }
+
     public CalenderEventResponse calenderEvents(Integer year, Integer month) {
         LocalDate beginDate = LocalDate.of(year, month, 1);
         LocalDate endDate = LocalDate.of(year, month, beginDate.lengthOfMonth());
