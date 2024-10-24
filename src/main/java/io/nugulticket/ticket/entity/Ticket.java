@@ -3,14 +3,17 @@ package io.nugulticket.ticket.entity;
 import io.nugulticket.event.entity.Event;
 import io.nugulticket.seat.entity.Seat;
 import io.nugulticket.ticket.enums.TicketStatus;
+import io.nugulticket.user.entity.User;
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
 @Entity
+@NoArgsConstructor
 @Table(name = "ticket")
 public class Ticket {
 
@@ -35,6 +38,9 @@ public class Ticket {
     @Enumerated(EnumType.STRING)
     private TicketStatus status;
 
+    @Column(nullable = false)
+    private boolean isDeleted=false;
+
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
     @JoinColumn(name = "event_id")
     private Event event;
@@ -49,5 +55,15 @@ public class Ticket {
      */
     public void changeStatus(TicketStatus newStatus) {
         this.status = newStatus;
+    }
+
+    public void createTicket(Event event, Seat seat, Long buyerId, String qrCode){
+        this.event = event;
+        this.seat = seat;
+        this.qrCode = qrCode;
+        this.purchaseDate = LocalDateTime.now();
+        this.buyerId = buyerId;
+        this.status=TicketStatus.AUCTION;
+
     }
 }
