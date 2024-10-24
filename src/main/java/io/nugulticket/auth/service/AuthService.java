@@ -3,6 +3,8 @@ package io.nugulticket.auth.service;
 import io.nugulticket.auth.dto.LoginRequest;
 import io.nugulticket.auth.dto.SignupRequest;
 import io.nugulticket.auth.dto.SignupResponse;
+import io.nugulticket.common.apipayload.status.ErrorStatus;
+import io.nugulticket.common.exception.ApiException;
 import io.nugulticket.common.utils.JwtUtil;
 import io.nugulticket.user.entity.User;
 import io.nugulticket.user.enums.LoginType;
@@ -23,7 +25,7 @@ import java.util.Objects;
 public class AuthService {
 
     @Value("${ADMIN_KEY}")
-    private static String ADMIN_KEY; // 관리자 가입 시 사용
+    private String ADMIN_KEY; // 관리자 가입 시 사용
 
     private final BCryptPasswordEncoder passwordEncoders;
     private final JwtUtil jwtUtil;
@@ -41,17 +43,17 @@ public class AuthService {
         String encodedPassword = passwordEncoders.encode(signupRequest.getPassword());
 
         if(userService.isUser(signupRequest.getEmail())){
-            throw new RuntimeException("해당 유저가 이미 존재합니다.");
+            throw new ApiException(ErrorStatus._USER_ALREADY_EXISTS);
         }
 
         // 사용자 역할을 설정하기 위한 변수 설정
         UserRole userRole;
-        if (signupRequest.getAdminKey().isEmpty()) {
+        if (signupRequest.getAdminKey() == null || signupRequest.getAdminKey().isEmpty()) {
             userRole = UserRole.USER;
         } else if (Objects.equals(signupRequest.getAdminKey(), ADMIN_KEY)) {
             userRole = UserRole.ADMIN;
         } else {
-            throw new RuntimeException("adminKey가 일치하지 않습니다.");
+            throw new ApiException(ErrorStatus._INVALID_ADMIN_KEY);
         }
 
         User user = new User(
@@ -76,10 +78,10 @@ public class AuthService {
         User user = userService.getUserFromEmail(loginRequest.getEmail());
 
         if(!passwordEncoders.matches(loginRequest.getPassword(), user.getPassword())){
-            throw new RuntimeException("비밀번호가 일치하지 않습니다.");
+            throw new ApiException(ErrorStatus._INVALID_PASSWORD);
         }
         if(user.getDeletedAt() != null){
-            throw new RuntimeException("탈퇴한 사용자 입니다.");
+            throw new ApiException(ErrorStatus._USER_ALREADY_EXISTS);
         }
 
         return jwtUtil.createToken(
@@ -98,7 +100,7 @@ public class AuthService {
         User user = userService.getUser(userId);
 
         if(user.getDeletedAt() != null){
-            throw new RuntimeException("이미 탈퇴한 사용자 입니다.");
+            throw new ApiException(ErrorStatus._USER_ALREADY_EXISTS);
         }
         user.deleteAccount();
     }
