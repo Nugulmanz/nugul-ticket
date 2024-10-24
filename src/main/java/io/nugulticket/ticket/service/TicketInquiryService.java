@@ -22,9 +22,9 @@ public class TicketInquiryService {
     @Transactional(readOnly = true)
     public List<TicketReservedResponse> reservedTicket(AuthUser authUser) {
 
-        Long buyerId = authUser.getId();
+        Long userId = authUser.getId();
 
-        List<Ticket> reservedTickets = ticketRepository.findAllByStatusAndBuyerId(TicketStatus.RESERVED, buyerId);
+        List<Ticket> reservedTickets = ticketRepository.findAllByStatusAndUser_Id(TicketStatus.RESERVED, userId);
 
         return reservedTickets.stream()
                 .map(TicketReservedResponse::new)
@@ -34,9 +34,9 @@ public class TicketInquiryService {
     @Transactional(readOnly = true)
     public List<TicketCancelledResponse> cancelledTicket(AuthUser authUser) {
 
-        Long buyerId = authUser.getId();
+        Long userId = authUser.getId();
 
-        List<Ticket> cancelledTickets = ticketRepository.findAllByStatusAndBuyerId(TicketStatus.CANCELLED, buyerId);
+        List<Ticket> cancelledTickets = ticketRepository.findAllByStatusAndUser_Id(TicketStatus.CANCELLED, userId);
 
         return cancelledTickets.stream()
                 .map(TicketCancelledResponse::new)
@@ -46,9 +46,9 @@ public class TicketInquiryService {
     @Transactional(readOnly = true)
     public List<TicketCompletedResponse> completedTicket(AuthUser authUser) {
 
-        Long buyerId = authUser.getId();
+        Long userId = authUser.getId();
 
-        List<Ticket> completedTickets = ticketRepository.findAllByStatusAndBuyerId(TicketStatus.COMPLETE, buyerId);
+        List<Ticket> completedTickets = ticketRepository.findAllByStatusAndUser_Id(TicketStatus.COMPLETE, userId);
 
         return completedTickets.stream()
                 .map(TicketCompletedResponse::new)
