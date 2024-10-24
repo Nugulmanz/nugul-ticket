@@ -1,5 +1,7 @@
 package io.nugulticket.ticket.dto.response;
 
+import io.nugulticket.seat.entity.Seat;
+import io.nugulticket.seat.enums.SeatType;
 import io.nugulticket.ticket.entity.Ticket;
 import lombok.Getter;
 
@@ -13,6 +15,9 @@ public class TicketReservedResponse {
     private LocalDateTime purchaseDate;
     private LocalDate startDate;
     private LocalDate endDate;
+    private String seatNumber;
+    private int seatPrice;
+    private SeatType seatType;
     private String qrCode;
 
     public TicketReservedResponse(Ticket ticket) {
@@ -22,5 +27,14 @@ public class TicketReservedResponse {
         this.eventTitle = ticket.getEvent().getTitle();
         this.startDate = ticket.getEvent().getStartDate();
         this.endDate = ticket.getEvent().getEndDate();
+
+        Seat seat = ticket.getSeat();
+        if(seat != null) {
+            this.seatNumber = seat.getSeatNumber();
+            this.seatPrice = seat.getPrice();
+            this.seatType = seat.getSeatType();
+        }
     }
+
+
 }
