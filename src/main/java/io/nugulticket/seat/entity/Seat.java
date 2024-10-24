@@ -1,6 +1,5 @@
 package io.nugulticket.seat.entity;
 
-import io.nugulticket.event.entity.Event;
 import io.nugulticket.eventtime.entity.EventTime;
 import io.nugulticket.seat.enums.SeatType;
 import jakarta.persistence.*;
@@ -9,8 +8,8 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @Entity
-@Table(name = "seat")
 @NoArgsConstructor
+@Table(name = "seat")
 public class Seat {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

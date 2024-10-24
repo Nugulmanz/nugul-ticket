@@ -19,22 +19,28 @@ public class SeatService {
     private final SeatRepository seatRepository;
 
     @Transactional
-    public List<Seat> creatSeat(EventTime eventTime, int price, int vipSeatSize, int rSeatSize, int aSeatSize) {
-        List<Seat> seats = new ArrayList<>(vipSeatSize + rSeatSize + aSeatSize);
+    public List<Seat> creatSeat(EventTime eventTime, int price, int vipSeatSize, int rSeatSize, int sSeatSize, int aSeatSize) {
+        List<Seat> seats = new ArrayList<>(vipSeatSize + rSeatSize + sSeatSize + aSeatSize);
+        int offset = 0;
 
-        for (int i = 0; i < vipSeatSize; i++) {
-            seats.add(new Seat(eventTime, Integer.toString(i + 1), price, SeatType.VIP));
-        }
+        addSeat(seats, eventTime, offset, price, vipSeatSize, SeatType.VIP);
+        offset += vipSeatSize;
 
-        for (int i = 0; i < rSeatSize; i++) {
-            seats.add(new Seat(eventTime, Integer.toString(vipSeatSize + i + 1), price, SeatType.R));
-        }
+        addSeat(seats, eventTime, offset, price, vipSeatSize, SeatType.R);
+        offset += rSeatSize;
 
-        for (int i = 0; i < aSeatSize; i++) {
-            seats.add(new Seat(eventTime, Integer.toString(vipSeatSize + rSeatSize + i + 1), price, SeatType.A));
-        }
+        addSeat(seats, eventTime, offset, price, vipSeatSize, SeatType.S);
+        offset += sSeatSize;
+
+        addSeat(seats, eventTime, offset, price, vipSeatSize, SeatType.A);
 
         return seatRepository.saveAll(seats);
+    }
+
+    private void addSeat(List<Seat> seats, EventTime eventTime, int offset, int price, int seatSize, SeatType seatType) {
+        for(int i = 0; i < seatSize; ++i) {
+            seats.add(new Seat(eventTime, Integer.toString(offset + i + 1), price,seatType));
+        }
     }
 
     public Seat findSeatById(Long id) {

@@ -1,6 +1,8 @@
 package io.nugulticket.event.service;
 
 import io.nugulticket.common.AuthUser;
+import io.nugulticket.event.dto.CalenderEventResponse;
+import io.nugulticket.event.dto.EventSimpleResponse;
 import io.nugulticket.common.apipayload.status.ErrorStatus;
 import io.nugulticket.common.exception.ApiException;
 import io.nugulticket.event.dto.createEvent.CreateEventRequest;
@@ -17,10 +19,12 @@ import io.nugulticket.user.enums.UserRole;
 import io.nugulticket.user.service.UserService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.Time;
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
@@ -90,7 +94,7 @@ public class EventService {
         Event event = eventRepository.findById(eventId)
                 .orElseThrow(() -> new ApiException(ErrorStatus.EVENT_NOT_FOUND));
 
-        event.setIs_deleted(true);
+        event.deleteEvent();
 
         eventRepository.save(event);
     }
@@ -120,5 +124,19 @@ public class EventService {
 
     public List<Event> getEventFromUserId(Long userId) {
         return eventRepository.findByUser_Id(userId);
+    }
+
+    public CalenderEventResponse calenderEvents(Integer year, Integer month) {
+        LocalDate beginDate = LocalDate.of(year, month, 1);
+        LocalDate endDate = LocalDate.of(year, month, beginDate.lengthOfMonth());
+
+        List<Event> events = eventRepository.findByBetweenTwoDate(beginDate, endDate);
+
+        List<EventSimpleResponse> simpleResponses = events.stream().map(EventSimpleResponse::of).toList();
+        return CalenderEventResponse.of(simpleResponses);
+    }
+
+    public Page<Event> getEventsFromKeywords(String keyword, LocalDate eventDate, String place, String category, Pageable pageable) {
+        return eventRepository.findByKeywords(keyword, eventDate, place, category, pageable);
     }
 }
