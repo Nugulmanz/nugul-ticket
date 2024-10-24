@@ -56,6 +56,20 @@ public class User extends Timestamped {
         this.loginType = loginType;
     }
 
+    public void updateUser(String nickname, String address) {
+        this.nickname = nickname;
+        this.address = address;
+    }
+
+    public void changePassword(String password) {
+        this.password = password;
+    }
+
+    public void changeUserRole(UserRole userRole) {
+        this.userRole = userRole;
+    }
+
+
     public void deleteAccount(){
         this.deletedAt = LocalDateTime.now();
     }
