@@ -3,11 +3,13 @@ package io.nugulticket.eventtime.entity;
 import io.nugulticket.event.entity.Event;
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
 @Getter
 @Entity
+@NoArgsConstructor
 @Table(name = "event_time")
 public class EventTime {
     @Id
@@ -24,4 +26,10 @@ public class EventTime {
 
     @Column(name = "remaining_seat", nullable = false)
     private int remainingSeat;
+
+    public EventTime(Event event, LocalDateTime dateTime, int remainingSeat) {
+        this.event = event;
+        this.dateTime = dateTime;
+        this.remainingSeat = remainingSeat;
+    }
 }
