@@ -47,7 +47,7 @@ public class TicketService {
     public CreateTicketResponse createTicket(CreateTicketRequest reqDto, Long userId) {
         Seat seat = seatService.findSeatById(reqDto.getSeatId()); // 락 필요
         if(seat.isReserved()){
-            throw new IllegalArgumentException("이미 예약된 좌석입니다.");
+            throw new IllegalArgumentException("이미 예약된 좌석입니다."); // res에 메세지 보이지 않음
         }
         // 결제 기능 구현 필요
 
@@ -56,6 +56,7 @@ public class TicketService {
         String qrCode = createQRCode();
         Ticket ticket = new Ticket();
         ticket.createTicket(event, seat, userId, qrCode);
+        seat.seatReserved();
         ticketRepository.save(ticket);
 
         CreateTicketResponse resDto = new CreateTicketResponse(seat, event, ticket, userId);

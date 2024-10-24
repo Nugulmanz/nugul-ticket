@@ -63,7 +63,7 @@ public class Ticket {
         this.qrCode = qrCode;
         this.purchaseDate = LocalDateTime.now();
         this.buyerId = buyerId;
-        this.status=TicketStatus.AUCTION;
+        this.status=TicketStatus.RESERVED;
 
     }
 }

@@ -33,4 +33,8 @@ public class Seat {
     private SeatType seatType;
 
     private boolean isDelete=false;
+
+    public void seatReserved() {
+        this.isReserved = true;
+    }
 }
