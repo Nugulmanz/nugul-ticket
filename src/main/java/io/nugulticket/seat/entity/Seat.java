@@ -36,6 +36,10 @@ public class Seat {
 
     private boolean isDelete=false;
 
+    public void seatReserved() {
+        this.isReserved = true;
+    }
+
     public Seat(EventTime eventTime, String seatNumber, int price, SeatType seatType) {
         this.eventTime = eventTime;
         this.seatNumber = seatNumber;

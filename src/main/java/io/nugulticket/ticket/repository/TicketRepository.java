@@ -9,6 +9,12 @@ import java.util.List;
 import java.util.Optional;
 
 public interface TicketRepository extends JpaRepository<Ticket, Long> {
+
+    List<Ticket> findAllByStatusAndUser_Id(TicketStatus status, Long buyerId);
+
+    Optional<Ticket> findByUser_IdAndTicketId(Long userId, Long ticketId);
+
+    Optional<Ticket> findByUser_IdAndTicketIdAndEvent_EventId(Long userId, Long ticketId, Long eventId);
     List<Ticket> findAllByStatusAndBuyerId(TicketStatus status, Long buyerId);
     /**
      * 해당 유저( buyerId )가 구매한 Ticket중에 status가 동일한 상태인 Ticket에 대해

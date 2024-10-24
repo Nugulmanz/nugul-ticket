@@ -20,7 +20,7 @@ public class TicketTransferApplyResponse {
     public static TicketTransferApplyResponse of(TicketTransfer ticketTransfer) {
         return new TicketTransferApplyResponse(
                 ticketTransfer.getTicket().getTicketId(),
-                ticketTransfer.getTicket().getBuyerId(),
+                ticketTransfer.getTicket().getUser().getId(),
                 ticketTransfer.getId(),
                 ticketTransfer.getPrice(),
                 ticketTransfer.getTransferAt()
