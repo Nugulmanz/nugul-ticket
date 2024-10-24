@@ -26,7 +26,9 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
     @Query("select t from Ticket t " +
             "join fetch t.event e " +
             "join fetch t.seat s " +
-            "where t.status = :status and t.buyerId = :buyerId")
+            "join fetch t.user u " +
+//            "join fetch s.eventTime et " +
+            "where t.status = :status and t.user.id = :buyerId")
     List<Ticket> findAllEqualParamIdJoinFetchSeatAndEvent(String status, Long buyerId);
 
     /**
