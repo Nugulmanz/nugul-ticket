@@ -1,5 +1,6 @@
 package io.nugulticket.event.service;
 
+import io.nugulticket.common.AuthUser;
 import io.nugulticket.event.dto.createEvent.CreateEventRequest;
 import io.nugulticket.event.dto.createEvent.CreateEventResponse;
 import io.nugulticket.event.dto.getAllEvent.GetAllEventResponse;
@@ -29,13 +30,13 @@ public class EventService {
     private final EventRepository eventRepository;
     private final EventTimeService eventTimeService;
 
-    public CreateEventResponse createEvent(Long userId, CreateEventRequest eventRequest) {
+    public CreateEventResponse createEvent(AuthUser authUser, CreateEventRequest eventRequest) {
         int price = 140000;
         int vipSeatCount = 20;
         int rSeatCount = 20;
         int aSeatCount = 20;
 
-        User user = userService.getUser(userId);
+        User user = userService.getUser(authUser.getId());
 
         Event event = new Event(user,eventRequest);
 
@@ -54,9 +55,9 @@ public class EventService {
     }
 
     @Transactional
-    public UpdateEventResponse updateEvent(Long userId, Long eventId, UpdateEventRequest eventRequest) {
+    public UpdateEventResponse updateEvent(AuthUser authUser, Long eventId, UpdateEventRequest eventRequest) {
 
-        User user = userService.getUser(userId);
+        User user = userService.getUser(authUser.getId());
 
         if (!user.getUserRole().equals(UserRole.SELLER)) {
             throw new RuntimeException("수정 권한이 없습니다. SELLER 권한이 필요합니다.");
@@ -76,9 +77,9 @@ public class EventService {
     }
 
     @Transactional
-    public void deleteEvent(Long adminId, Long eventId) {
+    public void deleteEvent(AuthUser authUser, Long eventId) {
 
-        User adminUser = userService.getUser(adminId);
+        User adminUser = userService.getUser(authUser.getId());
 
         if (!adminUser.getUserRole().equals(UserRole.ADMIN)) {
             throw new RuntimeException("삭제 권한이 없습니다. ADMIN 권한이 필요합니다.");
