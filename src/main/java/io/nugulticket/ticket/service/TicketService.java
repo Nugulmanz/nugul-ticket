@@ -17,9 +17,12 @@ import io.nugulticket.user.entity.User;
 import io.nugulticket.user.service.UserService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
@@ -57,7 +60,7 @@ public class TicketService {
      * @return 해당 구매자가 구매한 티켓 중 해당 상태인 티켓 리스트
      */
     public List<Ticket> getAllTicketJoinFetchEventSeat(TicketStatus status, Long userId) {
-        return ticketRepository.findAllEqualParamIdJoinFetchSeatAndEvent(status, userId);
+        return ticketRepository.findAllEqualParamIdJoinFetchSeatAndEvent(String.valueOf(status), userId);
     }
     public List<Ticket> findAllTicketByUserAndStatus(TicketStatus status, Long userId) {
         return ticketRepository.findAllByStatusAndUser_Id(status, userId);
@@ -102,5 +105,9 @@ public class TicketService {
 
     private String createQRCode(){
         return UUID.randomUUID().toString();
+    }
+
+    public Page<Ticket> getTicketsFromKeywords(String keyword, LocalDate eventDate, Pageable pageable) {
+        return ticketRepository.findByKeywords(keyword, eventDate, pageable);
     }
 }
