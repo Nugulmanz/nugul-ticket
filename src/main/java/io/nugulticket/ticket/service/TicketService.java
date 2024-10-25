@@ -1,6 +1,8 @@
 package io.nugulticket.ticket.service;
 
 import io.nugulticket.common.AuthUser;
+import io.nugulticket.common.apipayload.status.ErrorStatus;
+import io.nugulticket.common.exception.ApiException;
 import io.nugulticket.event.entity.Event;
 import io.nugulticket.event.service.EventService;
 import io.nugulticket.seat.entity.Seat;
@@ -65,10 +67,10 @@ public class TicketService {
     }
 
     @Transactional
-    public CreateTicketResponse createTicket(CreateTicketRequest reqDto, Long userId) {
+    public CreateTicketResponse createTicket(CreateTicketRequest reqDto, AuthUser authUser) {
         Seat seat = seatService.findSeatById(reqDto.getSeatId()); // 락 필요
         if(seat.isReserved()){
-            throw new IllegalArgumentException("이미 예약된 좌석입니다."); // res에 메세지 보이지 않음
+            throw new ApiException(ErrorStatus._ALREADY_RESERVED);
         }
         // 결제 기능 구현 필요
 
@@ -76,18 +78,18 @@ public class TicketService {
         Event event = eventService.getEventFromId(eventId);
         String qrCode = createQRCode();
         Ticket ticket = new Ticket();
-        User user = userService.getUser(userId);
+        User user = userService.getUser(authUser.getId());
         ticket.createTicket(event, seat, user, qrCode);
         seat.seatReserved();
         ticketRepository.save(ticket);
 
-        CreateTicketResponse resDto = new CreateTicketResponse(seat, event, ticket, userId);
+        CreateTicketResponse resDto = new CreateTicketResponse(seat, event, ticket, authUser.getId());
         return resDto;
     }
 
     public RefundTicketResponse refundTicket(Long ticketId, AuthUser authUser) {
         Ticket ticket = ticketRepository.findByUser_IdAndTicketId(authUser.getId(), ticketId)
-                .orElseThrow(IllegalArgumentException::new);
+                .orElseThrow(()-> new ApiException(ErrorStatus._NOT_FOUND_TICKET));
         ticket.requestCancel();
         ticketRepository.save(ticket);
 

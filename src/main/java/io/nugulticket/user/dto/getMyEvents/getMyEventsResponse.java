@@ -1,4 +1,4 @@
-package io.nugulticket.dashboard.dto.getMyEvents;
+package io.nugulticket.user.dto.getMyEvents;
 
 import io.nugulticket.event.entity.Event;
 import lombok.Getter;

@@ -1,4 +1,4 @@
-package io.nugulticket.dashboard.dto.acceptRefund;
+package io.nugulticket.user.dto.acceptRefund;
 
 import io.nugulticket.ticket.entity.Ticket;
 import io.nugulticket.ticket.enums.TicketStatus;

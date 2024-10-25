@@ -1,4 +1,4 @@
-package io.nugulticket.dashboard.dto.authorityAccept;
+package io.nugulticket.user.dto.authorityAccept;
 
 import io.nugulticket.user.enums.UserRole;
 import lombok.Getter;
