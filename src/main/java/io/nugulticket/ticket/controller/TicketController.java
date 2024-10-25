@@ -22,13 +22,16 @@ public class TicketController {
     @PatchMapping("/{ticketId}/refund")
     public ResponseEntity<RefundTicketResponse> refundTicket(@PathVariable Long ticketId,
                              @AuthenticationPrincipal AuthUser authUser) {
+
         RefundTicketResponse resDto = ticketService.refundTicket(ticketId, authUser);
+
         return ResponseEntity.ok().body(resDto);
     }
 
     @PostMapping
     public ApiResponse<CreateTicketResponse> createTicket(@RequestBody CreateTicketRequest reqDto,
                                                           @RequestParam Long userId) {
+
         return ApiResponse.ok(ticketService.createTicket(reqDto, userId));
     }
 }
