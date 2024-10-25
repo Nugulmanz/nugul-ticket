@@ -40,7 +40,7 @@ public class Event extends Timestamped {
     private Double rating;
     private String place;
     private Boolean bookAble;
-    @Setter
+
     private Boolean is_deleted = false;
 
 
@@ -91,5 +91,8 @@ public class Event extends Timestamped {
         }
     }
 
+    public void deleteEvent(){
+        this.is_deleted = true;
+    }
 
 }
