@@ -44,6 +44,10 @@ public class EventService {
 
         User user = userService.getUser(authUser.getId());
 
+        if (!user.getUserRole().equals(UserRole.SELLER)) {
+            throw new ApiException(ErrorStatus.SELLER_ROLE_REQUIRED);
+        }
+
         Event event = new Event(user,eventRequest);
 
         Event savedEvent = eventRepository.save(event);
