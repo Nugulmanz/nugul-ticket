@@ -21,8 +21,7 @@ import java.time.LocalDateTime;
 //@SQLDelete(sql = "UPDATE event SET is_deleted = true WHERE event_id = ?")
 //@OnDelete( action = OnDeleteAction.CASCADE)
 @Table(name = "event", indexes = {
-        @Index(name = "idx_start_date", columnList = "startDate"),
-        @Index(name = "idx_end_date", columnList = "endDate"),
+        @Index(name = "idx_event_date", columnList = "startDate, endDate"),
         @Index(name = "idx_place", columnList = "place"),
         @Index(name = "idx_category", columnList = "category"),
         @Index(name = "idx_title", columnList = "title")
