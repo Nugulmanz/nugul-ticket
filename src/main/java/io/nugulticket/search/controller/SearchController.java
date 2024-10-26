@@ -2,7 +2,7 @@ package io.nugulticket.search.controller;
 
 import io.nugulticket.common.apipayload.ApiResponse;
 import io.nugulticket.search.dto.searchEvents.SearchEventsResponse;
-import io.nugulticket.search.dto.searchTransferableTickets.searchTransferableTicketsResponse;
+import io.nugulticket.search.dto.searchTickets.SearchTicketsResponse;
 import io.nugulticket.search.service.SearchService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -33,12 +33,13 @@ public class SearchController {
 
     //검색하는 공연의 양도 티켓 검색
     @GetMapping("/v1/tickets")
-    public ApiResponse<Page<searchTransferableTicketsResponse>> searchTransferableTickets (@RequestParam(defaultValue = "1", required = false) int page,
-                                                                                           @RequestParam(defaultValue = "10", required = false) int size,
-                                                                                           @RequestParam(required = false) String keyword,
-                                                                                           @RequestParam(required = false) LocalDate eventDate) {
+    public ApiResponse<Page<SearchTicketsResponse>> searchTransferableTickets (@RequestParam(defaultValue = "1", required = false) int page,
+                                                                                                  @RequestParam(defaultValue = "10", required = false) int size,
+                                                                                                  @RequestParam(required = false) String keyword,
+                                                                                                  @RequestParam(required = false) LocalDate eventDate) {
         return ApiResponse.ok(searchService.searchTransferableTickets(page, size, keyword, eventDate));
     }
+
 
 
 
