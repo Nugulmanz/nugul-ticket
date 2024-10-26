@@ -7,3 +7,6 @@ spring:
 jwt:
   secret:
     key: ${JWT_SECRET_KEY}
+    
+client:
+  id: ${CLIENT_ID}

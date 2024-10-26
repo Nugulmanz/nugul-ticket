@@ -23,12 +23,11 @@ public class User extends Timestamped {
 
     private String password;
 
-    @Column(nullable = false)
     private String username;
 
     private String nickname;
 
-    @Column(name = "phone_number", nullable = false)
+    @Column(name = "phone_number")
     private String phoneNumber;
 
     private String address;
@@ -42,9 +41,62 @@ public class User extends Timestamped {
     private LoginType loginType;
 
     @Column(name = "social_id")
-    private String socialId;
+    private Long socialId;
 
-    @Column(name = "deleted_at", nullable = false)
+    @Column(name = "deleted_at")
     private LocalDateTime deletedAt;
+
+    public User(String email, String password, String username, String nickname, String phoneNumber, UserRole userRole, LoginType loginType) {
+        this.email = email;
+        this.password = password;
+        this.username = username;
+        this.nickname = nickname;
+        this.phoneNumber = phoneNumber;
+        this.userRole = userRole;
+        this.loginType = loginType;
+    }
+
+    public void updateUser(String nickname, String address) {
+        this.nickname = nickname;
+        this.address = address;
+    }
+
+    public void changePassword(String password) {
+        this.password = password;
+    }
+
+    public void changeUserRole(UserRole userRole) {
+        this.userRole = userRole;
+    }
+
+
+    public void deleteAccount(){
+        this.deletedAt = LocalDateTime.now();
+    }
+
+    public User(String nickname, String kakaoEmail, Long socialId, String encodedPassword, UserRole userRole, LoginType loginType) {
+        this.nickname = nickname;
+        this.email = kakaoEmail;
+        this.socialId = socialId;
+        this.password = encodedPassword;
+        this.userRole = userRole;
+        this.loginType = loginType;
+    }
+
+    public User updateSocialIdAndLoginType(Long socialId, LoginType loginType) {
+        this.socialId = socialId;
+        this.loginType = loginType;
+        return this;
+    }
+
+    public void updateUserInfo(String username, String phoneNumber, String address) {
+        this.username = username;
+        this.phoneNumber = phoneNumber;
+        this.address = address;
+    }
+
+    public void becomeSeller(){
+        this.userRole = UserRole.SELLER;
+    }
 
 }
