@@ -7,13 +7,8 @@ import io.nugulticket.user.entity.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
-import org.hibernate.annotations.SQLDelete;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -48,8 +43,11 @@ public class Event extends Timestamped {
 
     private Boolean is_deleted = false;
 
+    // S3 이미지 url
+    private String imageUrl;
 
-    public Event(User user, CreateEventRequest createEventRequest) {
+
+    public Event(User user, CreateEventRequest createEventRequest, String imageUrl) {
         this.user = user;
         this.category = createEventRequest.getCategory();
         this.title = createEventRequest.getTitle();
@@ -61,9 +59,10 @@ public class Event extends Timestamped {
         this.rating = createEventRequest.getRating();
         this.place = createEventRequest.getPlace();
         this.bookAble = createEventRequest.getBookAble();
+        this.imageUrl = imageUrl;
     }
 
-    public void updateEvent(UpdateEventRequest updateEventRequest) {
+    public void updateEvent(UpdateEventRequest updateEventRequest, String imageUrl) {
         if (updateEventRequest.getCategory() != null) {
             this.category = updateEventRequest.getCategory();
         }
@@ -93,6 +92,9 @@ public class Event extends Timestamped {
         }
         if (updateEventRequest.getBookAble() != null) {
             this.bookAble = updateEventRequest.getBookAble();
+        }
+        if (updateEventRequest.getImage() != null) {
+            this.imageUrl = imageUrl;
         }
     }
 

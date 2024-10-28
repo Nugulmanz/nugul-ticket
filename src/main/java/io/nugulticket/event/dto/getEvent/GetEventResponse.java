@@ -17,6 +17,7 @@ public class GetEventResponse {
     private String viewRating;
     private Double rating;
     private Boolean bookAble;
+    private String imageUrl;
 
     public GetEventResponse(Event event){
         this.category = event.getCategory();
@@ -29,5 +30,6 @@ public class GetEventResponse {
         this.rating = event.getRating();
         this.place = event.getPlace();
         this.bookAble = event.getBookAble();
+        this.imageUrl = event.getImageUrl();
     }
 }

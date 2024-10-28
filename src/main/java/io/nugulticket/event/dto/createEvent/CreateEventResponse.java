@@ -24,6 +24,7 @@ public class CreateEventResponse {
     private Boolean bookAble;
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
+    private String imageUrl;
 
     public CreateEventResponse(Event event){
         this.category = event.getCategory();
@@ -38,5 +39,6 @@ public class CreateEventResponse {
         this.bookAble = event.getBookAble();
         this.createdAt = event.getCreatedAt();
         this.modifiedAt = event.getModifiedAt();
+        this.imageUrl = event.getImageUrl();
     }
 }

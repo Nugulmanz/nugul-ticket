@@ -55,6 +55,9 @@ dependencies {
     // Spring Security OAuth2 Client (카카오 소셜 로그인 구현을 위해 필요)
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
 
+    // AWS S3
+    implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
+
 }
 
 tasks.named('test') {
