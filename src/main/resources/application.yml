@@ -10,3 +10,15 @@ jwt:
     
 client:
   id: ${CLIENT_ID}
+
+cloud:
+  aws:
+    s3:
+      bucket: nugulticket
+      credentials:
+        access-key: ${S3_ACCESS_KEY}
+        secret-key: ${S3_SECRET_KEY}
+    region:
+      static: ${S3_REGION}
+    stack:
+      auto: false

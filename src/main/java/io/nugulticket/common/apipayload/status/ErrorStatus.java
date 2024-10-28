@@ -37,9 +37,13 @@ public enum ErrorStatus implements BaseCode {
     // event
     SELLER_ROLE_REQUIRED(HttpStatus.FORBIDDEN, "403", "SELLER 권한이 필요합니다."),
     EVENT_NOT_FOUND(HttpStatus.NOT_FOUND, "404","해당 공연을 찾을 수 없습니다."),
-    ADMIN_ROLE_REQUIRED(HttpStatus.FORBIDDEN, "403", "ADMIN 권한이 필요합니다.");
+    ADMIN_ROLE_REQUIRED(HttpStatus.FORBIDDEN, "403", "ADMIN 권한이 필요합니다."),
 
-
+    // image
+    _FILE_UPLOAD_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "500", "이미지 업로드에 실패하였습니다."),
+    _EMPTY_FILE(HttpStatus.NOT_FOUND, "404", "이미지 파일이 존재하지 않습니다."),
+    _FILE_SIZE_EXCEEDED(HttpStatus.BAD_REQUEST, "400", "파일 크기가 허용된 제한을 초과했습니다."),
+    _UNSUPPORTED_FILE_FORMAT(HttpStatus.BAD_REQUEST, "400", "지원하지 않는 파일 형식입니다.");
 
 
     private HttpStatus httpStatus;
