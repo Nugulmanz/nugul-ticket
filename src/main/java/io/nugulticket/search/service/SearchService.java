@@ -4,6 +4,8 @@ import io.nugulticket.event.entity.Event;
 import io.nugulticket.event.service.EventService;
 import io.nugulticket.search.dto.searchEvents.SearchEventsResponse;
 import io.nugulticket.search.dto.searchTickets.SearchTicketsResponse;
+import io.nugulticket.search.entity.EventDocument;
+import io.nugulticket.search.repository.EventSearchRepository;
 import io.nugulticket.ticket.entity.Ticket;
 import io.nugulticket.ticket.service.TicketService;
 import lombok.RequiredArgsConstructor;
@@ -23,8 +25,29 @@ public class SearchService {
     private final EventService eventService;
     private final TicketService ticketService;
 
+    private final EventSearchRepository eventSearchRepository;
+
+
+//    @Transactional
+//    public Page<SearchEventsResponse> searchEvents(int page, int size, String keyword, LocalDate eventDate, String place, String category) {
+//        // StopWatch 객체 생성
+//        StopWatch stopWatch = new StopWatch();
+//        // 측정 시작
+//        stopWatch.start();
+//
+//        Pageable pageable = PageRequest.of(page-1, size);
+//        Page<Event> events = eventService.getEventsFromKeywords(keyword, eventDate, place, category, pageable);
+//
+//        // 측정 중단
+//        stopWatch.stop();
+//        // 소요 시간 출력
+//        System.out.println(stopWatch.prettyPrint());
+//
+//        return events.map(SearchEventsResponse::of);
+//    }
+
     /**
-     * 공연제목 키워드, 공연날짜, 공연장소, 카테고리로 공연을 검색하는 메서드
+     * 공연제목 키워드, 공연날짜, 공연장소, 카테고리로 공연을 검색하는 메서드 (엘라스틱 서치)
      * @param page
      * @param size
      * @param keyword
@@ -33,23 +56,12 @@ public class SearchService {
      * @param category
      * @return Pageable한 SearchEventsResponse 반환
      */
-    @Transactional
     public Page<SearchEventsResponse> searchEvents(int page, int size, String keyword, LocalDate eventDate, String place, String category) {
-        // StopWatch 객체 생성
-        StopWatch stopWatch = new StopWatch();
-        // 측정 시작
-        stopWatch.start();
-
         Pageable pageable = PageRequest.of(page-1, size);
-        Page<Event> events = eventService.getEventsFromKeywords(keyword, eventDate, place, category, pageable);
-
-        // 측정 중단
-        stopWatch.stop();
-        // 소요 시간 출력
-        System.out.println(stopWatch.prettyPrint());
-
+        Page<Event> events = eventSearchRepository.findByKeywords(keyword, eventDate, place, category, pageable);
         return events.map(SearchEventsResponse::of);
     }
+
 
 
     /**
