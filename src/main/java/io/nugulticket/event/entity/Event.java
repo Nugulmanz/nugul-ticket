@@ -102,4 +102,21 @@ public class Event extends Timestamped {
         this.is_deleted = true;
     }
 
+
+    public Event(Long eventId, String title, String description, String category, LocalDate startDate, LocalDate endDate,
+                 String runtime, String viewRating, Double rating, String place, Boolean bookAble, String dummyImageUrl) {
+        this.eventId = eventId;
+        this.title= title;
+        this.description = description;
+        this.category = category;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.runtime = runtime;
+        this.viewRating = viewRating;
+        this.rating = rating;
+        this.place = place;
+        this.bookAble = bookAble;
+        this.imageUrl = dummyImageUrl;
+    }
+
 }
