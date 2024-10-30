@@ -1,4 +1,4 @@
-package io.nugulticket.config;
+package io.nugulticket.config.payment;
 
 import net.minidev.json.JSONObject;
 import org.springframework.stereotype.Component;
@@ -19,24 +19,25 @@ public class CommunicationPaymentUtil {
                 .build();
     }
 
-    private Map<String, Object> getBaseBody(int amount, String orderId) {
+    private Map<String, Object> getBaseBody(int amount, String orderId, long userId) {
         Map<String, Object> body = new HashMap<>();
         body.put("amount", amount);
         body.put("orderId", orderId);
+        body.put("userId", userId);
 
         return body;
     }
 
     // 1. API 호출하기
-    public JSONObject preProcess(int amount, String orderId) {
-        Map<String, Object> bodyMap = getBaseBody(amount, orderId);
+    public JSONObject preProcess(int amount, String orderId, long userId) {
+        Map<String, Object> bodyMap = getBaseBody(amount, orderId, userId);
 
         return requestProcess(bodyMap, PREPROCESS_PATH);
     }
 
     // 1. API 호출하기
-    public JSONObject postProcess(int amount, String orderId, String paymentId) {
-        Map<String, Object> bodyMap = getBaseBody(amount, orderId);
+    public JSONObject postProcess(int amount, String orderId, String paymentId, long userId) {
+        Map<String, Object> bodyMap = getBaseBody(amount, orderId, userId);
         bodyMap.put("paymentId", paymentId);
 
         return requestProcess(bodyMap, POSTPROCESS_PATH);

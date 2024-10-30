@@ -39,8 +39,18 @@
       currency: "KRW",
       value: [[${amount}]],
     };
+    const userId = [[${userId}]];       // 주문한 유저 아이디
+    const orderId = [[${orderId}]];     // 주문 아이디
+    const orderType = [[${orderType}]]; // 주문 종류
+    const orderName = [[${orderName}]];   // 상품 이름
+    const email = [[${email}]];         // 이메일
 
     let selectedPaymentMethod = null;
+
+    localStorage.setItem('userId', userId);
+    localStorage.setItem('orderName', orderName);
+    localStorage.setItem('email', email);
+    localStorage.setItem('orderType', orderType);
 
     function selectPaymentMethod(method) {
       if (selectedPaymentMethod != null) {
@@ -78,8 +88,8 @@
           await payment.requestPayment({
             method: "CARD", // 카드 및 간편결제
             amount,
-            orderId: generateRandomString(),
-            orderName: "토스 티셔츠 외 2건",
+              orderId,
+              orderName,
             successUrl: window.location.origin + "/payment/success.html", // 결제 요청이 성공하면 리다이렉트되는 URL
             failUrl: window.location.origin + "/fail.html", // 결제 요청이 실패하면 리다이렉트되는 URL
             customerEmail: "customer123@gmail.com",
@@ -96,8 +106,8 @@
           await payment.requestPayment({
             method: "TRANSFER", // 계좌이체 결제
             amount,
-            orderId: generateRandomString(),
-            orderName: "토스 티셔츠 외 2건",
+              orderId,
+              orderName,
             successUrl: window.location.origin + "/payment/success.html",
             failUrl: window.location.origin + "/fail.html",
             customerEmail: "customer123@gmail.com",
@@ -114,8 +124,8 @@
           await payment.requestPayment({
             method: "VIRTUAL_ACCOUNT", // 가상계좌 결제
             amount,
-            orderId: generateRandomString(),
-            orderName: "토스 티셔츠 외 2건",
+              orderId,
+              orderName,
             successUrl: window.location.origin + "/payment/success.html",
             failUrl: window.location.origin + "/fail.html",
             customerEmail: "customer123@gmail.com",
@@ -133,8 +143,8 @@
           await payment.requestPayment({
             method: "MOBILE_PHONE", // 휴대폰 결제
             amount,
-            orderId: generateRandomString(),
-            orderName: "토스 티셔츠 외 2건",
+              orderId,
+              orderName,
             successUrl: window.location.origin + "/payment/success.html",
             failUrl: window.location.origin + "/fail.html",
             customerEmail: "customer123@gmail.com",
@@ -145,8 +155,8 @@
           await payment.requestPayment({
             method: "CULTURE_GIFT_CERTIFICATE", // 문화상품권 결제
             amount,
-            orderId: generateRandomString(),
-            orderName: "토스 티셔츠 외 2건",
+              orderId,
+              orderName,
             successUrl: window.location.origin + "/payment/success.html",
             failUrl: window.location.origin + "/fail.html",
             customerEmail: "customer123@gmail.com",
@@ -160,8 +170,8 @@
               value: 100,
               currency: "USD",
             },
-            orderId: generateRandomString(),
-            orderName: "토스 티셔츠 외 2건",
+              orderId,
+            orderName,
             successUrl: window.location.origin + "/payment/success.html",
             failUrl: window.location.origin + "/fail.html",
             customerEmail: "customer123@gmail.com",
