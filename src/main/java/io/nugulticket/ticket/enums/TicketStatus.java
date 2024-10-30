@@ -5,7 +5,7 @@ import io.nugulticket.user.enums.UserRole;
 import java.util.Arrays;
 
 public enum TicketStatus {
-    RESERVED, CANCELLED, WAITTRANSFER, TRANSFERRED, AUCTION,COMPLETE, WAIT_CANCEL;
+    RESERVED, CANCELLED, WAITTRANSFER, TRANSFERRED, WAITING_RESERVED, AUCTION,COMPLETE, WAIT_CANCEL;
 
 
     public static TicketStatus of(String status) {

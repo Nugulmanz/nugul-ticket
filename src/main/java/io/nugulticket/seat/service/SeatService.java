@@ -26,13 +26,13 @@ public class SeatService {
         addSeat(seats, eventTime, offset, price, vipSeatSize, SeatType.VIP);
         offset += vipSeatSize;
 
-        addSeat(seats, eventTime, offset, price, vipSeatSize, SeatType.R);
+        addSeat(seats, eventTime, offset, price, rSeatSize, SeatType.R);
         offset += rSeatSize;
 
-        addSeat(seats, eventTime, offset, price, vipSeatSize, SeatType.S);
+        addSeat(seats, eventTime, offset, price, sSeatSize, SeatType.S);
         offset += sSeatSize;
 
-        addSeat(seats, eventTime, offset, price, vipSeatSize, SeatType.A);
+        addSeat(seats, eventTime, offset, price, aSeatSize, SeatType.A);
 
         return seatRepository.saveAll(seats);
     }

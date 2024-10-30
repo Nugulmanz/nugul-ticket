@@ -37,7 +37,7 @@
 <script th:inline="javascript">
     const amount = {
       currency: "KRW",
-      value: 50000,
+      value: [[${amount}]],
     };
 
     let selectedPaymentMethod = null;
