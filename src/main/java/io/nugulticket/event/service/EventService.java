@@ -69,7 +69,7 @@ public class EventService {
         Event savedEvent = eventRepository.save(event);
 
         // Redis에 공연 이름과 ID 매핑
-        redisTemplate.opsForHash().put("eventId", savedEvent.getTitle(), savedEvent.getEventId());
+        redisTemplate.opsForHash().put("eventIdMap", savedEvent.getTitle(), savedEvent.getEventId().toString());
 
         eventTimeService.createEventTimes(event,
                 eventRequest.getStartDate(),
@@ -174,4 +174,9 @@ public class EventService {
     public Page<Event> getEventsFromKeywords(String keyword, LocalDate eventDate, String place, String category, Pageable pageable) {
         return eventRepository.findByKeywords(keyword, eventDate, place, category, pageable);
     }
+
+//    public Event SearchEventFromId(Long eventId) {
+//        return eventRepository.findById(eventId)
+//                .orElseThrow(() -> new ApiException(ErrorStatus.EVENT_NOT_FOUND));
+//    }
 }

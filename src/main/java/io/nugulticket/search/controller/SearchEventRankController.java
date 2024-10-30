@@ -16,9 +16,9 @@ public class SearchEventRankController {
     private final SearchEventRankService searchEventRankService;
 
 
-    @PostMapping("/events")
-    public ApiResponse<Map<String, Object>> addEvent(@RequestParam String eventTitle) {
-        Map<String, Object> response = searchEventRankService.addKeywordAndGetScore(eventTitle);
+    @PostMapping("/events/{eventId}")
+    public ApiResponse<Map<String, Object>> addEvent(@RequestParam String eventTitle, @PathVariable Long eventId) {
+        Map<String, Object> response = searchEventRankService.addKeywordAndGetScore(eventTitle,eventId);
         return ApiResponse.ok(response);
     }
 
