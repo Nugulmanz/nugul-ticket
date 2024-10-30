@@ -1,10 +1,14 @@
 package io.nugulticket.payment.dto.request;
 
-import lombok.Data;
+import lombok.Getter;
 
-@Data
+@Getter
 public class PaymentRequest {
     String paymentKey;
     String orderId;
     int amount;
+    long userId;
+    String orderName;
+    String email;
+    String orderType;
 };
