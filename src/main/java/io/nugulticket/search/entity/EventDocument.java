@@ -23,13 +23,35 @@ public class EventDocument {
     @Field(name = "category", type = FieldType.Text)
     private String category;
 
-    @Field(name = "keyword", type = FieldType.Text)
-    private String keyword;
+    @Field(name = "title", type = FieldType.Text)
+    private String title;
 
-    @Field(name = "eventDate", type = FieldType.Date, format = DateFormat.basic_date)
-    private LocalDate eventDate;
+    @Field(name = "description", type = FieldType.Text)
+    private String description;
+
+    @Field(name = "startDate", type = FieldType.Date, format = DateFormat.basic_date)
+    private LocalDate startDate;
+
+    @Field(name = "endDate", type = FieldType.Date, format = DateFormat.basic_date)
+    private LocalDate endDate;
+
+    @Field(name = "runtime", type = FieldType.Text)
+    private String runtime;
+
+    @Field(name = "viewRating", type = FieldType.Text)
+    private String viewRating;
+
+    @Field(name = "rating", type = FieldType.Double)
+    private Double rating;
 
     @Field(name = "place", type = FieldType.Text)
     private String place;
+
+    @Field(name = "bookAble", type = FieldType.Boolean)
+    private Boolean bookAble;
+
+    @Field(name = "imageUrl", type = FieldType.Text)
+    private String imageUrl;
+
 
 }
