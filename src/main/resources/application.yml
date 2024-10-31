@@ -7,11 +7,6 @@ spring:
     redis:
       port: 6379
       host: localhost
-  elasticsearch:
-    cluster-nodes: http://localhost:9200
-    cluster-name: docker-cluster
-    username: ${ES_USERNAME}
-    password: ${ES_PASSWORD}
 
 jwt:
   secret:
