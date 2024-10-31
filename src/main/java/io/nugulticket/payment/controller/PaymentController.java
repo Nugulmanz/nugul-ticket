@@ -1,9 +1,10 @@
 package io.nugulticket.payment.controller;
 
 
-import io.nugulticket.config.payment.CommunicationPaymentUtil;
-import io.nugulticket.config.payment.GenerateOrderIdUtil;
+import io.nugulticket.common.utils.payment.CommunicationPaymentUtil;
+import io.nugulticket.common.utils.payment.GenerateOrderIdUtil;
 import io.nugulticket.payment.dto.request.PaymentRequest;
+import io.nugulticket.ticket.dto.response.TicketNeedPaymentResponse;
 import lombok.RequiredArgsConstructor;
 import net.minidev.json.JSONObject;
 import org.springframework.http.ResponseEntity;
@@ -25,8 +26,8 @@ public class PaymentController {
     public ResponseEntity<JSONObject> confirmPayments(@RequestBody PaymentRequest paymentRequest) {
         System.out.println("들어왔어");
 
-        JSONObject jsonObject = communicationPaymentUtil.preProcess(paymentRequest.getAmount(), paymentRequest.getOrderId(), paymentRequest.getUserId());
-        JSONObject newjsonObject =communicationPaymentUtil.postProcess(paymentRequest.getAmount(), paymentRequest.getOrderId(), paymentRequest.getPaymentKey(), paymentRequest.getUserId());
+        JSONObject jsonObject = communicationPaymentUtil.preProcess(paymentRequest);
+        JSONObject newjsonObject =communicationPaymentUtil.postProcess(paymentRequest);
 
         int statusCode = newjsonObject.containsKey("error") ? 400 : 200;
         return ResponseEntity.status(statusCode).body(newjsonObject);
@@ -34,12 +35,17 @@ public class PaymentController {
 
     @RequestMapping(value = "/test", method = RequestMethod.GET)
     public String Test(Model model) {
-        model.addAttribute("userId", 1L);
-        model.addAttribute("amount", 500);
-        model.addAttribute("orderId", generateOrderIdUtil.generateOrderId());
-        model.addAttribute("orderType", "RESERVE");
-        model.addAttribute("orderName", "웃는 남자");
-        model.addAttribute("email", "a@naver.com");
+        TicketNeedPaymentResponse ticketNeedPaymentResponse = new TicketNeedPaymentResponse(
+                1L,
+                1L,
+                "RESERVE",
+                "웃는 남자",
+                "a@naver.com",
+                generateOrderIdUtil.generateOrderId(),
+                500
+        );
+
+        model.addAllAttributes(ticketNeedPaymentResponse.toMap());
 
         return "/payment/checkout";
     }

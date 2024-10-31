@@ -1,4 +1,4 @@
-package io.nugulticket.config.payment;
+package io.nugulticket.common.utils.payment;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.stereotype.Component;

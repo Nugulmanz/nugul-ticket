@@ -2,16 +2,15 @@ package io.nugulticket.ticket.controller;
 
 import io.nugulticket.common.AuthUser;
 import io.nugulticket.common.apipayload.ApiResponse;
-import io.nugulticket.ticket.dto.response.MyTransferTicketsResponse;
-import io.nugulticket.ticket.dto.response.TicketTransferApplyResponse;
-import io.nugulticket.ticket.dto.response.TicketTransferCancelResponse;
-import io.nugulticket.ticket.dto.response.TicketTransferResponse;
+import io.nugulticket.common.utils.payment.GenerateOrderIdUtil;
+import io.nugulticket.ticket.dto.response.*;
 import io.nugulticket.ticket.service.TicketTransferService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 /**
  * 양도 받은 티켓, 티켓 양도하기 / 신청과 같이 티켓 양도 기능 관련 컨트롤러
@@ -24,16 +23,13 @@ public class TicketTransferController {
 
     private final TicketTransferService ticketTransferService;
 
+
     @RequestMapping(value = "/{ticketId}/transfer/apply", method = RequestMethod.POST)
-    public String applyTransfer(@AuthenticationPrincipal AuthUser user, @PathVariable("ticketId") Long ticketId) {
+    public String applyTransfer(Model model, @AuthenticationPrincipal AuthUser user, @PathVariable("ticketId") Long ticketId) {
 
-        ticketTransferService.applyTransfer(user, ticketId);
-        return "/payment/checkout";
-    }
+        TicketNeedPaymentResponse ticketNeedPaymentResponse = ticketTransferService.applyTransferBeforePayment(user, ticketId);
+        model.addAllAttributes(ticketNeedPaymentResponse.toMap());
 
-    @RequestMapping(value = "/test", method = RequestMethod.GET)
-    public String Test(Model model) {
-        model.addAttribute("amount", 500);
         return "/payment/checkout";
     }
 

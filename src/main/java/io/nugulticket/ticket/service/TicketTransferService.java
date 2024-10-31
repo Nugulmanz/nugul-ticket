@@ -3,11 +3,9 @@ package io.nugulticket.ticket.service;
 import io.nugulticket.common.AuthUser;
 import io.nugulticket.common.apipayload.status.ErrorStatus;
 import io.nugulticket.common.exception.ApiException;
+import io.nugulticket.common.utils.payment.GenerateOrderIdUtil;
 import io.nugulticket.ticket.config.TicketUtil;
-import io.nugulticket.ticket.dto.response.MyTransferTicketsResponse;
-import io.nugulticket.ticket.dto.response.TicketTransferApplyResponse;
-import io.nugulticket.ticket.dto.response.TicketTransferCancelResponse;
-import io.nugulticket.ticket.dto.response.TicketTransferResponse;
+import io.nugulticket.ticket.dto.response.*;
 import io.nugulticket.ticket.entity.Ticket;
 import io.nugulticket.ticket.entity.TicketTransfer;
 import io.nugulticket.ticket.enums.TicketStatus;
@@ -27,7 +25,7 @@ public class TicketTransferService {
     private final TicketUtil ticketUtil;
     private final TicketService ticketService;
     private final TicketTransferRepository ticketTransferRepository;
-
+    private final GenerateOrderIdUtil generateOrderIdUtil;
     private final UserService userService;
 
     /**
@@ -36,8 +34,8 @@ public class TicketTransferService {
      * @return 양도 결과가 담긴 Dto객체
      */
     @Transactional
-    public TicketTransferApplyResponse applyTransfer(AuthUser users, Long ticketId) {
-        User user = userService.getUser(1L);
+    public TicketNeedPaymentResponse applyTransferBeforePayment(AuthUser users, Long ticketId) {
+        User user = userService.getUser(users.getId());
         Ticket ticket = ticketService.getTicket(ticketId);
 
         // 해당 티켓 상태가 양도 가능한 상태인지 확인
@@ -53,11 +51,10 @@ public class TicketTransferService {
         //ticket.changeStatus(TicketStatus.TRANSFERRED);
 
         // 티켓 양도 결과를 DB에 저장
-        TicketTransfer ticketTransfer = new TicketTransfer(ticket, user.getId());
-        TicketTransfer savedTicketTransfer = ticketTransferRepository.save(ticketTransfer);
+//        TicketTransfer ticketTransfer = new TicketTransfer(ticket, user.getId());
+//        TicketTransfer savedTicketTransfer = ticketTransferRepository.save(ticketTransfer);
 
-        return TicketTransferApplyResponse.of(savedTicketTransfer);
-
+        return TicketNeedPaymentResponse.of(ticket, users,"TRANSFER", generateOrderIdUtil.generateOrderId());
     }
 
     /**

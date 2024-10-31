@@ -11,4 +11,5 @@ public class PaymentRequest {
     String orderName;
     String email;
     String orderType;
+    String ticketId;
 };
