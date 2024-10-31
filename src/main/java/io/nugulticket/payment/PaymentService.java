@@ -21,7 +21,7 @@ public class PaymentService {
 
         switch(type) {
             case "ticket":
-//                ticketService.reserve(ticketId)
+//                ticketService.reserveTicket(ticketId)
                 break;
             case "transfer":
 //              ticketTransferService.success(ticketId)
@@ -39,7 +39,7 @@ public class PaymentService {
 
         switch(type) {
             case "ticket":
-//                ticketService.cancel(ticketId)
+//                ticketService.cancelTicket(ticketId)
                 break;
             case "transfer":
 //              ticketTransferService.failed(ticketId)

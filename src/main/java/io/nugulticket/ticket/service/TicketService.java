@@ -3,6 +3,7 @@ package io.nugulticket.ticket.service;
 import io.nugulticket.common.AuthUser;
 import io.nugulticket.common.apipayload.status.ErrorStatus;
 import io.nugulticket.common.exception.ApiException;
+import io.nugulticket.common.utils.payment.GenerateOrderIdUtil;
 import io.nugulticket.event.entity.Event;
 import io.nugulticket.event.service.EventService;
 import io.nugulticket.seat.entity.Seat;
@@ -10,6 +11,7 @@ import io.nugulticket.seat.service.SeatService;
 import io.nugulticket.ticket.dto.createTicket.CreateTicketRequest;
 import io.nugulticket.ticket.dto.createTicket.CreateTicketResponse;
 import io.nugulticket.ticket.dto.refundTicket.RefundTicketResponse;
+import io.nugulticket.ticket.dto.response.TicketNeedPaymentResponse;
 import io.nugulticket.ticket.entity.Ticket;
 import io.nugulticket.ticket.enums.TicketStatus;
 import io.nugulticket.ticket.repository.TicketRepository;
@@ -33,6 +35,7 @@ public class TicketService {
     private final SeatService seatService;
     private final EventService eventService;
     private final UserService userService;
+    private final GenerateOrderIdUtil generateOrderIdUtil;
 
     /**
      * 해당 Id를 가진 티켓을 반환하는 메서드
@@ -67,13 +70,13 @@ public class TicketService {
     }
 
     @Transactional
-    public CreateTicketResponse createTicket(CreateTicketRequest reqDto, AuthUser authUser) {
+    public TicketNeedPaymentResponse createTicket(CreateTicketRequest reqDto, AuthUser authUser) {
         Seat seat = seatService.findSeatById(reqDto.getSeatId()); // 락 필요
         if(seat.isReserved()){
             throw new ApiException(ErrorStatus._ALREADY_RESERVED);
         }
-        // 결제 기능 구현 필요
 
+        // 티켓 생성 및 저장
         Long eventId = seat.getEventTime().getEvent().getEventId(); // n+1 문제 있을 듯
         Event event = eventService.getEventFromId(eventId);
         String qrCode = createQRCode();
@@ -81,10 +84,20 @@ public class TicketService {
         User user = userService.getUser(authUser.getId());
         ticket.createTicket(event, seat, user, qrCode);
         seat.seatReserved();
-        ticketRepository.save(ticket);
+        Ticket t = ticketRepository.save(ticket);
 
-        CreateTicketResponse resDto = new CreateTicketResponse(seat, event, ticket, authUser.getId());
-        return resDto;
+//        CreateTicketResponse resDto123 = new CreateTicketResponse(seat, event, ticket, authUser.getId());
+        return TicketNeedPaymentResponse.of(t,authUser,"ticket",generateOrderIdUtil.generateOrderId());
+    }
+
+    public void reserveTicket(Long id) {
+        Ticket ticket = getTicketJoinFetchSeat(id);
+        ticket.changeStatus(TicketStatus.RESERVED);
+    }
+
+    public void cancelTicket(Long id) {
+        Ticket ticket = getTicketJoinFetchSeat(id);
+        ticket.changeStatus(TicketStatus.CANCELLED);
     }
 
     public RefundTicketResponse refundTicket(Long ticketId, AuthUser authUser) {
