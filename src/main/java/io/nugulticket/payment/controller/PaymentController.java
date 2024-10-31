@@ -22,13 +22,14 @@ public class PaymentController {
     // 성공적으로 결제 페이지가 끝났을 경우 호출
     @ResponseBody
     @PostMapping("/confirm")
-    public ResponseEntity<String> confirmPayments(@RequestBody PaymentRequest paymentRequest) {
+    public ResponseEntity<JSONObject> confirmPayments(@RequestBody PaymentRequest paymentRequest) {
         System.out.println("들어왔어");
 
         JSONObject jsonObject = communicationPaymentUtil.preProcess(paymentRequest.getAmount(), paymentRequest.getOrderId(), paymentRequest.getUserId());
         JSONObject newjsonObject =communicationPaymentUtil.postProcess(paymentRequest.getAmount(), paymentRequest.getOrderId(), paymentRequest.getPaymentKey(), paymentRequest.getUserId());
 
-        return ResponseEntity.status(200).body("{ \"i\" :  \"Test\" }");
+        int statusCode = newjsonObject.containsKey("error") ? 400 : 200;
+        return ResponseEntity.status(statusCode).body(newjsonObject);
     }
 
     @RequestMapping(value = "/test", method = RequestMethod.GET)
