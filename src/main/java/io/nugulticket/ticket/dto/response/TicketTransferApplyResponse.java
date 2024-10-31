@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 @Getter
 public class TicketTransferApplyResponse {
     private Long ticketId;
+    private String ticketTitle;
     private Long sellerId;
     private Long ticketTransferId;
     private Integer price;
@@ -20,6 +21,7 @@ public class TicketTransferApplyResponse {
     public static TicketTransferApplyResponse of(TicketTransfer ticketTransfer) {
         return new TicketTransferApplyResponse(
                 ticketTransfer.getTicket().getTicketId(),
+                ticketTransfer.getTicket().getEvent().getTitle(),
                 ticketTransfer.getTicket().getUser().getId(),
                 ticketTransfer.getId(),
                 ticketTransfer.getPrice(),
