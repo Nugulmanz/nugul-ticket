@@ -16,6 +16,8 @@ import io.nugulticket.event.entity.Event;
 import io.nugulticket.event.repository.EventRepository;
 import io.nugulticket.eventtime.service.EventTimeService;
 import io.nugulticket.s3file.S3FileService;
+import io.nugulticket.search.entity.EventDocument;
+import io.nugulticket.search.repository.EventSearchRepository;
 import io.nugulticket.user.entity.User;
 import io.nugulticket.user.enums.UserRole;
 import io.nugulticket.user.service.UserService;
@@ -31,6 +33,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Service
@@ -42,6 +45,7 @@ public class EventService {
     private final EventTimeService eventTimeService;
     private final S3FileService s3FileService;
     private final RedisTemplate<String, Object> redisTemplate;
+    private final EventSearchRepository eventSearchRepository;
 
     // S3
     private final AmazonS3Client s3Client;
@@ -66,10 +70,15 @@ public class EventService {
 
         Event event = new Event(user,eventRequest, imageUrl);
 
+        // MySQL에 이벤트 저장
         Event savedEvent = eventRepository.save(event);
 
         // Redis에 공연 이름과 ID 매핑
         redisTemplate.opsForHash().put("eventIdMap", savedEvent.getTitle(), savedEvent.getEventId().toString());
+
+        // Elasticsearch에 이벤트 저장
+        EventDocument eventDocument = convertToEventDocument(savedEvent);
+        eventSearchRepository.save(eventDocument);
 
         eventTimeService.createEventTimes(event,
                 eventRequest.getStartDate(),
@@ -114,7 +123,14 @@ public class EventService {
 
         event.updateEvent(eventRequest, imageUrl);
 
-        return new UpdateEventResponse(event);
+        // MySQL에 수정된 이벤트 저장
+        Event updatedEvent = eventRepository.save(event);
+
+        // Elasticsearch에 수정된 이벤트 저장
+        EventDocument eventDocument = convertToEventDocument(updatedEvent);
+        eventSearchRepository.save(eventDocument);
+
+        return new UpdateEventResponse(updatedEvent);
     }
 
     @Transactional
@@ -130,8 +146,10 @@ public class EventService {
                 .orElseThrow(() -> new ApiException(ErrorStatus.EVENT_NOT_FOUND));
 
         event.deleteEvent();
-
         eventRepository.save(event);
+
+        // 공연 검색이라 Elasticsearch 에서는 이벤트 완전 삭제
+        eventSearchRepository.deleteById(eventId);
     }
 
     @Transactional(readOnly = true)
@@ -173,6 +191,27 @@ public class EventService {
 
     public Page<Event> getEventsFromKeywords(String keyword, LocalDate eventDate, String place, String category, Pageable pageable) {
         return eventRepository.findByKeywords(keyword, eventDate, place, category, pageable);
+    }
+
+    public EventDocument convertToEventDocument (Event event) {
+        // ISO 8601 형식으로 날짜 변환
+        String formattedStartDate = event.getStartDate().format(DateTimeFormatter.ISO_LOCAL_DATE);
+        String formattedEndDate = event.getEndDate().format(DateTimeFormatter.ISO_LOCAL_DATE);
+
+        return EventDocument.builder()
+                .eventId(event.getEventId())
+                .category(event.getCategory())
+                .title(event.getTitle())
+                .description(event.getDescription())
+                .startDate(formattedStartDate)  // 문자열로 변환된 날짜 사용
+                .endDate(formattedEndDate)  // 문자열로 변환된 날짜 사용
+                .runtime(event.getRuntime())
+                .viewRating(event.getViewRating())
+                .rating(event.getRating())
+                .place(event.getPlace())
+                .bookAble(event.getBookAble())
+                .imageUrl(event.getImageUrl())
+                .build();
     }
 
 //    public Event SearchEventFromId(Long eventId) {

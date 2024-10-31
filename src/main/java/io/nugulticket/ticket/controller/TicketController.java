@@ -2,7 +2,7 @@ package io.nugulticket.ticket.controller;
 
 import io.nugulticket.common.AuthUser;
 import io.nugulticket.common.apipayload.ApiResponse;
-import io.nugulticket.config.payment.GenerateOrderIdUtil;
+import io.nugulticket.common.utils.payment.GenerateOrderIdUtil;
 import io.nugulticket.ticket.dto.createTicket.CreateTicketRequest;
 import io.nugulticket.ticket.dto.createTicket.CreateTicketResponse;
 import io.nugulticket.ticket.dto.refundTicket.RefundTicketResponse;
