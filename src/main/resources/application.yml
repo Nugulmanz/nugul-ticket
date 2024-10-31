@@ -3,6 +3,10 @@ spring:
     active: local
   application:
     name: nugul-ticket
+  data:
+    redis:
+      port: 6379
+      host: localhost
   elasticsearch:
     cluster-nodes: http://localhost:9200
     cluster-name: docker-cluster

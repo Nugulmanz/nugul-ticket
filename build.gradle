@@ -27,6 +27,9 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-webflux'
+
     compileOnly 'org.projectlombok:lombok'
     runtimeOnly 'com.mysql:mysql-connector-j'
     annotationProcessor 'org.projectlombok:lombok'
@@ -55,8 +58,18 @@ dependencies {
     // Spring Security OAuth2 Client (카카오 소셜 로그인 구현을 위해 필요)
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
 
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+
     // AWS S3
     implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
+
+    // prometheus
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'io.micrometer:micrometer-registry-prometheus'
+
+    // faker 관련
+    implementation ('com.github.javafaker:javafaker:1.0.2') { exclude module: 'snakeyaml' }
+    implementation group: 'org.yaml', name: 'snakeyaml', version: '2.2'
 
     // elasticsearch
     implementation 'org.springframework.boot:spring-boot-starter-data-elasticsearch'

@@ -31,7 +31,7 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
             "join fetch t.user u " +
 //            "join fetch s.eventTime et " +
             "where t.status = :status and t.user.id = :buyerId")
-    List<Ticket> findAllEqualParamIdJoinFetchSeatAndEvent(String status, Long buyerId);
+    List<Ticket> findAllEqualParamIdJoinFetchSeatAndEvent(TicketStatus status, Long buyerId);
 
     /**
      * 해당 ID를 가진 Ticket에 대해 Event를 fetch join하여 반환하는 쿼리

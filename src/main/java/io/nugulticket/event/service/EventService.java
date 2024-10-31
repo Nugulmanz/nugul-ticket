@@ -26,6 +26,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -43,6 +44,7 @@ public class EventService {
     private final EventRepository eventRepository;
     private final EventTimeService eventTimeService;
     private final S3FileService s3FileService;
+    private final RedisTemplate<String, Object> redisTemplate;
     private final EventSearchRepository eventSearchRepository;
 
     // S3
@@ -70,6 +72,9 @@ public class EventService {
 
         // MySQL에 이벤트 저장
         Event savedEvent = eventRepository.save(event);
+
+        // Redis에 공연 이름과 ID 매핑
+        redisTemplate.opsForHash().put("eventIdMap", savedEvent.getTitle(), savedEvent.getEventId().toString());
 
         // Elasticsearch에 이벤트 저장
         EventDocument eventDocument = convertToEventDocument(savedEvent);
@@ -208,4 +213,9 @@ public class EventService {
                 .imageUrl(event.getImageUrl())
                 .build();
     }
+
+//    public Event SearchEventFromId(Long eventId) {
+//        return eventRepository.findById(eventId)
+//                .orElseThrow(() -> new ApiException(ErrorStatus.EVENT_NOT_FOUND));
+//    }
 }
