@@ -49,6 +49,7 @@
     const orderName = localStorage.getItem('orderName');
     const email = localStorage.getItem('email');
     const orderType = localStorage.getItem('orderType');
+    const ticketId = localStorage.getItem('ticketId')
 
     // 서버로 결제 승인에 필요한 결제 정보를 보내세요.
     async function confirm() {
@@ -60,6 +61,7 @@
           orderName,
           email,
           orderType,
+          ticketId
       };
 
       const response = await fetch("/payment/confirm", {
