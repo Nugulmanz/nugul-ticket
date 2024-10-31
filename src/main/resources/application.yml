@@ -3,10 +3,6 @@ spring:
     active: local
   application:
     name: nugul-ticket
-  data:
-    redis:
-      port: 6379
-      host: localhost
 
 jwt:
   secret:

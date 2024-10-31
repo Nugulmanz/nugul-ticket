@@ -5,6 +5,11 @@ spring:
     password: ${LOCAL_DB_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
 
+  data:
+    redis:
+      port: 6379
+      host: localhost
+
   elasticsearch:
     cluster-nodes: http://localhost:9200
     cluster-name: docker-cluster
