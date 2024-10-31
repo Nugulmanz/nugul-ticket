@@ -70,6 +70,14 @@ dependencies {
     // faker 관련
     implementation ('com.github.javafaker:javafaker:1.0.2') { exclude module: 'snakeyaml' }
     implementation group: 'org.yaml', name: 'snakeyaml', version: '2.2'
+
+    // elasticsearch
+    implementation 'org.springframework.boot:spring-boot-starter-data-elasticsearch'
+
+    // Jackson 관련 라이브러리
+    implementation 'com.fasterxml.jackson.core:jackson-databind' // 데이터 바인딩
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310' // Java 8 날짜/시간 지원
+
 }
 
 tasks.named('test') {
