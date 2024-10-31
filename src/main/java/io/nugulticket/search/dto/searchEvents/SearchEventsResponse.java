@@ -1,10 +1,8 @@
 package io.nugulticket.search.dto.searchEvents;
 
-import io.nugulticket.event.entity.Event;
+import io.nugulticket.search.entity.EventDocument;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-
-import java.time.LocalDate;
 
 @Getter
 @AllArgsConstructor
@@ -13,8 +11,8 @@ public class SearchEventsResponse {
     private String category;
     private String title;
     private String description;
-    private LocalDate startDate;
-    private LocalDate endDate;
+    private String startDate;
+    private String endDate;
     private String runtime;
     private String viewRating;
     private Double rating;
@@ -22,20 +20,20 @@ public class SearchEventsResponse {
     private Boolean bookAble;
     private String imageUrl;
 
-    public static SearchEventsResponse of(Event event) {
+    public static SearchEventsResponse of(EventDocument eventDocument) {
         return new SearchEventsResponse(
-                event.getEventId(),
-                event.getCategory(),
-                event.getTitle(),
-                event.getDescription(),
-                event.getStartDate(),
-                event.getEndDate(),
-                event.getRuntime(),
-                event.getViewRating(),
-                event.getRating(),
-                event.getPlace(),
-                event.getBookAble(),
-                event.getImageUrl()
+                eventDocument.getEventId(),
+                eventDocument.getCategory(),
+                eventDocument.getTitle(),
+                eventDocument.getDescription(),
+                eventDocument.getStartDate(),
+                eventDocument.getEndDate(),
+                eventDocument.getRuntime(),
+                eventDocument.getViewRating(),
+                eventDocument.getRating(),
+                eventDocument.getPlace(),
+                eventDocument.getBookAble(),
+                eventDocument.getImageUrl()
         );
     }
 

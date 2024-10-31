@@ -13,7 +13,63 @@ import java.time.LocalDate;
 @Repository
 public interface EventSearchRepository extends ElasticsearchRepository<EventDocument, Long> {
 
-    @Query("{\"bool\": {\"must\": [{\"match\": {\"title\": \"?0\"}}, " +
-            "{\"range\": {\"startDate\": {\"lte\": \"?1\"}, \"endDate\": {\"gte\": \"?1\"}}}]}}")
+    @Query("""
+        {
+           "query": {
+             "bool": {
+               "should": [
+                 {
+                   "match": {
+                     "title": {
+                       "query": "?0",
+                       "fuzziness": "AUTO"
+                     }
+                   }
+                 },
+                 {
+                   "match": {
+                     "place": {
+                       "query": "?2",
+                       "fuzziness": "AUTO"
+                     }
+                   }
+                 },
+                 {
+                   "match": {
+                     "category": {
+                       "query": "?3",
+                       "fuzziness": "AUTO"
+                     }
+                   }
+                 },
+                 {
+                   "range": {
+                     "startDate": {
+                       "lte": "?1"
+                     },
+                     "endDate": {
+                       "gte": "?1"
+                     }
+                   }
+                 }
+               ],
+               "minimum_should_match": 1
+             }
+           },
+           "sort": [
+             {
+               "startDate": {
+                 "order": "asc"
+               }
+             },
+             {
+               "rating": {
+                 "order": "desc"
+               }
+             }
+           ]
+         }
+        """
+    )
     Page<Event> findByKeywords(String keyword, LocalDate eventDate, String place, String category, Pageable pageable);
 }

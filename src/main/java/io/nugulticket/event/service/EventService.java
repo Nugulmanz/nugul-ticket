@@ -32,6 +32,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Service
@@ -187,14 +188,18 @@ public class EventService {
         return eventRepository.findByKeywords(keyword, eventDate, place, category, pageable);
     }
 
-    private EventDocument convertToEventDocument (Event event) {
+    public EventDocument convertToEventDocument (Event event) {
+        // ISO 8601 형식으로 날짜 변환
+        String formattedStartDate = event.getStartDate().format(DateTimeFormatter.ISO_LOCAL_DATE);
+        String formattedEndDate = event.getEndDate().format(DateTimeFormatter.ISO_LOCAL_DATE);
+
         return EventDocument.builder()
                 .eventId(event.getEventId())
                 .category(event.getCategory())
                 .title(event.getTitle())
                 .description(event.getDescription())
-                .startDate(event.getStartDate())
-                .endDate(event.getEndDate())
+                .startDate(formattedStartDate)  // 문자열로 변환된 날짜 사용
+                .endDate(formattedEndDate)  // 문자열로 변환된 날짜 사용
                 .runtime(event.getRuntime())
                 .viewRating(event.getViewRating())
                 .rating(event.getRating())

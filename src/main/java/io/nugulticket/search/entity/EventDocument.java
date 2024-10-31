@@ -1,10 +1,9 @@
 package io.nugulticket.search.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.*;
-
-import java.time.LocalDate;
 
 /**
  * 엘라스틱서치에 사용되는 인덱스 (관계형 디비 table - 엘라스틱서치 index)
@@ -30,10 +29,12 @@ public class EventDocument {
     private String description;
 
     @Field(name = "startDate", type = FieldType.Date, format = DateFormat.basic_date)
-    private LocalDate startDate;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    private String startDate;
 
     @Field(name = "endDate", type = FieldType.Date, format = DateFormat.basic_date)
-    private LocalDate endDate;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    private String endDate;
 
     @Field(name = "runtime", type = FieldType.Text)
     private String runtime;
