@@ -55,6 +55,7 @@ public class WebSecurityConfig {
                         .requestMatchers("/api/seller/v1/**").hasAuthority(UserRole.Authority.SELLER)
                         .requestMatchers(HttpMethod.POST, "/api/events/v1/**").hasAuthority(UserRole.Authority.SELLER)  // 공연 생성
                         .requestMatchers(HttpMethod.PATCH, "/api/events/v1/**").hasAuthority(UserRole.Authority.SELLER) // 공연 수정
+                        .requestMatchers(HttpMethod.POST, "/api/email/verify-code").hasAuthority(UserRole.Authority.USER) // 이메일 인증 코드 검증은 USER 권한을 가진 사용자 허용
                         .anyRequest().authenticated()
                 )
                 .build();
