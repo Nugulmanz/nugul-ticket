@@ -43,8 +43,13 @@ public enum ErrorStatus implements BaseCode {
     _FILE_UPLOAD_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "500", "이미지 업로드에 실패하였습니다."),
     _EMPTY_FILE(HttpStatus.NOT_FOUND, "404", "이미지 파일이 존재하지 않습니다."),
     _FILE_SIZE_EXCEEDED(HttpStatus.BAD_REQUEST, "400", "파일 크기가 허용된 제한을 초과했습니다."),
-    _UNSUPPORTED_FILE_FORMAT(HttpStatus.BAD_REQUEST, "400", "지원하지 않는 파일 형식입니다.");
+    _UNSUPPORTED_FILE_FORMAT(HttpStatus.BAD_REQUEST, "400", "지원하지 않는 파일 형식입니다."),
 
+    //email
+    _NOT_FOUND_EMAIL(HttpStatus.NOT_FOUND, "404", "가입되지 않은 이메일입니다."),
+    _INVALID_VERIFICATION_CODE(HttpStatus.BAD_REQUEST, "400", "인증 코드가 올바르지 않습니다."),
+    _EMAIL_ALREADY_VERIFIED(HttpStatus.CONFLICT, "409", "이메일이 이미 인증되었습니다."),
+    _EMAIL_SEND_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "500", "이메일 발송 중 오류가 발생했습니다.");
 
     private HttpStatus httpStatus;
     private String statusCode;
