@@ -2,13 +2,16 @@ package io.nugulticket.ticket.controller;
 
 import io.nugulticket.common.AuthUser;
 import io.nugulticket.common.apipayload.ApiResponse;
+import io.nugulticket.common.utils.payment.CommunicationPaymentUtil;
 import io.nugulticket.common.utils.payment.GenerateOrderIdUtil;
+import io.nugulticket.payment.dto.request.PaymentRequest;
 import io.nugulticket.ticket.dto.createTicket.CreateTicketRequest;
 import io.nugulticket.ticket.dto.createTicket.CreateTicketResponse;
 import io.nugulticket.ticket.dto.refundTicket.RefundTicketResponse;
 import io.nugulticket.ticket.dto.response.TicketNeedPaymentResponse;
 import io.nugulticket.ticket.service.TicketService;
 import lombok.RequiredArgsConstructor;
+import net.minidev.json.JSONObject;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,6 +24,7 @@ import org.springframework.web.servlet.ModelAndView;
 public class TicketController {
 
     private final TicketService ticketService;
+    private final CommunicationPaymentUtil communicationPaymentUtil;
 
     // orderId 생성해주는 유틸
     private final GenerateOrderIdUtil generateOrderIdUtil;
@@ -35,6 +39,9 @@ public class TicketController {
         ModelAndView mav = new ModelAndView();
 
         mav.setViewName("/payment/checkout");
+
+        // 페이먼츠 서버에 전송(처음 결제 정보 저장)
+        JSONObject jsonObject = communicationPaymentUtil.preProcess(PaymentRequest.of(resDto));
 
         // 이렇게 넣으면 한방에 다 들어감
         mav.addAllObjects(resDto.toMap());

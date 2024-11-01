@@ -26,7 +26,7 @@ public class PaymentController {
     public ResponseEntity<JSONObject> confirmPayments(@RequestBody PaymentRequest paymentRequest) {
         System.out.println("들어왔어");
 
-        JSONObject jsonObject = communicationPaymentUtil.preProcess(paymentRequest);
+        // 최종 결제 승인
         JSONObject newjsonObject =communicationPaymentUtil.postProcess(paymentRequest);
 
         int statusCode = newjsonObject.containsKey("error") ? 400 : 200;

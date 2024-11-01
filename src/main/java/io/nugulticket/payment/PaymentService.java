@@ -17,11 +17,11 @@ public class PaymentService {
     private final AuctionService auctionService; // 지갑
     private final UserService userService;
 
-    private PaymentResponse successfully(String type) {
+    private PaymentResponse successfully(String type, Long ticketId) {
 
         switch(type) {
             case "ticket":
-//                ticketService.reserveTicket(ticketId)
+                ticketService.reserveTicket(ticketId);
                 break;
             case "transfer":
 //              ticketTransferService.success(ticketId)
@@ -35,11 +35,11 @@ public class PaymentService {
         return null;
     }
 
-    private PaymentResponse fail(String type) {
+    private PaymentResponse fail(String type, Long ticketId) {
 
         switch(type) {
             case "ticket":
-//                ticketService.cancelTicket(ticketId)
+                ticketService.cancelTicket(ticketId);
                 break;
             case "transfer":
 //              ticketTransferService.failed(ticketId)

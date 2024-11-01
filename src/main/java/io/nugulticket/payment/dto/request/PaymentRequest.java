@@ -1,5 +1,6 @@
 package io.nugulticket.payment.dto.request;
 
+import io.nugulticket.ticket.dto.response.TicketNeedPaymentResponse;
 import lombok.Getter;
 
 @Getter
@@ -11,5 +12,18 @@ public class PaymentRequest {
     String orderName;
     String email;
     String orderType;
-    String ticketId;
+    Long ticketId;
+
+    public static PaymentRequest of(TicketNeedPaymentResponse response){
+        PaymentRequest request = new PaymentRequest();
+        request.paymentKey="";
+        request.orderId=response.getOrderId();
+        request.amount=response.getAmount();
+        request.userId=response.getUserId();
+        request.orderName=response.getOrderName();
+        request.email=response.getEmail();
+        request.orderType=response.getOrderType();
+        request.ticketId=response.getTicketId();
+        return request;
+    }
 };
