@@ -65,7 +65,7 @@ public class Ticket {
         this.qrCode = qrCode;
         this.purchaseDate = LocalDateTime.now();
         this.user = user;
-        this.status=TicketStatus.RESERVED;
+        this.status=TicketStatus.WAITING_RESERVED;
     }
 
     public void requestCancel(){
