@@ -11,7 +11,6 @@ import io.nugulticket.auth.service.AuthService;
 import io.nugulticket.auth.service.KakaoService;
 import io.nugulticket.common.AuthUser;
 import io.nugulticket.common.apipayload.ApiResponse;
-import io.nugulticket.common.apipayload.BaseCode;
 import io.nugulticket.common.apipayload.status.ErrorStatus;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

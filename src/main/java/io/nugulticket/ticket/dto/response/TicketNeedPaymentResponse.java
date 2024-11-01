@@ -3,7 +3,6 @@ package io.nugulticket.ticket.dto.response;
 import io.nugulticket.common.AuthUser;
 import io.nugulticket.ticket.entity.Ticket;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 

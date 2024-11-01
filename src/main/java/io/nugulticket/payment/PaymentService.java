@@ -17,14 +17,14 @@ public class PaymentService {
     private final AuctionService auctionService; // 지갑
     private final UserService userService;
 
-    private PaymentResponse successfully(String type, Long ticketId) {
+    public PaymentResponse successfully(String type, Long ticketId, Long userId) {
 
         switch(type) {
             case "ticket":
                 ticketService.reserveTicket(ticketId);
                 break;
             case "transfer":
-//              ticketTransferService.success(ticketId)
+                ticketTransferService.applyTransferAfterPayment(ticketId, userId);
                 break;
             case "charge":
 //
@@ -35,14 +35,14 @@ public class PaymentService {
         return null;
     }
 
-    private PaymentResponse fail(String type, Long ticketId) {
+    public PaymentResponse fail(String type, Long ticketId, Long userId) {
 
         switch(type) {
             case "ticket":
                 ticketService.cancelTicket(ticketId);
                 break;
             case "transfer":
-//              ticketTransferService.failed(ticketId)
+                ticketTransferService.cancelTransferAfterPayment(ticketId);
                 break;
             case "charge":
 //

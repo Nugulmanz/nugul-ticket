@@ -3,7 +3,6 @@ package io.nugulticket.search.controller;
 import io.nugulticket.common.apipayload.ApiResponse;
 import io.nugulticket.search.dto.searchEvents.SearchEventsResponse;
 import io.nugulticket.search.dto.searchTickets.SearchTicketsResponse;
-import io.nugulticket.search.entity.EventDocument;
 import io.nugulticket.search.service.SearchService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;

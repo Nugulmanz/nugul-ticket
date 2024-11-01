@@ -1,7 +1,5 @@
 package io.nugulticket.ticket.enums;
 
-import io.nugulticket.user.enums.UserRole;
-
 import java.util.Arrays;
 
 public enum TicketStatus {

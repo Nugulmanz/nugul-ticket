@@ -3,7 +3,6 @@ package io.nugulticket.auction.entity;
 import io.nugulticket.auction.dto.createAction.CreateAuctionRequest;
 import io.nugulticket.common.Timestamped;
 import io.nugulticket.ticket.entity.Ticket;
-import io.nugulticket.user.entity.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

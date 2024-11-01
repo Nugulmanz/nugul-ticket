@@ -11,7 +11,6 @@ import io.nugulticket.user.enums.LoginType;
 import io.nugulticket.user.enums.UserRole;
 import io.nugulticket.user.service.UserService;
 import lombok.RequiredArgsConstructor;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;

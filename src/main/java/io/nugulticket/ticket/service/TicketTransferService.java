@@ -5,7 +5,10 @@ import io.nugulticket.common.apipayload.status.ErrorStatus;
 import io.nugulticket.common.exception.ApiException;
 import io.nugulticket.common.utils.payment.GenerateOrderIdUtil;
 import io.nugulticket.ticket.config.TicketUtil;
-import io.nugulticket.ticket.dto.response.*;
+import io.nugulticket.ticket.dto.response.MyTransferTicketsResponse;
+import io.nugulticket.ticket.dto.response.TicketNeedPaymentResponse;
+import io.nugulticket.ticket.dto.response.TicketTransferCancelResponse;
+import io.nugulticket.ticket.dto.response.TicketTransferResponse;
 import io.nugulticket.ticket.entity.Ticket;
 import io.nugulticket.ticket.entity.TicketTransfer;
 import io.nugulticket.ticket.enums.TicketStatus;
@@ -45,16 +48,28 @@ public class TicketTransferService {
 
         ticket.changeStatus(TicketStatus.WAITING_RESERVED);
 
-        // 결제 시스템 추가
+        return TicketNeedPaymentResponse.of(ticket, users,"transfer", generateOrderIdUtil.generateOrderId());
+    }
 
-        // 해당 티켓의 상태를 변화 => 재양도시 체크하기 위함
-        //ticket.changeStatus(TicketStatus.TRANSFERRED);
+    @Transactional
+    public TicketTransferResponse applyTransferAfterPayment(Long ticketId, Long userId) {
+        Ticket ticket = ticketService.getTicket(ticketId);
 
-        // 티켓 양도 결과를 DB에 저장
-//        TicketTransfer ticketTransfer = new TicketTransfer(ticket, user.getId());
-//        TicketTransfer savedTicketTransfer = ticketTransferRepository.save(ticketTransfer);
+        ticket.changeStatus(TicketStatus.TRANSFERRED);
 
-        return TicketNeedPaymentResponse.of(ticket, users,"TRANSFER", generateOrderIdUtil.generateOrderId());
+        TicketTransfer ticketTransfer = new TicketTransfer(ticket, userId);
+        TicketTransfer savedTicketTransfer = ticketTransferRepository.save(ticketTransfer);
+
+        return TicketTransferResponse.of(ticket);
+    }
+
+    @Transactional
+    public TicketTransferResponse cancelTransferAfterPayment(Long ticketId) {
+        Ticket ticket = ticketService.getTicket(ticketId);
+
+        ticket.changeStatus(TicketStatus.WAITTRANSFER);
+
+        return TicketTransferResponse.of(ticket);
     }
 
     /**

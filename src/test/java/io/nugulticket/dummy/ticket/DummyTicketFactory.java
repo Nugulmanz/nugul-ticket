@@ -1,9 +1,5 @@
 package io.nugulticket.dummy.ticket;
 
-import com.github.javafaker.Faker;
-import io.nugulticket.event.dto.createEvent.CreateEventRequest;
-import io.nugulticket.event.entity.Event;
-import io.nugulticket.eventtime.entity.EventTime;
 import io.nugulticket.seat.entity.Seat;
 import io.nugulticket.ticket.entity.Ticket;
 import io.nugulticket.user.entity.User;

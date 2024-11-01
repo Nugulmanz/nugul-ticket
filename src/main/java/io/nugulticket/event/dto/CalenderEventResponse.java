@@ -1,6 +1,5 @@
 package io.nugulticket.event.dto;
 
-import io.nugulticket.ticket.dto.response.TicketDetailResponse;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
