@@ -1,6 +1,5 @@
 package io.nugulticket.seat.service;
 
-import io.nugulticket.event.entity.Event;
 import io.nugulticket.eventtime.entity.EventTime;
 import io.nugulticket.seat.entity.Seat;
 import io.nugulticket.seat.enums.SeatType;

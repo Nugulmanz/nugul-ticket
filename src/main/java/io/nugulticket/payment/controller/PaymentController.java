@@ -3,6 +3,7 @@ package io.nugulticket.payment.controller;
 
 import io.nugulticket.common.utils.payment.CommunicationPaymentUtil;
 import io.nugulticket.common.utils.payment.GenerateOrderIdUtil;
+import io.nugulticket.payment.PaymentService;
 import io.nugulticket.payment.dto.request.PaymentRequest;
 import io.nugulticket.ticket.dto.response.TicketNeedPaymentResponse;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +20,7 @@ public class PaymentController {
 
     private final CommunicationPaymentUtil communicationPaymentUtil;
     private final GenerateOrderIdUtil generateOrderIdUtil;
+    private final PaymentService paymentService;
 
     // 성공적으로 결제 페이지가 끝났을 경우 호출
     @ResponseBody
@@ -30,6 +32,13 @@ public class PaymentController {
         JSONObject newjsonObject =communicationPaymentUtil.postProcess(paymentRequest);
 
         int statusCode = newjsonObject.containsKey("error") ? 400 : 200;
+
+        if(statusCode == 200) {
+            paymentService.successfully(paymentRequest.getOrderType(), paymentRequest.getTicketId(), paymentRequest.getUserId());
+        } else {
+            paymentService.fail(paymentRequest.getOrderType(), paymentRequest.getTicketId(), paymentRequest.getUserId());
+        }
+
         return ResponseEntity.status(statusCode).body(newjsonObject);
     }
 

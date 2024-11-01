@@ -1,11 +1,7 @@
 package io.nugulticket.event.dto.createEvent;
 
 import io.nugulticket.event.entity.Event;
-import jakarta.persistence.Column;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
 import lombok.Getter;
-import org.springframework.data.annotation.LastModifiedDate;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;

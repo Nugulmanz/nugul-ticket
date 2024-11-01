@@ -1,7 +1,6 @@
 package io.nugulticket.ticket.dto.createTicket;
 
 import io.nugulticket.event.entity.Event;
-import io.nugulticket.eventtime.entity.EventTime;
 import io.nugulticket.seat.entity.Seat;
 import io.nugulticket.seat.enums.SeatType;
 import io.nugulticket.ticket.entity.Ticket;

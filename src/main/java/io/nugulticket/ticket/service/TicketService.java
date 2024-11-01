@@ -9,7 +9,6 @@ import io.nugulticket.event.service.EventService;
 import io.nugulticket.seat.entity.Seat;
 import io.nugulticket.seat.service.SeatService;
 import io.nugulticket.ticket.dto.createTicket.CreateTicketRequest;
-import io.nugulticket.ticket.dto.createTicket.CreateTicketResponse;
 import io.nugulticket.ticket.dto.refundTicket.RefundTicketResponse;
 import io.nugulticket.ticket.dto.response.TicketNeedPaymentResponse;
 import io.nugulticket.ticket.entity.Ticket;
