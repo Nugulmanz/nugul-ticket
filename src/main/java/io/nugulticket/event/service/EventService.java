@@ -24,8 +24,6 @@ import io.nugulticket.user.service.UserService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -189,10 +187,6 @@ public class EventService {
         return CalenderEventResponse.of(simpleResponses);
     }
 
-    public Page<Event> getEventsFromKeywords(String keyword, LocalDate eventDate, String place, String category, Pageable pageable) {
-        return eventRepository.findByKeywords(keyword, eventDate, place, category, pageable);
-    }
-
     public EventDocument convertToEventDocument (Event event) {
         // ISO 8601 형식으로 날짜 변환
         String formattedStartDate = event.getStartDate().format(DateTimeFormatter.ISO_LOCAL_DATE);
@@ -213,9 +207,4 @@ public class EventService {
                 .imageUrl(event.getImageUrl())
                 .build();
     }
-
-//    public Event SearchEventFromId(Long eventId) {
-//        return eventRepository.findById(eventId)
-//                .orElseThrow(() -> new ApiException(ErrorStatus.EVENT_NOT_FOUND));
-//    }
 }

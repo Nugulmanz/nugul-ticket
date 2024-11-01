@@ -11,7 +11,7 @@ spring:
       host: localhost
 
   elasticsearch:
-    cluster-nodes: http://localhost:9200
+    cluster-nodes: ${ES_URL}
     cluster-name: docker-cluster
     username: ${ES_USERNAME}
     password: ${ES_PASSWORD}
