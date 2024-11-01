@@ -22,3 +22,16 @@ cloud:
       static: ${S3_REGION}
     stack:
       auto: false
+
+email:
+  host: smtp.naver.com
+  port: 465
+  setForm: ${NAVER_EMAIL_USERNAME} # 발신자 이메일 주소
+  password: ${NAVER_EMAIL_PASSWORD} #발신자 비밀번호
+
+  properties:
+    mail:
+      smtp:
+        auth: true
+        ssl:
+          enable: true # SSL 활성화

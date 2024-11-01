@@ -78,6 +78,8 @@ dependencies {
     implementation 'com.fasterxml.jackson.core:jackson-databind' // 데이터 바인딩
     implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310' // Java 8 날짜/시간 지원
 
+    //이메일 인증
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
 }
 
 tasks.named('test') {
