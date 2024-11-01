@@ -1,4 +1,4 @@
-package io.nugulticket.user;
+package io.nugulticket.dummy.user;
 
 import com.github.javafaker.Faker;
 import io.nugulticket.auth.dto.SignupRequest;

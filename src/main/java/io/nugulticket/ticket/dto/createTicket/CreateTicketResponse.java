@@ -20,6 +20,9 @@ public class CreateTicketResponse {
     private boolean isReserved;
     private LocalDateTime purchaseDate;
 
+    // 이거 추가해주기
+    private String title;
+
     public CreateTicketResponse(Seat seat, Event event, Ticket ticket, Long userId) {
         this.seatId=seat.getId();
         this.eventId=event.getEventId();

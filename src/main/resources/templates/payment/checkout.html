@@ -37,10 +37,22 @@
 <script th:inline="javascript">
     const amount = {
       currency: "KRW",
-      value: 50000,
+      value: [[${amount}]],
     };
+    const userId = [[${userId}]];       // 주문한 유저 아이디
+    const orderId = [[${orderId}]];     // 주문 아이디
+    const orderType = [[${orderType}]]; // 주문 종류
+    const orderName = [[${orderName}]];   // 상품 이름
+    const customerEmail = [[${email}]];         // 이메일
+    const ticketId = [[${ticketId}]];
 
     let selectedPaymentMethod = null;
+
+    localStorage.setItem('userId', userId);
+    localStorage.setItem('orderName', orderName);
+    localStorage.setItem('email', customerEmail);
+    localStorage.setItem('orderType', orderType);
+    localStorage.setItem('ticketId', ticketId);
 
     function selectPaymentMethod(method) {
       if (selectedPaymentMethod != null) {
@@ -57,7 +69,7 @@
     // TODO: server.js 의 secretKey 또한 결제위젯 연동 키가 아닌 API 개별 연동 키의 시크릿 키로 변경해야 합니다.
     // TODO: 구매자의 고유 아이디를 불러와서 customerKey로 설정하세요. 이메일・전화번호와 같이 유추가 가능한 값은 안전하지 않습니다.
     // @docs https://docs.tosspayments.com/sdk/v2/js#토스페이먼츠-초기화
-    const clientKey = "test_ck_D5GePWvyJnrK0W0k6q8gLzN97Eoq";
+    const clientKey = "test_ck_AQ92ymxN34dpebwBbgy03ajRKXvd";
     const customerKey = generateRandomString();
     const tossPayments = TossPayments(clientKey);
     // 회원 결제
@@ -78,11 +90,11 @@
           await payment.requestPayment({
             method: "CARD", // 카드 및 간편결제
             amount,
-            orderId: generateRandomString(),
-            orderName: "토스 티셔츠 외 2건",
+              orderId,
+              orderName,
             successUrl: window.location.origin + "/payment/success.html", // 결제 요청이 성공하면 리다이렉트되는 URL
             failUrl: window.location.origin + "/fail.html", // 결제 요청이 실패하면 리다이렉트되는 URL
-            customerEmail: "customer123@gmail.com",
+              customerEmail,
             customerName: "김토스",
             customerMobilePhone: "01012341234",
             card: {
@@ -96,11 +108,11 @@
           await payment.requestPayment({
             method: "TRANSFER", // 계좌이체 결제
             amount,
-            orderId: generateRandomString(),
-            orderName: "토스 티셔츠 외 2건",
+              orderId,
+              orderName,
             successUrl: window.location.origin + "/payment/success.html",
             failUrl: window.location.origin + "/fail.html",
-            customerEmail: "customer123@gmail.com",
+              customerEmail,
             customerName: "김토스",
             customerMobilePhone: "01012341234",
             transfer: {
@@ -114,8 +126,8 @@
           await payment.requestPayment({
             method: "VIRTUAL_ACCOUNT", // 가상계좌 결제
             amount,
-            orderId: generateRandomString(),
-            orderName: "토스 티셔츠 외 2건",
+              orderId,
+              orderName,
             successUrl: window.location.origin + "/payment/success.html",
             failUrl: window.location.origin + "/fail.html",
             customerEmail: "customer123@gmail.com",
@@ -133,8 +145,8 @@
           await payment.requestPayment({
             method: "MOBILE_PHONE", // 휴대폰 결제
             amount,
-            orderId: generateRandomString(),
-            orderName: "토스 티셔츠 외 2건",
+              orderId,
+              orderName,
             successUrl: window.location.origin + "/payment/success.html",
             failUrl: window.location.origin + "/fail.html",
             customerEmail: "customer123@gmail.com",
@@ -145,8 +157,8 @@
           await payment.requestPayment({
             method: "CULTURE_GIFT_CERTIFICATE", // 문화상품권 결제
             amount,
-            orderId: generateRandomString(),
-            orderName: "토스 티셔츠 외 2건",
+              orderId,
+              orderName,
             successUrl: window.location.origin + "/payment/success.html",
             failUrl: window.location.origin + "/fail.html",
             customerEmail: "customer123@gmail.com",
@@ -160,8 +172,8 @@
               value: 100,
               currency: "USD",
             },
-            orderId: generateRandomString(),
-            orderName: "토스 티셔츠 외 2건",
+              orderId,
+            orderName,
             successUrl: window.location.origin + "/payment/success.html",
             failUrl: window.location.origin + "/fail.html",
             customerEmail: "customer123@gmail.com",
