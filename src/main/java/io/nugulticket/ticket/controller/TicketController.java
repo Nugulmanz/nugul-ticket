@@ -6,15 +6,12 @@ import io.nugulticket.common.utils.payment.CommunicationPaymentUtil;
 import io.nugulticket.common.utils.payment.GenerateOrderIdUtil;
 import io.nugulticket.payment.dto.request.PaymentRequest;
 import io.nugulticket.ticket.dto.createTicket.CreateTicketRequest;
-import io.nugulticket.ticket.dto.createTicket.CreateTicketResponse;
 import io.nugulticket.ticket.dto.refundTicket.RefundTicketResponse;
 import io.nugulticket.ticket.dto.response.TicketNeedPaymentResponse;
 import io.nugulticket.ticket.service.TicketService;
 import lombok.RequiredArgsConstructor;
 import net.minidev.json.JSONObject;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
