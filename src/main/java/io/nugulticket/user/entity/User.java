@@ -46,7 +46,14 @@ public class User extends Timestamped {
     @Column(name = "deleted_at")
     private LocalDateTime deletedAt;
 
-    public User(String email, String password, String username, String nickname, String phoneNumber, UserRole userRole, LoginType loginType) {
+    //이메일 인증
+    private boolean emailVerified = false;
+
+    public void verifyEmail() {
+        this.emailVerified = true;
+    }
+
+    public User(String email, String password, String username, String nickname, String phoneNumber, UserRole userRole, LoginType loginType, boolean emailVerified) {
         this.email = email;
         this.password = password;
         this.username = username;
@@ -54,6 +61,7 @@ public class User extends Timestamped {
         this.phoneNumber = phoneNumber;
         this.userRole = userRole;
         this.loginType = loginType;
+        this.emailVerified = emailVerified;
     }
 
     public void updateUser(String nickname, String address) {

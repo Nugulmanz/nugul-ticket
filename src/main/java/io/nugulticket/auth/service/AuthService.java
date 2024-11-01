@@ -6,6 +6,8 @@ import io.nugulticket.auth.dto.SignupResponse;
 import io.nugulticket.common.apipayload.status.ErrorStatus;
 import io.nugulticket.common.exception.ApiException;
 import io.nugulticket.common.utils.JwtUtil;
+import io.nugulticket.email.service.EmailService;
+import io.nugulticket.email.service.RedisService;
 import io.nugulticket.user.entity.User;
 import io.nugulticket.user.enums.LoginType;
 import io.nugulticket.user.enums.UserRole;
@@ -24,12 +26,14 @@ import java.util.Objects;
 @Transactional(readOnly = true)
 public class AuthService {
 
+    private final EmailService emailService;
     @Value("${ADMIN_KEY}")
     private String ADMIN_KEY; // 관리자 가입 시 사용
 
     private final BCryptPasswordEncoder passwordEncoders;
     private final JwtUtil jwtUtil;
     private final UserService userService;
+    private final RedisService redisService;
 
     /**
      * 회원가입 기능(USER, ADMIN 모두 수행)
@@ -63,9 +67,14 @@ public class AuthService {
                 signupRequest.getNickname(),
                 signupRequest.getPhoneNumber(),
                 userRole,
-                LoginType.LOCAL
+                LoginType.LOCAL,
+                false
         );
         User savedUser = userService.addUser(user);
+
+        String code = emailService.joinEmail(signupRequest.getEmail());
+        redisService.setCode(signupRequest.getEmail(), code);
+
         return SignupResponse.of(savedUser);
     }
 
