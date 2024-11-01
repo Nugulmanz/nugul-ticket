@@ -8,7 +8,7 @@ services:
       - discovery.type=single-node
       - bootstrap.memory_lock=true
       - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
-      - ELASTIC_PASSWORD=${ES_PASSWORD}  # 'elastic' 사용자의 비밀번호
+      - ELASTIC_PASSWORD=sun1234
       - xpack.security.enabled=true
     ulimits:
       memlock:
@@ -19,14 +19,19 @@ services:
     ports:
       - 9200:9200
       - 9300:9300
+    command: >
+      /bin/sh -c "if [ ! -d plugins/analysis-nori ]; then 
+      bin/elasticsearch-plugin install analysis-nori; 
+      fi; 
+      /usr/local/bin/docker-entrypoint.sh"
 
   kibana:
     image: docker.elastic.co/kibana/kibana:7.17.0
     container_name: kibana
     environment:
       - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
-      - ELASTICSEARCH_USERNAME=${ES_USERNAME}
-      - ELASTICSEARCH_PASSWORD=${ES_PASSWORD}
+      - ELASTICSEARCH_USERNAME=elastic
+      - ELASTICSEARCH_PASSWORD=sun1234
     ports:
       - 5601:5601
     depends_on:
