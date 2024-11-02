@@ -1,47 +1,89 @@
 package io.nugulticket.search.service;
 
-import io.nugulticket.event.entity.Event;
-import io.nugulticket.event.service.EventService;
 import io.nugulticket.search.dto.searchEvents.SearchEventsResponse;
 import io.nugulticket.search.dto.searchTickets.SearchTicketsResponse;
 import io.nugulticket.search.entity.EventDocument;
-import io.nugulticket.search.repository.EventSearchRepository;
 import io.nugulticket.ticket.entity.Ticket;
 import io.nugulticket.ticket.service.TicketService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.elasticsearch.client.elc.ElasticsearchTemplate;
+import org.springframework.data.elasticsearch.core.SearchHits;
+import org.springframework.data.elasticsearch.core.query.Criteria;
+import org.springframework.data.elasticsearch.core.query.CriteriaQuery;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StopWatch;
 
 import java.time.LocalDate;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
 public class SearchService {
 
-    private final EventService eventService;
     private final TicketService ticketService;
-    private final EventSearchRepository eventSearchRepository;
+    private final ElasticsearchTemplate elasticsearchTemplate;
 
     /**
      * 공연제목 키워드, 공연날짜, 공연장소, 카테고리로 공연을 검색하는 메서드 (엘라스틱 서치)
      * @param page
      * @param size
-     * @param keyword
+     * @param title
      * @param eventDate
      * @return Pageable한 SearchEventsResponse 반환
      */
-    public Page<SearchEventsResponse> searchEvents(int page, int size, String keyword, LocalDate eventDate, String place, String category) {
+    public Page<SearchEventsResponse> searchEvents(int page, int size, String title, LocalDate eventDate, String place, String category) {
         Pageable pageable = PageRequest.of(page - 1, size);
-        Page<Event> events = eventSearchRepository.findByKeywords(keyword, eventDate, place, category, pageable);
+        Criteria criteria = new Criteria();
 
-        // Page<Event>를 Page<EventDocument>로 변환
-        Page<EventDocument> eventDocuments = events.map(eventService::convertToEventDocument);
+        // 동적 쿼리 구성
+        if (title != null) {
+            criteria = criteria.or("title").fuzzy(title);
+        }
+        if (eventDate != null) {
+            criteria = criteria.and("startDate").lessThanEqual(eventDate)
+                    .and("endDate").greaterThanEqual(eventDate);
+        }
+        if (place != null) {
+            criteria = criteria.or("place").fuzzy(place);
+        }
+        if (category != null) {
+            criteria = criteria.or("category").fuzzy(category);
+        }
 
-        return eventDocuments.map(SearchEventsResponse::of);
+        CriteriaQuery searchQuery = new CriteriaQuery(criteria).setPageable(pageable);
+
+        // search 메서드를 사용하여 페이징된 결과를 얻음
+        SearchHits<EventDocument> searchHits = elasticsearchTemplate.search(searchQuery, EventDocument.class);
+
+        // SearchHits를 Page로 변환, SearchEventsResponse로 매핑
+        return new PageImpl<>(
+                searchHits.getSearchHits().stream()
+                        .map(hit -> {
+                            EventDocument eventDoc = hit.getContent();
+                            return new SearchEventsResponse(
+                                    eventDoc.getEventId(),
+                                    eventDoc.getCategory(),
+                                    eventDoc.getTitle(),
+                                    eventDoc.getDescription(),
+                                    eventDoc.getStartDate(),
+                                    eventDoc.getEndDate(),
+                                    eventDoc.getRuntime(),
+                                    eventDoc.getViewRating(),
+                                    eventDoc.getRating(),
+                                    eventDoc.getPlace(),
+                                    eventDoc.getBookAble(),
+                                    eventDoc.getImageUrl()
+                            );
+                        })
+                        .collect(Collectors.toList()),
+                pageable,
+                searchHits.getTotalHits()
+        );
     }
 
 
