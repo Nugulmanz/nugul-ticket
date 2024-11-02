@@ -5,7 +5,7 @@ import io.nugulticket.search.entity.EventDocument;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Random;
-import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * Event 클래스를 사용해 더미 데이터를 생성하는 클래스
@@ -26,9 +26,14 @@ public class DummyEventGenerator {
             "예술의 전당", "충무아트센터", "샤롯데씨어터", "블루스퀘어 마스터카드홀", "고척스카이돔", "장충체육관", "KT&G 상상마당 라이브홀"
     };
 
+    private static final AtomicLong counter = new AtomicLong(1);
+
+    private static Long getNextId() {
+        return counter.getAndIncrement(); // 1씩 증가
+    }
 
     public static EventDocument createDummyEvent() {
-        Long eventId = ThreadLocalRandom.current().nextLong(1, 1000000); // 1부터 1000000 사이의 랜덤 Long ID 생성
+        Long eventId =DummyEventGenerator.getNextId(); // 순차적으로 ID가 반환됨
         String title = generateRandomKoreanTitle();
         LocalDate startDate = LocalDate.now().plusDays(RANDOM.nextInt(30)); // 오늘부터 30일 이내의 시작 날짜
         LocalDate endDate = startDate.plusDays(RANDOM.nextInt(5) + 1); // 시작 날짜 이후 1~5일 이내의 종료 날짜
