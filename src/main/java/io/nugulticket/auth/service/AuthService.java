@@ -49,14 +49,14 @@ public class AuthService {
             throw new ApiException(ErrorStatus._USER_ALREADY_EXISTS);
         }
 
-        // 사용자 역할을 설정하기 위한 변수 설정
-        UserRole userRole;
-        if (signupRequest.getAdminKey() == null || signupRequest.getAdminKey().isEmpty()) {
-            userRole = UserRole.USER;
-        } else if (Objects.equals(signupRequest.getAdminKey(), ADMIN_KEY)) {
-            userRole = UserRole.ADMIN;
-        } else {
-            throw new ApiException(ErrorStatus._INVALID_ADMIN_KEY);
+        UserRole userRole = UserRole.UNVERIFIED_USER;
+
+        if (signupRequest.getAdminKey() != null && !signupRequest.getAdminKey().isEmpty()) {
+            if (Objects.equals(signupRequest.getAdminKey(), ADMIN_KEY)) {
+                userRole = UserRole.ADMIN;
+            } else {
+                throw new ApiException(ErrorStatus._INVALID_ADMIN_KEY);
+            }
         }
 
         User user = new User(
@@ -112,4 +112,6 @@ public class AuthService {
         }
         user.deleteAccount();
     }
+
+
 }
