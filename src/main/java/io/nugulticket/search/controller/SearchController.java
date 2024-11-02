@@ -24,11 +24,11 @@ public class SearchController {
     @GetMapping("/v1/events")
     public ApiResponse<Page<SearchEventsResponse>> searchEvents(@RequestParam(defaultValue = "1", required = false) int page,
                                                          @RequestParam(defaultValue = "10", required = false) int size,
-                                                         @RequestParam(required = false) String keyword,
+                                                         @RequestParam(required = false) String title,
                                                          @RequestParam(required = false) LocalDate eventDate,
                                                          @RequestParam(required = false) String place,
                                                          @RequestParam(required = false) String category) {
-        return ApiResponse.ok(searchService.searchEvents(page, size, keyword, eventDate, place, category));
+        return ApiResponse.ok(searchService.searchEvents(page, size, title, eventDate, place, category));
     }
 
     //검색하는 공연의 양도 티켓 검색
