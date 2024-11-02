@@ -33,6 +33,7 @@ public enum ErrorStatus implements BaseCode {
     _NOT_FOUND_USER(HttpStatus.NOT_FOUND, "404", "존재하지 않는 유저입니다"),
     _FORBIDDEN_USER(HttpStatus.FORBIDDEN,"403", "어드민 유저만 접근할 수 있습니다."),
     _FORBIDDEN_ROLE(HttpStatus.FORBIDDEN,"403", "접근할 수 없는 권한입니다."),
+    ROLE_CHANGE_NOT_ALLOWED(HttpStatus.FORBIDDEN, "403", "UNVERIFIED_USER 상태에서만 역할 변경이 가능합니다."),
 
     // event
     SELLER_ROLE_REQUIRED(HttpStatus.FORBIDDEN, "403", "SELLER 권한이 필요합니다."),

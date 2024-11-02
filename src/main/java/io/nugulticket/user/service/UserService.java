@@ -63,4 +63,8 @@ public class UserService {
     public Optional<User> findByEmail(String email) {
         return userRepository.findByEmail(email);
     }
+
+    public void updateUserRole(User user) {
+        userRepository.save(user);
+    }
 }
