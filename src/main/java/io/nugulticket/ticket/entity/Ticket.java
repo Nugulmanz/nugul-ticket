@@ -74,4 +74,8 @@ public class Ticket {
     public void cancel(){
         this.status=TicketStatus.CANCELLED;
     }
+
+    public void rollbackSeat(){
+        this.seat.rollbackReserve();
+    }
 }
