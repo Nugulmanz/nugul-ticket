@@ -2,6 +2,7 @@ package io.nugulticket.payment;
 
 import io.nugulticket.auction.service.AuctionService;
 import io.nugulticket.payment.dto.response.PaymentResponse;
+import io.nugulticket.ticket.entity.Ticket;
 import io.nugulticket.ticket.service.TicketService;
 import io.nugulticket.ticket.service.TicketTransferService;
 import io.nugulticket.user.service.UserService;
@@ -40,6 +41,8 @@ public class PaymentService {
         switch(type) {
             case "ticket":
                 ticketService.cancelTicket(ticketId);
+                Ticket ticket = ticketService.getTicket(ticketId);
+                ticket.rollbackSeat();
                 break;
             case "transfer":
                 ticketTransferService.cancelTransferAfterPayment(ticketId);
