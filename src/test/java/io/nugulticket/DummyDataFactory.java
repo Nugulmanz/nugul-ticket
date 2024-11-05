@@ -92,7 +92,7 @@ public class DummyDataFactory {
 
     @Transactional
     public List<Ticket> createDummyTickets(List<Seat> seats, List<User> users, int size) {
-        List<Ticket> tickets = dummyTicketFactory.createDummyTickets(seats, users, size);
+        List<Ticket> tickets = dummyTicketFactory.createDummyTickets(faker, seats, users, size);
 
         return ticketRepository.saveAll(tickets);
     }

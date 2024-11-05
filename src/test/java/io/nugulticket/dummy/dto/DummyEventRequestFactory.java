@@ -26,7 +26,7 @@ public class DummyEventRequestFactory {
     private final int MAX_VIP_SEAT_PRICE = MIN_VIP_SEAT_PRICE + PRICE_OFFSET;
 
     private final int MIN_SEAT_COUNT = 5;
-    private final int MAX_SEAT_COUNT = 20;
+    private final int MAX_SEAT_COUNT = 5;
 
     private final List<String> CATEGORI = new ArrayList<>(){{
         add("뮤지컬");

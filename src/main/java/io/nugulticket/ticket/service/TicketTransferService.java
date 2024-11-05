@@ -43,7 +43,7 @@ public class TicketTransferService {
 
         // 해당 티켓 상태가 양도 가능한 상태인지 확인
         if(!ticketUtil.isAbleTicketApplyTransfer(ticket, user.getId())) {
-            throw new ApiException(ErrorStatus._USER_ALREADY_EXISTS);
+            throw new ApiException(ErrorStatus._CANT_TRANSFER_STATE);
         }
 
         ticket.changeStatus(TicketStatus.WAITING_RESERVED);
@@ -83,7 +83,7 @@ public class TicketTransferService {
 
         // 해당 티켓이 양도 가능 상태인지 확인
         if (!ticketUtil.isAbleTicketCancelTransfer(ticket, user.getId())) {
-            throw new IllegalArgumentException();
+            throw new ApiException(ErrorStatus._CANT_TRANSFER_STATE);
         }
 
         // 티켓을 양도 대기 -> 예약 상태로 변화
@@ -103,7 +103,7 @@ public class TicketTransferService {
 
         // 해당 티켓이 양도 가능 상태인지 확인
         if (!ticketUtil.isAbleTicketTransfer(ticket, user.getId())) {
-            throw new IllegalArgumentException();
+            throw new ApiException(ErrorStatus._CANT_TRANSFER_STATE);
         }
 
         // 티켓을 양도 대기 -> 예약 상태로 변화

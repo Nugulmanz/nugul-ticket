@@ -7,14 +7,17 @@ import io.nugulticket.user.entity.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+import org.hibernate.annotations.SQLDelete;
 
 import java.time.LocalDate;
 
 @Entity
 @Getter
 @NoArgsConstructor
-//@SQLDelete(sql = "UPDATE event SET is_deleted = true WHERE event_id = ?")
-//@OnDelete( action = OnDeleteAction.CASCADE)
+@SQLDelete(sql = "UPDATE event SET is_deleted = true WHERE event_id = ?")
+@OnDelete( action = OnDeleteAction.CASCADE)
 @Table(name = "event", indexes = {
         @Index(name = "idx_event_date", columnList = "startDate, endDate"),
         @Index(name = "idx_place", columnList = "place"),

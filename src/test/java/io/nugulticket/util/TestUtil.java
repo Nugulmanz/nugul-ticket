@@ -7,6 +7,7 @@ import io.nugulticket.eventtime.entity.EventTime;
 import io.nugulticket.seat.entity.Seat;
 import io.nugulticket.seat.enums.SeatType;
 import io.nugulticket.ticket.entity.Ticket;
+import io.nugulticket.ticket.entity.TicketTransfer;
 import io.nugulticket.user.entity.User;
 import io.nugulticket.user.enums.LoginType;
 import io.nugulticket.user.enums.UserRole;
@@ -70,27 +71,38 @@ public class TestUtil {
 
     public static EventTime getEventTime(Long id) {
         EventTime eventTime = new EventTime(getEvent(id), LocalDateTime.now(), 1);
+
         ReflectionTestUtils.setField(eventTime, "id", 1);
         return eventTime;
     }
 
     public static Seat getSeat(Long id) {
         Seat seat = new Seat(getEventTime(id), "1", 1, SeatType.VIP);
+
         ReflectionTestUtils.setField(seat, "id", id);
         return seat;
     }
 
     public static Event getEvent(Long id) {
         Event event = new Event(getUser(1L), getRequest(), " ");
+
         ReflectionTestUtils.setField(event, "eventId", id);
         return event;
     }
 
     public static Ticket getTicket(Long id) {
         Ticket ticket = new Ticket();
+
         ticket.createTicket(getEvent(id), getSeat(id), getUser(id), " ");
         ReflectionTestUtils.setField(ticket, "ticketId", id);
         return ticket;
+    }
+
+    public static TicketTransfer getTicketTransfer(Long id, Long userId, Ticket ticket) {
+        TicketTransfer transfer = new TicketTransfer(ticket, userId);
+
+        ReflectionTestUtils.setField(transfer, "id", id);
+        return transfer;
     }
 
     public static AuthUser getAuthUser(User user) {
