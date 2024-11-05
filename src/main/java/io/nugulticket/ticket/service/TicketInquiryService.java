@@ -19,6 +19,11 @@ public class TicketInquiryService {
 
     private final TicketRepository ticketRepository;
 
+    /**
+     * 현재 로그인 중인 유저가 예매한 티켓들을 조회하는 메서드
+     * @param authUser 현재 로그인 중인 유저 정보
+     * @return 현재 로그인 중인 유저가 예매한 티켓 정보가 담긴 Response List
+     */
     @Transactional(readOnly = true)
     public List<TicketReservedResponse> reservedTicket(AuthUser authUser) {
 
@@ -31,6 +36,11 @@ public class TicketInquiryService {
                 .toList();
     }
 
+    /**
+     * 해당 유저가 취소한 티켓 리스트를 반환하는 메서드
+     * @param authUser 현재 로그인 중인 유저 정보
+     * @return 현재 로그인 중인 유저가 예매 취소한 티켓 정보가 담긴 Response List
+     */
     @Transactional(readOnly = true)
     public List<TicketCancelledResponse> cancelledTicket(AuthUser authUser) {
 
@@ -43,6 +53,11 @@ public class TicketInquiryService {
                 .toList();
     }
 
+    /**
+     * 현재 로그인 중인 유저가 경매 낙찰한 티켓들을 조회하는 메서드
+     * @param authUser 현재 로그인 중인 유저 정보
+     * @return 현재 로그인 중인 유저가 경매 낙찰한 티켓 정보가 담긴 Response List
+     */
     @Transactional(readOnly = true)
     public List<TicketCompletedResponse> completedTicket(AuthUser authUser) {
 

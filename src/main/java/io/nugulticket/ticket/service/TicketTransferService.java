@@ -51,6 +51,12 @@ public class TicketTransferService {
         return TicketNeedPaymentResponse.of(ticket, users,"transfer", generateOrderIdUtil.generateOrderId());
     }
 
+    /**
+     * 결제 후 티켓 소유권을 이전하는 메서드
+     * @param ticketId 소유권을 이전할 티켓 메서드
+     * @param userId 소유권을 이전 받을 유저 Id
+     * @return 해당 소유권을 이전한 티켓 정보가 담긴 Response 객체
+     */
     @Transactional
     public TicketTransferResponse applyTransferAfterPayment(Long ticketId, Long userId) {
         Ticket ticket = ticketService.getTicket(ticketId);
@@ -63,6 +69,11 @@ public class TicketTransferService {
         return TicketTransferResponse.of(ticket);
     }
 
+    /**
+     * 결제 실패 후 티켓 상태를 롤백하는 메서드
+     * @param ticketId 소유권을 롤백할 티켓 Id
+     * @return 상태를 롤백 시킨 티켓 정보가 담긴 Response 객체
+     */
     @Transactional
     public TicketTransferResponse cancelTransferAfterPayment(Long ticketId) {
         Ticket ticket = ticketService.getTicket(ticketId);

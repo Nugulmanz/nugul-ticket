@@ -51,12 +51,14 @@ public class EventService {
     @Value("nugulticket")
     private String bucket;
 
+    /**
+     * 공연 정보를 생성하는 메서드
+     * @param authUser 현재 로그인 중인 SELLER 권한인 유저 정보
+     * @param eventRequest 공연 생성에 필요한 정보가 담긴 Request 객체
+     * @param image 공연 프로필 이미지
+     * @return 생성된 공연 정보가 담긴 Response 객체
+     */
     public CreateEventResponse createEvent(AuthUser authUser, CreateEventRequest eventRequest, MultipartFile image) {
-        int price = 140000;
-        int vipSeatCount = 20;
-        int rSeatCount = 20;
-        int aSeatCount = 20;
-
         User user = userService.getUser(authUser.getId());
 
         if (!user.getUserRole().equals(UserRole.SELLER)) {
@@ -82,14 +84,21 @@ public class EventService {
                 eventRequest.getStartDate(),
                 eventRequest.getEndDate(),
                 LocalTime.now(),
-                price,
-                vipSeatCount,
-                rSeatCount,
-                aSeatCount);
+                eventRequest.getASeatPrice(),
+                eventRequest.getVipSeatCount(),
+                eventRequest.getRSeatCount(),
+                eventRequest.getASeatCount());
 
         return new CreateEventResponse(savedEvent);
     }
 
+    /**
+     * 공연 정보를 수정하는 메서드
+     * @param authUser 현재 로그인 중인 SELLER 권한의 유저
+     * @param eventId 수정할 공연 Id
+     * @param eventRequest 공연 수정에 필요한 정보가 담긴 Request 객체
+     * @return 수정된 공연 정보가 담긴 Response 객체
+     */
     @Transactional
     public UpdateEventResponse updateEvent(AuthUser authUser, Long eventId, UpdateEventRequest eventRequest) {
 
@@ -131,6 +140,11 @@ public class EventService {
         return new UpdateEventResponse(updatedEvent);
     }
 
+    /**
+     * 등록된 공연을 삭제하는 메서드
+     * @param authUser 현재 로그인 중인 SELLER 권한의 유저 정보
+     * @param eventId 삭제할 공연 ID
+     */
     @Transactional
     public void deleteEvent(AuthUser authUser, Long eventId) {
 
@@ -150,6 +164,11 @@ public class EventService {
         eventSearchRepository.deleteById(eventId);
     }
 
+    /**
+     * eventId에 해당하는 공연 정보를 반환하는 메서드
+     * @param eventId 조회할 eventId
+     * @return 해당 eventId 정보를 포함하고 있는 공연 정보가 담긴 Response 객체
+     */
     @Transactional(readOnly = true)
     public GetEventResponse getEvent(Long eventId) {
 
@@ -159,6 +178,10 @@ public class EventService {
         return new GetEventResponse(event);
     }
 
+    /**
+     * 모든 공연 정보를 조회하는 메서드
+     * @return 모든 공연 정보가 담긴 Response 객체
+     */
     @Transactional(readOnly = true)
     public List<GetAllEventResponse> getAllEvents() {
 
@@ -169,14 +192,33 @@ public class EventService {
                 .toList();
     }
 
+    /**
+     * eventId에 해당하는 공연 정보를 반환하는 메서드
+     * @param eventId 조회할 eventId
+     * @return 해당 eventId에 해당하는 Event 객체
+     */
+    @Transactional(readOnly = true)
     public Event getEventFromId(Long eventId) {
         return eventRepository.findById(eventId).orElseThrow(EntityNotFoundException::new);
     }
 
+    /**
+     * userId에 해당하는 유저가 작성한 공연 목록을 조회하는 메서드
+     * @param userId 조회할 eventId
+     * @return 해당 eventId에 해당하는 Event 객체
+     */
+    @Transactional(readOnly = true)
     public List<Event> getEventFromUserId(Long userId) {
         return eventRepository.findByUser_Id(userId);
     }
 
+    /**
+     * 해당 연 / 월에 진행되는 공연 정보를 조회하는 메서드
+     * @param year 조회할 연도
+     * @param month 조회할 월
+     * @return 해당 연 / 월에 진행되는 공연 정보가 담긴 Response 객체
+     */
+    @Transactional(readOnly = true)
     public CalenderEventResponse calenderEvents(Integer year, Integer month) {
         LocalDate beginDate = LocalDate.of(year, month, 1);
         LocalDate endDate = LocalDate.of(year, month, beginDate.lengthOfMonth());
@@ -187,6 +229,12 @@ public class EventService {
         return CalenderEventResponse.of(simpleResponses);
     }
 
+    /**
+     * Event 객체를 EventDocument 형태로 변환하여 반환하는 메서드
+     *      엘라스틱 서치에 데이터를 삽입할 때 사용
+     * @param event 변환할 Event 객체
+     * @return Event 객체가 변환된 EventDocument 객체
+     */
     public EventDocument convertToEventDocument (Event event) {
         // ISO 8601 형식으로 날짜 변환
         String formattedStartDate = event.getStartDate().format(DateTimeFormatter.ISO_LOCAL_DATE);

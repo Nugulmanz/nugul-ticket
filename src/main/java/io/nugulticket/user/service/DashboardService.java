@@ -63,7 +63,7 @@ public class DashboardService {
     }
 
     /**
-     *
+     * 환불을 진행하는 메서드
      * @param authUser : 로그인 유저
      * @param eventId : 이벤트 아이디
      * @param ticketId : 티켓 아이디
