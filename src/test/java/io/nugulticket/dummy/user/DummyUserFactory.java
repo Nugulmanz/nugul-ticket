@@ -42,7 +42,8 @@ public class DummyUserFactory {
                     signupRequest.getNickname(),
                     signupRequest.getPhoneNumber(),
                     UserRole.ADMIN,
-                    LoginType.LOCAL
+                    LoginType.LOCAL,
+                    false
             );
 
             users.add(user);

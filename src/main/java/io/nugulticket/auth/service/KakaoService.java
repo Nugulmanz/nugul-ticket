@@ -71,7 +71,7 @@ public class KakaoService {
 
     // 카카오에서 준 인가코드로 액세스토큰을 반환하는 메서드
     //kakao developers에서 요청하는대로 http형태를 만들어서 RestTemplete으로 API를 요청
-    private String getToken(String code) throws JsonProcessingException {
+    public String getToken(String code) throws JsonProcessingException {
         log.info("인가코드 : " + code);
 
         // 요청 URL 만들기
@@ -112,7 +112,7 @@ public class KakaoService {
 
 
     // 액세스토큰으로 사용자정보(닉네임, 이메일)을 가져오는 메서드
-    private KakaoUserDto getKakaoUserInfo(String accessToken)  throws JsonProcessingException {
+    public KakaoUserDto getKakaoUserInfo(String accessToken)  throws JsonProcessingException {
         log.info("accessToken : " + accessToken);
         // 요청 URL 만들기
         URI uri = UriComponentsBuilder
@@ -152,7 +152,7 @@ public class KakaoService {
 
 
     //해당 유저가 이미 가입되어 있는지 확인하고, 가입되어 있지 않다면 회원가입을 진행하는 메서드
-    private User registerKakaoUserIfNeeded(KakaoUserDto kakaoUserDto) {
+    public User registerKakaoUserIfNeeded(KakaoUserDto kakaoUserDto) {
         // DB 에 중복된 socialId가 있는지 확인
         Long socialId = kakaoUserDto.getId();
         User kakaoUser = userRepository.findBySocialId(socialId).orElse(null);
