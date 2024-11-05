@@ -70,7 +70,7 @@ public class TestUtil {
 
     public static EventTime getEventTime(Long id) {
         EventTime eventTime = new EventTime(getEvent(id), LocalDateTime.now(), 1);
-        ReflectionTestUtils.setField(eventTime, "id", id);
+        ReflectionTestUtils.setField(eventTime, "id", 1);
         return eventTime;
     }
 

@@ -54,8 +54,13 @@ public class SearchEventRankService {
 
     public Long getEventIdByName(String eventTitle) {
 
-        String eventIdStr = (String) redisTemplate.opsForHash().get("eventIdMap", eventTitle);
+        Object eventIdStr = redisTemplate.opsForHash().get("eventIdMap", eventTitle);
 
-        return eventIdStr != null ? Long.valueOf(eventIdStr) : null;
+        if (eventIdStr instanceof Long) {
+            return (Long) eventIdStr;
+        } else if (eventIdStr instanceof String) {
+            return Long.valueOf((String) eventIdStr);
+        }
+        return null;
     }
 }
