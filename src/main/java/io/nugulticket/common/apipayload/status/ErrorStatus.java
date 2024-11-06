@@ -28,6 +28,7 @@ public enum ErrorStatus implements BaseCode {
     // ticket
     _ALREADY_RESERVED(HttpStatus.NOT_ACCEPTABLE,"406", "이미 예약된 좌석입니다."),
     _NOT_FOUND_TICKET(HttpStatus.NOT_FOUND, "404", "존재하지 않는 티켓입니다"),
+    _CANT_TRANSFER_STATE(HttpStatus.BAD_REQUEST, "406", "티켓 양도가 불가능한 상태 입니다"),
 
     // user
     _NOT_FOUND_USER(HttpStatus.NOT_FOUND, "404", "존재하지 않는 유저입니다"),

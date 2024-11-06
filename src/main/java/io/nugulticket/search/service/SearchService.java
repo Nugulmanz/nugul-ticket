@@ -30,10 +30,10 @@ public class SearchService {
 
     /**
      * 공연제목 키워드, 공연날짜, 공연장소, 카테고리로 공연을 검색하는 메서드 (엘라스틱 서치)
-     * @param page
-     * @param size
-     * @param title
-     * @param eventDate
+     * @param page 조회할 페이지 번호
+     * @param size 한 페이지당 사이즈
+     * @param title 티켓의 공연제목 중 키워드 검색
+     * @param eventDate 티켓의 공연 시작일과 종료일 사이 날짜로 검색
      * @return Pageable한 SearchEventsResponse 반환
      */
     public Page<SearchEventsResponse> searchEvents(int page, int size, String title, LocalDate eventDate, String place, String category) {
@@ -89,8 +89,8 @@ public class SearchService {
 
     /**
      * 공연제목 키워드, 공연날짜로 검색하고 그 공연의 양도 가능한 티켓을 검색하는 메서드
-     * @param page
-     * @param size
+     * @param page 조회할 페이지 번호
+     * @param size 한 페이지당 사이즈
      * @param keyword   티켓의 공연제목 중 키워드 검색
      * @param eventDate 티켓의 공연 시작일과 종료일 사이 날짜로 검색
      * @return Pageable한 searchTransferableTicketsResponse 반환

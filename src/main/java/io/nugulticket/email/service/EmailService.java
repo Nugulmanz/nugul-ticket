@@ -24,6 +24,11 @@ public class EmailService {
             "<br><br>" +
             "인증번호 %s";
 
+    /**
+     * 인증 메일에 필요한 내용을 추가해주는 메서드
+     * @param email 인증 메일을 수신할 이메일 주소
+     * @return 인증에 사용될 6자리 인증번호
+     */
     public String joinEmail(String email) {
         String code = Integer.toString(makeRandomNumber());
         String content = String.format(EMAIL_CONTENT_TEMPLATE, code);
@@ -31,6 +36,13 @@ public class EmailService {
         return code;
     }
 
+    /**
+     * 인증 메일을 전송하는 메서드
+     * @param setFrom 메시지를 발신할 Naver 아이디
+     * @param toMail 인증 메일을 수신할 이메일 주소
+     * @param title 인증 이메일 제목
+     * @param content 인증 정보가 담긴 이메일 내용
+     */
     public void mailSend(String setFrom, String toMail, String title, String content) {
         MimeMessage message = mailSender.createMimeMessage();
         try {
@@ -48,6 +60,10 @@ public class EmailService {
         }
     }
 
+    /**
+     * 무작위 숫자를 만들어주는 메서드
+     * @return 완성된 6자리의 무작위 숫자
+     */
     public int makeRandomNumber() {
         Random r = new Random();
         StringBuilder randomNumber = new StringBuilder();

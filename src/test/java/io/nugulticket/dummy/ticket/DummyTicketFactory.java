@@ -1,5 +1,6 @@
 package io.nugulticket.dummy.ticket;
 
+import com.github.javafaker.Faker;
 import io.nugulticket.seat.entity.Seat;
 import io.nugulticket.ticket.entity.Ticket;
 import io.nugulticket.user.entity.User;
@@ -19,12 +20,16 @@ public class DummyTicketFactory {
         return ticket;
     }
 
-    public List<Ticket> createDummyTickets(List<Seat> seats, List<User> users, int size) {
+    public List<Ticket> createDummyTickets(Faker faker, List<Seat> seats, List<User> users, int size) {
         List<Ticket> tickets = new ArrayList<>();
-        int maxRange = Integer.min(Integer.min(size, seats.size()) , users.size());
+        int maxRange = Integer.min(size, seats.size());
 
         for (int i = 0; i < maxRange; ++i) {
-            tickets.add(createTicket(seats.get(i), users.get(i)));
+            int next = faker.random().nextInt(users.size());
+
+            User randUser = users.get(next);
+
+            tickets.add(createTicket(seats.get(i),randUser));
         }
 
         return tickets;

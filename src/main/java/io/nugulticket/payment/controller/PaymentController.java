@@ -36,7 +36,7 @@ public class PaymentController {
         if(statusCode == 200) {
             paymentService.successfully(paymentRequest.getOrderType(), paymentRequest.getTicketId(), paymentRequest.getUserId());
         } else {
-            paymentService.fail(paymentRequest.getOrderType(), paymentRequest.getTicketId(), paymentRequest.getUserId());
+            paymentService.fail(paymentRequest.getOrderType(), paymentRequest.getTicketId());
         }
 
         return ResponseEntity.status(statusCode).body(newjsonObject);

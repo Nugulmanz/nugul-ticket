@@ -38,6 +38,9 @@ public class Seat {
     public void seatReserved() {
         this.isReserved = true;
     }
+    public void rollbackReserve(){
+        this.isReserved = false;
+    }
 
     public Seat(EventTime eventTime, String seatNumber, int price, SeatType seatType) {
         this.eventTime = eventTime;

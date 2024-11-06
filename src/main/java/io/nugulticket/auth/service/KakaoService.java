@@ -68,10 +68,15 @@ public class KakaoService {
         return new KakaoLoginResponse(token);
     }
 
-
-    // 카카오에서 준 인가코드로 액세스토큰을 반환하는 메서드
-    //kakao developers에서 요청하는대로 http형태를 만들어서 RestTemplete으로 API를 요청
-    private String getToken(String code) throws JsonProcessingException {
+    /**
+     * 카카오에서 발급 받은 인가코드로 액세스토큰을 반환하는 메서드
+     * kakao developers에서 요청하는대로 http형태를 만들어서 RestTemplete으로 API를 요청
+     *
+     * @param code 카카오에서 발급 받은 인가코드
+     * @return 인가 코드를 통해 Kakao에서 발급 받은 액세스 토큰
+     * @throws JsonProcessingException
+     */
+    public String getToken(String code) throws JsonProcessingException {
         log.info("인가코드 : " + code);
 
         // 요청 URL 만들기
@@ -110,9 +115,12 @@ public class KakaoService {
         return jsonNode.get("access_token").asText();
     }
 
-
-    // 액세스토큰으로 사용자정보(닉네임, 이메일)을 가져오는 메서드
-    private KakaoUserDto getKakaoUserInfo(String accessToken)  throws JsonProcessingException {
+    /**
+     * 액세스토큰으로 사용자정보(닉네임, 이메일)을 가져오는 메서드
+     * @param accessToken Kakao로 부터 발급 받은 액세스 토큰
+     * @return 해당 사용자의 정보가 담긴 Dto 객체
+     */
+    public KakaoUserDto getKakaoUserInfo(String accessToken)  throws JsonProcessingException {
         log.info("accessToken : " + accessToken);
         // 요청 URL 만들기
         URI uri = UriComponentsBuilder
@@ -150,9 +158,12 @@ public class KakaoService {
         return new KakaoUserDto(id, nickname, email);
     }
 
-
-    //해당 유저가 이미 가입되어 있는지 확인하고, 가입되어 있지 않다면 회원가입을 진행하는 메서드
-    private User registerKakaoUserIfNeeded(KakaoUserDto kakaoUserDto) {
+    /**
+     * 해당 유저가 이미 가입되어 있는지 확인하고, 가입되어 있지 않다면 회원가입을 진행하는 메서드
+     * @param kakaoUserDto Kakao 유저 정보가 담긴 Dto객체
+     * @return 가입 되어 있을 경우 : 가입 된 유저 정보 / 가입 되어 있지 않은 경우 : 회원가입이 진행된 유저 정보
+     */
+    public User registerKakaoUserIfNeeded(KakaoUserDto kakaoUserDto) {
         // DB 에 중복된 socialId가 있는지 확인
         Long socialId = kakaoUserDto.getId();
         User kakaoUser = userRepository.findBySocialId(socialId).orElse(null);
@@ -188,9 +199,9 @@ public class KakaoService {
 
     /**
      * 소셜로그인한 유저의 추가정보를 업데이트하는 메서드
-     * @param authUser
-     * @param updateKakaoUserInfoRequest
-     * @return 업데이트한 정보를 보여주는 responseDto
+     * @param authUser 현재 로그인 한 유저 정보
+     * @param updateKakaoUserInfoRequest 업데이트에 필요한 추가 정보가 담긴 Request 객체
+     * @return 업데이트한 정보를 보여주는 response 객체
      */
     @Transactional
     public UpdateKakaoUserInfoResponse updateKakaoUserInfo (AuthUser authUser, UpdateKakaoUserInfoRequest updateKakaoUserInfoRequest) {

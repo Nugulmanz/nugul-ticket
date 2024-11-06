@@ -54,7 +54,7 @@ public class WebSecurityConfig {
                         .requestMatchers("/api/admin/v1/**").hasAuthority(UserRole.Authority.ADMIN)
                         .requestMatchers(HttpMethod.DELETE, "/api/events/v1/**").hasAuthority(UserRole.Authority.ADMIN) // 공연 삭제
                         .requestMatchers("/api/seller/v1/**").hasAuthority(UserRole.Authority.SELLER)
-                        .requestMatchers(HttpMethod.POST, "/api/events/**").hasAuthority(UserRole.Authority.SELLER)  // 공연 생성
+                        .requestMatchers(HttpMethod.POST, "/api/events/v1/**").hasAuthority(UserRole.Authority.SELLER)  // 공연 생성
                         .requestMatchers(HttpMethod.PATCH, "/api/events/v1/**").hasAuthority(UserRole.Authority.SELLER) // 공연 수정
                         .requestMatchers(HttpMethod.POST, "/api/email/verify-code").hasAuthority(UserRole.Authority.UNVERIFIED_USER) // 이메일 인증 코드 검증은 UNVERIFIED_USER 권한을 가진 사용자 허용
                         .anyRequest().authenticated()
