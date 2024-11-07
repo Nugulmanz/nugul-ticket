@@ -40,12 +40,6 @@ public class JwtSecurityFilter extends OncePerRequestFilter {
     ) throws ServletException, IOException {
         String authorizationHeader = httpRequest.getHeader("Authorization");
 
-        // 통합 검색 기능은 JWT 검증을 건너뜀
-        if (httpRequest.getRequestURI().startsWith("/api/search/v1/")) {
-            chain.doFilter(httpRequest, httpResponse);
-            return;
-        }
-
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             String jwt = jwtUtil.substringToken(authorizationHeader);
 
