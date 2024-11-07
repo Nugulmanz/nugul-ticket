@@ -9,10 +9,10 @@ import java.util.Arrays;
 @RequiredArgsConstructor
 public enum UserRole {
 
-    ROLE_ADMIN(Authority.ADMIN),
-    ROLE_SELLER(Authority.SELLER),
-    ROLE_USER(Authority.USER),
-    ROLE_UNVERIFIED_USER(Authority.UNVERIFIED_USER);
+    ADMIN(Authority.ADMIN),
+    SELLER(Authority.SELLER),
+    USER(Authority.USER),
+    UNVERIFIED_USER(Authority.UNVERIFIED_USER);
 
     private final String userRole;
 
