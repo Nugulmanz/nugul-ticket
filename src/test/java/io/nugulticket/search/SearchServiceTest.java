@@ -23,6 +23,7 @@ import org.springframework.data.elasticsearch.core.query.CriteriaQuery;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
@@ -41,7 +42,7 @@ public class SearchServiceTest {
     private ElasticsearchTemplate elasticsearchTemplate;
 
     @Test
-    public void testSearchEvents_withCriteria_shouldReturnPagedResults() {
+    public void testSearchEvents_withCriteria_shouldReturnPagedResults() throws IOException {
         // Given
         int page = 1;
         int size = 5;

@@ -1,5 +1,12 @@
 package io.nugulticket.search.service;
 
+import co.elastic.clients.elasticsearch.ElasticsearchClient;
+import co.elastic.clients.elasticsearch._types.FieldValue;
+import co.elastic.clients.elasticsearch._types.query_dsl.Query;
+import co.elastic.clients.elasticsearch.core.SearchRequest;
+import co.elastic.clients.elasticsearch.core.SearchResponse;
+import co.elastic.clients.elasticsearch.core.search.Hit;
+import co.elastic.clients.json.JsonData;
 import io.nugulticket.search.dto.searchEvents.SearchEventsResponse;
 import io.nugulticket.search.dto.searchTickets.SearchTicketsResponse;
 import io.nugulticket.search.entity.EventDocument;
@@ -11,15 +18,14 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.elasticsearch.client.elc.ElasticsearchTemplate;
-import org.springframework.data.elasticsearch.core.SearchHits;
-import org.springframework.data.elasticsearch.core.query.Criteria;
-import org.springframework.data.elasticsearch.core.query.CriteriaQuery;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StopWatch;
 
+import java.io.IOException;
 import java.time.LocalDate;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.List;
 
 @RequiredArgsConstructor
 @Service
@@ -27,6 +33,7 @@ public class SearchService {
 
     private final TicketService ticketService;
     private final ElasticsearchTemplate elasticsearchTemplate;
+    private final ElasticsearchClient elasticsearchClient;
 
     /**
      * 공연제목 키워드, 공연날짜, 공연장소, 카테고리로 공연을 검색하는 메서드 (엘라스틱 서치)
@@ -36,55 +43,68 @@ public class SearchService {
      * @param eventDate 티켓의 공연 시작일과 종료일 사이 날짜로 검색
      * @return Pageable한 SearchEventsResponse 반환
      */
-    public Page<SearchEventsResponse> searchEvents(int page, int size, String title, LocalDate eventDate, String place, String category) {
+    public Page<SearchEventsResponse> searchEvents(int page, int size, String title, LocalDate eventDate, String place, String category) throws IOException {
+        // 페이징을 위한 Pageable 객체 생성
         Pageable pageable = PageRequest.of(page - 1, size);
-        Criteria criteria = new Criteria();
+        List<SearchEventsResponse> results = new ArrayList<>();
 
         // 동적 쿼리 구성
-        if (title != null) {
-            criteria = criteria.or("title").fuzzy(title);
-        }
-        if (eventDate != null) {
-            criteria = criteria.and("startDate").lessThanEqual(eventDate)
-                    .and("endDate").greaterThanEqual(eventDate);
-        }
-        if (place != null) {
-            criteria = criteria.or("place").fuzzy(place);
-        }
-        if (category != null) {
-            criteria = criteria.or("category").fuzzy(category);
-        }
-
-        CriteriaQuery searchQuery = new CriteriaQuery(criteria).setPageable(pageable);
-
-        // search 메서드를 사용하여 페이징된 결과를 얻음
-        SearchHits<EventDocument> searchHits = elasticsearchTemplate.search(searchQuery, EventDocument.class);
-
-        // SearchHits를 Page로 변환, SearchEventsResponse로 매핑
-        return new PageImpl<>(
-                searchHits.getSearchHits().stream()
-                        .map(hit -> {
-                            EventDocument eventDoc = hit.getContent();
-                            return new SearchEventsResponse(
-                                    eventDoc.getEventId(),
-                                    eventDoc.getCategory(),
-                                    eventDoc.getTitle(),
-                                    eventDoc.getDescription(),
-                                    eventDoc.getStartDate(),
-                                    eventDoc.getEndDate(),
-                                    eventDoc.getRuntime(),
-                                    eventDoc.getViewRating(),
-                                    eventDoc.getRating(),
-                                    eventDoc.getPlace(),
-                                    eventDoc.getBookAble(),
-                                    eventDoc.getImageUrl()
-                            );
-                        })
-                        .collect(Collectors.toList()),
-                pageable,
-                searchHits.getTotalHits()
+        Query boolQuery = Query.of(q -> q
+                .bool(b -> {
+                    if (title != null) {
+                        b.must(m -> m.match(t -> t.field("title").query(FieldValue.of(title))));
+                    }
+                    if (eventDate != null) {
+                        b.filter(f -> f.range(r -> r.field("startDate").lte(JsonData.of(eventDate.toString()))));
+                        b.filter(f -> f.range(r -> r.field("endDate").gte(JsonData.of(eventDate.toString()))));
+                    }
+                    if (place != null) {
+                        b.must(m -> m.match(t -> t.field("place").query(FieldValue.of(place))));
+                    }
+                    if (category != null) {
+                        b.must(m -> m.match(t -> t.field("category").query(FieldValue.of(category))));
+                    }
+                    return b;
+                })
         );
+
+        // 검색 요청 생성
+        SearchRequest request = SearchRequest.of(s -> s
+                .index("events")
+                .query(boolQuery)
+                .from((page - 1) * size) // 시작 위치
+                .size(size)               // 페이지당 결과 개수
+        );
+
+        // Elasticsearch에 요청 보내기
+        SearchResponse<EventDocument> response = elasticsearchClient.search(request, EventDocument.class);
+
+        // SearchHits를 통해 검색 결과를 파싱
+        for (Hit<EventDocument> hit : response.hits().hits()) {
+            EventDocument eventDoc = hit.source();
+            results.add(new SearchEventsResponse(
+                    eventDoc.getEventId(),
+                    eventDoc.getCategory(),
+                    eventDoc.getTitle(),
+                    eventDoc.getDescription(),
+                    eventDoc.getStartDate(),
+                    eventDoc.getEndDate(),
+                    eventDoc.getRuntime(),
+                    eventDoc.getViewRating(),
+                    eventDoc.getRating(),
+                    eventDoc.getPlace(),
+                    eventDoc.getBookAble(),
+                    eventDoc.getImageUrl()
+            ));
+        }
+
+        // 검색 결과 전체 개수
+        long totalHits = response.hits().total().value();
+
+        // PageImpl을 통해 Page 형식으로 반환
+        return new PageImpl<>(results, pageable, totalHits);
     }
+
 
 
     /**

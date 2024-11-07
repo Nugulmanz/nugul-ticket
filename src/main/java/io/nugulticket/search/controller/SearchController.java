@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.IOException;
 import java.time.LocalDate;
 
 @RestController
@@ -27,7 +28,7 @@ public class SearchController {
                                                          @RequestParam(required = false) String title,
                                                          @RequestParam(required = false) LocalDate eventDate,
                                                          @RequestParam(required = false) String place,
-                                                         @RequestParam(required = false) String category) {
+                                                         @RequestParam(required = false) String category) throws IOException {
         return ApiResponse.ok(searchService.searchEvents(page, size, title, eventDate, place, category));
     }
 

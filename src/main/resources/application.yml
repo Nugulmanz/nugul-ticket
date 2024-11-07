@@ -35,3 +35,6 @@ email:
         auth: true
         ssl:
           enable: true # SSL 활성화
+
+payment:
+  url: ${PAYMENT_URL}
