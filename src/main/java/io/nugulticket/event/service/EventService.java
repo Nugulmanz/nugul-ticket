@@ -16,6 +16,7 @@ import io.nugulticket.event.entity.Event;
 import io.nugulticket.event.repository.EventRepository;
 import io.nugulticket.eventtime.service.EventTimeService;
 import io.nugulticket.s3file.S3FileService;
+import io.nugulticket.search.elasticsearch.KoreanInitialExtractor;
 import io.nugulticket.search.entity.EventDocument;
 import io.nugulticket.search.repository.EventSearchRepository;
 import io.nugulticket.user.entity.User;
@@ -76,8 +77,14 @@ public class EventService {
         // Redis에 공연 이름과 ID 매핑
         redisTemplate.opsForHash().put("eventIdMap", savedEvent.getTitle(), savedEvent.getEventId().toString());
 
-        // Elasticsearch에 이벤트 저장
+
         EventDocument eventDocument = convertToEventDocument(savedEvent);
+
+        // title에서 초성을 추출하여 title_initials 필드에 설정
+        String titleInitials = KoreanInitialExtractor.extractInitials(eventDocument.getTitle());
+        eventDocument.setTitleInitials(titleInitials);
+
+        // Elasticsearch에 이벤트 저장
         eventSearchRepository.save(eventDocument);
 
         eventTimeService.createEventTimes(event,
@@ -135,6 +142,10 @@ public class EventService {
 
         // Elasticsearch에 수정된 이벤트 저장
         EventDocument eventDocument = convertToEventDocument(updatedEvent);
+        // title에서 초성을 추출하여 title_initials 필드에 설정
+        String titleInitials = KoreanInitialExtractor.extractInitials(eventDocument.getTitle());
+
+        eventDocument.setTitleInitials(titleInitials);
         eventSearchRepository.save(eventDocument);
 
         return new UpdateEventResponse(updatedEvent);

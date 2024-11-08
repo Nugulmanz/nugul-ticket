@@ -51,7 +51,10 @@ public enum ErrorStatus implements BaseCode {
     _NOT_FOUND_EMAIL(HttpStatus.NOT_FOUND, "404", "가입되지 않은 이메일입니다."),
     _INVALID_VERIFICATION_CODE(HttpStatus.BAD_REQUEST, "400", "인증 코드가 올바르지 않습니다."),
     _EMAIL_ALREADY_VERIFIED(HttpStatus.CONFLICT, "409", "이메일이 이미 인증되었습니다."),
-    _EMAIL_SEND_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "500", "이메일 발송 중 오류가 발생했습니다.");
+    _EMAIL_SEND_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "500", "이메일 발송 중 오류가 발생했습니다."),
+
+    //search
+    SEARCH_QUERY_FAILURE(HttpStatus.INTERNAL_SERVER_ERROR, "500", "검색 쿼리 실행 중 오류가 발생했습니다.");
 
     private HttpStatus httpStatus;
     private String statusCode;

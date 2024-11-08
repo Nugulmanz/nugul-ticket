@@ -1,5 +1,14 @@
 package io.nugulticket.search.service;
 
+import co.elastic.clients.elasticsearch.ElasticsearchClient;
+import co.elastic.clients.elasticsearch._types.FieldValue;
+import co.elastic.clients.elasticsearch._types.query_dsl.Query;
+import co.elastic.clients.elasticsearch.core.SearchRequest;
+import co.elastic.clients.elasticsearch.core.SearchResponse;
+import co.elastic.clients.elasticsearch.core.search.Hit;
+import co.elastic.clients.json.JsonData;
+import io.nugulticket.common.apipayload.status.ErrorStatus;
+import io.nugulticket.common.exception.ApiException;
 import io.nugulticket.search.dto.searchEvents.SearchEventsResponse;
 import io.nugulticket.search.dto.searchTickets.SearchTicketsResponse;
 import io.nugulticket.search.entity.EventDocument;
@@ -10,26 +19,24 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.elasticsearch.client.elc.ElasticsearchTemplate;
-import org.springframework.data.elasticsearch.core.SearchHits;
-import org.springframework.data.elasticsearch.core.query.Criteria;
-import org.springframework.data.elasticsearch.core.query.CriteriaQuery;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StopWatch;
 
+import java.io.IOException;
 import java.time.LocalDate;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.List;
 
 @RequiredArgsConstructor
 @Service
 public class SearchService {
 
     private final TicketService ticketService;
-    private final ElasticsearchTemplate elasticsearchTemplate;
+    private final ElasticsearchClient elasticsearchClient;
 
     /**
-     * 공연제목 키워드, 공연날짜, 공연장소, 카테고리로 공연을 검색하는 메서드 (엘라스틱 서치)
+     * Java API Client를 사용해 Elasticsearch에서 동적 쿼리를 생성하고, 특정 조건에 맞는 EventDocument를 검색하는 메서드
      * @param page 조회할 페이지 번호
      * @param size 한 페이지당 사이즈
      * @param title 티켓의 공연제목 중 키워드 검색
@@ -37,55 +44,75 @@ public class SearchService {
      * @return Pageable한 SearchEventsResponse 반환
      */
     public Page<SearchEventsResponse> searchEvents(int page, int size, String title, LocalDate eventDate, String place, String category) {
-        Pageable pageable = PageRequest.of(page - 1, size);
-        Criteria criteria = new Criteria();
+        try {
+            // 페이징을 위한 Pageable 객체 생성
+            Pageable pageable = PageRequest.of(page - 1, size);
+            List<SearchEventsResponse> results = new ArrayList<>();
 
-        // 동적 쿼리 구성
-        if (title != null) {
-            criteria = criteria.or("title").fuzzy(title);
-        }
-        if (eventDate != null) {
-            criteria = criteria.and("startDate").lessThanEqual(eventDate)
-                    .and("endDate").greaterThanEqual(eventDate);
-        }
-        if (place != null) {
-            criteria = criteria.or("place").fuzzy(place);
-        }
-        if (category != null) {
-            criteria = criteria.or("category").fuzzy(category);
-        }
+            // 동적 쿼리 구성
+            Query boolQuery = Query.of(q -> q
+                    .bool(b -> {
+                        if (title != null) {
+                            // title 필드와 titleInitials 필드를 각각 검색
+                            b.should(m -> m.match(t -> t.field("title").query(title))); // 일반 검색
+                            b.should(m -> m.term(t -> t.field("titleInitials").value(title))); // 초성 검색
+                        }
+                        if (eventDate != null) {
+                            b.filter(f -> f.range(r -> r.field("startDate").lte(JsonData.of(eventDate.toString()))));
+                            b.filter(f -> f.range(r -> r.field("endDate").gte(JsonData.of(eventDate.toString()))));
+                        }
+                        if (place != null) {
+                            b.should(m -> m.match(t -> t.field("place").query(FieldValue.of(place))));
+                        }
+                        if (category != null) {
+                            b.should(m -> m.match(t -> t.field("category").query(FieldValue.of(category))));
+                        }
+                        return b;
+                    })
+            );
 
-        CriteriaQuery searchQuery = new CriteriaQuery(criteria).setPageable(pageable);
+            // 검색 요청 생성
+            SearchRequest request = SearchRequest.of(s -> s
+                    .index("events")
+                    .query(boolQuery)
+                    .from((page - 1) * size) // 페이징
+                    .size(size)
+            );
 
-        // search 메서드를 사용하여 페이징된 결과를 얻음
-        SearchHits<EventDocument> searchHits = elasticsearchTemplate.search(searchQuery, EventDocument.class);
+            // Elasticsearch에 요청 보내기
+            // elasticsearchClient.search() 메서드를 통해 request를 보내고, 결과를 EventDocument 타입의 SearchResponse로 받아옴
+            SearchResponse<EventDocument> response = elasticsearchClient.search(request, EventDocument.class);
 
-        // SearchHits를 Page로 변환, SearchEventsResponse로 매핑
-        return new PageImpl<>(
-                searchHits.getSearchHits().stream()
-                        .map(hit -> {
-                            EventDocument eventDoc = hit.getContent();
-                            return new SearchEventsResponse(
-                                    eventDoc.getEventId(),
-                                    eventDoc.getCategory(),
-                                    eventDoc.getTitle(),
-                                    eventDoc.getDescription(),
-                                    eventDoc.getStartDate(),
-                                    eventDoc.getEndDate(),
-                                    eventDoc.getRuntime(),
-                                    eventDoc.getViewRating(),
-                                    eventDoc.getRating(),
-                                    eventDoc.getPlace(),
-                                    eventDoc.getBookAble(),
-                                    eventDoc.getImageUrl()
-                            );
-                        })
-                        .collect(Collectors.toList()),
-                pageable,
-                searchHits.getTotalHits()
-        );
+            // SearchHits를 통해 검색 결과를 파싱
+            // hits()는 Elasticsearch에서 검색된 결과 목록을 가져오는 메서드, 실제 검색된 결과 목록을 반환
+            for (Hit<EventDocument> hit : response.hits().hits()) {
+                EventDocument eventDoc = hit.source();
+                results.add(new SearchEventsResponse(
+                        eventDoc.getEventId(),
+                        eventDoc.getCategory(),
+                        eventDoc.getTitle(),
+                        eventDoc.getDescription(),
+                        eventDoc.getStartDate(),
+                        eventDoc.getEndDate(),
+                        eventDoc.getRuntime(),
+                        eventDoc.getViewRating(),
+                        eventDoc.getRating(),
+                        eventDoc.getPlace(),
+                        eventDoc.getBookAble(),
+                        eventDoc.getImageUrl()
+                ));
+            }
+
+            // 검색 결과 전체 개수
+            long totalHits = response.hits().total().value();
+
+            // PageImpl을 통해 Page 형식으로 반환
+            return new PageImpl<>(results, pageable, totalHits);
+
+        } catch (IOException e) {
+            throw new ApiException(ErrorStatus.SEARCH_QUERY_FAILURE);
+        }
     }
-
 
     /**
      * 공연제목 키워드, 공연날짜로 검색하고 그 공연의 양도 가능한 티켓을 검색하는 메서드

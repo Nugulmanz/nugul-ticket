@@ -74,8 +74,8 @@ dependencies {
     // elasticsearch
     implementation 'org.springframework.boot:spring-boot-starter-data-elasticsearch'
 
-    // Elasticsearch High Level REST Client
-    implementation 'org.elasticsearch.client:elasticsearch-rest-high-level-client:7.17.0'
+    // Elasticsearch Java API Client
+    implementation 'co.elastic.clients:elasticsearch-java:8.10.0'
 
     // Jackson 관련 라이브러리
     implementation 'com.fasterxml.jackson.core:jackson-databind' // 데이터 바인딩
