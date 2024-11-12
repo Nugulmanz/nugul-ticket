@@ -26,7 +26,7 @@ import java.util.Objects;
 public class AuthService {
 
     private final EmailService emailService;
-    @Value("${ADMIN_KEY}")
+    @Value("${jwt.admin-key}")
     private String ADMIN_KEY; // 관리자 가입 시 사용
 
     private final BCryptPasswordEncoder passwordEncoders;
