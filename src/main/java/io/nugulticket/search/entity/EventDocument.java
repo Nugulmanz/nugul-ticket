@@ -19,7 +19,7 @@ import org.springframework.data.elasticsearch.annotations.FieldType;
 @Builder
 @ToString
 @JsonIgnoreProperties(ignoreUnknown = true)  // 알 수 없는 필드 무시
-@Document(indexName = "events")
+@Document(indexName = "events_current")
 public class EventDocument {
     @Id
     @Field(name = "event_id", type = FieldType.Long)
@@ -34,11 +34,11 @@ public class EventDocument {
     @Field(name = "description", type = FieldType.Text)
     private String description;
 
-    @Field(name = "startDate", type = FieldType.Date, format = DateFormat.basic_date)
+    @Field(name = "startDate", type = FieldType.Date, format = DateFormat.date)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private String startDate;
 
-    @Field(name = "endDate", type = FieldType.Date, format = DateFormat.basic_date)
+    @Field(name = "endDate", type = FieldType.Date, format = DateFormat.date)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private String endDate;
 

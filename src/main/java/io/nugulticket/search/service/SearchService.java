@@ -55,7 +55,8 @@ public class SearchService {
                         if (title != null) {
                             // title 필드와 titleInitials 필드를 각각 검색
                             b.should(m -> m.match(t -> t.field("title").query(title))); // 일반 검색
-                            b.should(m -> m.term(t -> t.field("titleInitials").value(title))); // 초성 검색
+                            b.should(m -> m.prefix(t -> t.field("titleInitials").value(title))); // 초성 검색
+                            b.minimumShouldMatch("1"); // should 조건 중 하나 이상 일치해야 함
                         }
                         if (eventDate != null) {
                             b.filter(f -> f.range(r -> r.field("startDate").lte(JsonData.of(eventDate.toString()))));
@@ -71,9 +72,9 @@ public class SearchService {
                     })
             );
 
-            // 검색 요청 생성
+            // 검색 요청 생성 - 알리아스 설정된 인덱스에 요청
             SearchRequest request = SearchRequest.of(s -> s
-                    .index("events")
+                    .index("events_current") // 알리아스 사용
                     .query(boolQuery)
                     .from((page - 1) * size) // 페이징
                     .size(size)
