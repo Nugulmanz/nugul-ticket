@@ -11,6 +11,9 @@ spring:
       host: ${REDIS_HOST}
 
   # 엘라스틱서치 어떻게 집어넣을것인가 논의 후 추가!!
+  opensearch:
+    endpoint: ${AWS_OPENSEARCH_ENDPOINT}
+
 
   thymeleaf:
     suffix: .html
