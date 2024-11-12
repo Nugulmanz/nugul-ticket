@@ -16,6 +16,9 @@ services:
         hard: -1
     volumes:
       - esdata:/usr/share/elasticsearch/data
+      - ./src/main/resources/elasticsearch/event_dictionary.txt:/usr/share/elasticsearch/config/event_dictionary.txt:ro
+      - ./src/main/resources/elasticsearch/event_synonym.txt:/usr/share/elasticsearch/config/event_synonym.txt:ro
+      - ./src/main/resources/elasticsearch/event_stopword.txt:/usr/share/elasticsearch/config/event_stopword.txt:ro
     ports:
       - 9200:9200
       - 9300:9300
