@@ -49,6 +49,17 @@ public class User extends Timestamped {
     //이메일 인증
     private boolean emailVerified = false;
 
+    //OTP 인증
+    private boolean otpVerified = false;
+
+    public void verifyOtp() {
+        this.otpVerified = true;
+    }
+
+    public void expireOtpVerification() {
+        this.otpVerified = false;
+    }
+
     public void verifyEmail() {
         this.emailVerified = true;
     }
