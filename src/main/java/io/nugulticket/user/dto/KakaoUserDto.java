@@ -4,10 +4,12 @@ import io.nugulticket.user.enums.LoginType;
 import io.nugulticket.user.enums.UserRole;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @AllArgsConstructor
+@NoArgsConstructor
 public class KakaoUserDto {
     private Long id;  //socialId
     private String nickname;

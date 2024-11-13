@@ -16,7 +16,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
-import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
@@ -28,18 +27,18 @@ public class JwtSecurityFilter extends OncePerRequestFilter {
     private final JwtUtil jwtUtil;
 
     @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) {
+        String path = request.getRequestURI();
+        return path.startsWith("/api/auth/v1/") || path.startsWith("/api/search/v1/") || path.startsWith("/health/");
+    }
+
+    @Override
     protected void doFilterInternal(
             HttpServletRequest httpRequest,
             @NonNull HttpServletResponse httpResponse,
             @NonNull FilterChain chain
     ) throws ServletException, IOException {
         String authorizationHeader = httpRequest.getHeader("Authorization");
-
-        // 통합 검색 기능은 JWT 검증을 건너뜀
-        if (httpRequest.getRequestURI().startsWith("/api/search/v1/")) {
-            chain.doFilter(httpRequest, httpResponse);
-            return;
-        }
 
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             String jwt = jwtUtil.substringToken(authorizationHeader);

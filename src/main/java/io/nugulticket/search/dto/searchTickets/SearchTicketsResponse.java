@@ -1,4 +1,4 @@
-package io.nugulticket.search.dto.searchTransferableTickets;
+package io.nugulticket.search.dto.searchTickets;
 
 import io.nugulticket.event.entity.Event;
 import io.nugulticket.seat.entity.Seat;
@@ -9,7 +9,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class searchTransferableTicketsResponse {
+public class SearchTicketsResponse {
 
     private String title;
     private String category;
@@ -17,11 +17,11 @@ public class searchTransferableTicketsResponse {
     private int price; //양도가격 - 티켓 본 가격
     private Long userId; //양도하는 사람 아이디
 
-    public static searchTransferableTicketsResponse of(Ticket ticket) {
+    public static SearchTicketsResponse of(Ticket ticket) {
         Event event = ticket.getEvent();
         Seat seat = ticket.getSeat();
         User user = ticket.getUser();
-        return new searchTransferableTicketsResponse(
+        return new SearchTicketsResponse(
                 event.getTitle(),
                 event.getCategory(),
                 seat.getSeatNumber(),

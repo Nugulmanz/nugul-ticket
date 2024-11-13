@@ -6,12 +6,13 @@ import io.nugulticket.auth.dto.SignupResponse;
 import io.nugulticket.common.apipayload.status.ErrorStatus;
 import io.nugulticket.common.exception.ApiException;
 import io.nugulticket.common.utils.JwtUtil;
+import io.nugulticket.email.service.EmailService;
+import io.nugulticket.email.service.RedisService;
 import io.nugulticket.user.entity.User;
 import io.nugulticket.user.enums.LoginType;
 import io.nugulticket.user.enums.UserRole;
 import io.nugulticket.user.service.UserService;
 import lombok.RequiredArgsConstructor;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -24,12 +25,14 @@ import java.util.Objects;
 @Transactional(readOnly = true)
 public class AuthService {
 
-    @Value("${ADMIN_KEY}")
+    private final EmailService emailService;
+    @Value("${jwt.admin-key}")
     private String ADMIN_KEY; // 관리자 가입 시 사용
 
     private final BCryptPasswordEncoder passwordEncoders;
     private final JwtUtil jwtUtil;
     private final UserService userService;
+    private final RedisService redisService;
 
     /**
      * 회원가입 기능(USER, ADMIN 모두 수행)
@@ -46,14 +49,14 @@ public class AuthService {
             throw new ApiException(ErrorStatus._USER_ALREADY_EXISTS);
         }
 
-        // 사용자 역할을 설정하기 위한 변수 설정
-        UserRole userRole;
-        if (signupRequest.getAdminKey() == null || signupRequest.getAdminKey().isEmpty()) {
-            userRole = UserRole.USER;
-        } else if (Objects.equals(signupRequest.getAdminKey(), ADMIN_KEY)) {
-            userRole = UserRole.ADMIN;
-        } else {
-            throw new ApiException(ErrorStatus._INVALID_ADMIN_KEY);
+        UserRole userRole = UserRole.UNVERIFIED_USER;
+
+        if (signupRequest.getAdminKey() != null && !signupRequest.getAdminKey().isEmpty()) {
+            if (Objects.equals(signupRequest.getAdminKey(), ADMIN_KEY)) {
+                userRole = UserRole.ADMIN;
+            } else {
+                throw new ApiException(ErrorStatus._INVALID_ADMIN_KEY);
+            }
         }
 
         User user = new User(
@@ -63,9 +66,14 @@ public class AuthService {
                 signupRequest.getNickname(),
                 signupRequest.getPhoneNumber(),
                 userRole,
-                LoginType.LOCAL
+                LoginType.LOCAL,
+                false
         );
         User savedUser = userService.addUser(user);
+
+        String code = emailService.joinEmail(signupRequest.getEmail());
+        redisService.setCode(signupRequest.getEmail(), code);
+
         return SignupResponse.of(savedUser);
     }
 
@@ -104,4 +112,6 @@ public class AuthService {
         }
         user.deleteAccount();
     }
+
+
 }

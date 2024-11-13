@@ -1,0 +1,36 @@
+spring:
+  application:
+    name: nugul-ticket
+
+jwt:
+  secret:
+    key: 7ZWt7ZW0OTntmZTsnbTtjIXtlZzqta3snYTrhIjrqLjshLjqs4TroZzrgpjslYTqsIDsnpDtm4zrpa3tlZzqsJzrsJzsnpDrpbzrp4zrk6TslrTqsIDsnpA
+    
+client:
+  id: werfsdfsdgsgwse
+
+cloud:
+  aws:
+    s3:
+      bucket: nugulticket
+      credentials:
+        access-key: setfsegtsdgdfgdfg
+        secret-key: sersfrsdgfsdgdgsdgf
+    region:
+      static: sdfsdfsdfdf
+    stack:
+      auto: false
+
+email:
+  host: smtp.naver.com
+  port: 465
+  setForm: sdfsreswrfsdgfsg # 발신자 이메일 주소
+  password: sdfsdfsdgfgrtwerfw #발신자 비밀번호
+
+  properties:
+    mail:
+      smtp:
+        auth: true
+        ssl:
+          enable: true # SSL 활성화
+

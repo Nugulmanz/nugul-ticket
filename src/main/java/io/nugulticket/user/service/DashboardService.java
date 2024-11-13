@@ -3,14 +3,14 @@ package io.nugulticket.user.service;
 import io.nugulticket.common.AuthUser;
 import io.nugulticket.common.apipayload.status.ErrorStatus;
 import io.nugulticket.common.exception.ApiException;
-import io.nugulticket.user.dto.acceptRefund.AcceptRefundRequest;
-import io.nugulticket.user.dto.acceptRefund.AcceptRefundResponse;
-import io.nugulticket.user.dto.authorityAccept.AuthorityAcceptResponse;
-import io.nugulticket.user.dto.getMyEvents.getMyEventsResponse;
 import io.nugulticket.event.entity.Event;
 import io.nugulticket.event.service.EventService;
 import io.nugulticket.ticket.entity.Ticket;
 import io.nugulticket.ticket.service.TicketService;
+import io.nugulticket.user.dto.acceptRefund.AcceptRefundRequest;
+import io.nugulticket.user.dto.acceptRefund.AcceptRefundResponse;
+import io.nugulticket.user.dto.authorityAccept.AuthorityAcceptResponse;
+import io.nugulticket.user.dto.getMyEvents.getMyEventsResponse;
 import io.nugulticket.user.entity.User;
 import io.nugulticket.user.enums.UserRole;
 import lombok.RequiredArgsConstructor;
@@ -63,7 +63,7 @@ public class DashboardService {
     }
 
     /**
-     *
+     * 환불을 진행하는 메서드
      * @param authUser : 로그인 유저
      * @param eventId : 이벤트 아이디
      * @param ticketId : 티켓 아이디

@@ -1,10 +1,15 @@
 package io.nugulticket.event.dto.createEvent;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 
 @Getter
+@AllArgsConstructor
+@Builder
 public class CreateEventRequest {
     private String title;
     private String place;
@@ -26,4 +31,6 @@ public class CreateEventRequest {
     private int rSeatPrice;
     private int sSeatPrice;
     private int aSeatPrice;
+
+    private MultipartFile image;
 }

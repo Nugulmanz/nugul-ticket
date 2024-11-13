@@ -7,20 +7,18 @@ import io.nugulticket.user.entity.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
-import org.hibernate.annotations.SQLDelete;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Entity
 @Getter
 @NoArgsConstructor
-//@SQLDelete(sql = "UPDATE event SET is_deleted = true WHERE event_id = ?")
-//@OnDelete( action = OnDeleteAction.CASCADE)
-@Table(name = "event")
+@Table(name = "event", indexes = {
+        @Index(name = "idx_event_date", columnList = "startDate, endDate"),
+        @Index(name = "idx_place", columnList = "place"),
+        @Index(name = "idx_category", columnList = "category"),
+        @Index(name = "idx_title", columnList = "title")
+})
 public class Event extends Timestamped {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -43,8 +41,11 @@ public class Event extends Timestamped {
 
     private Boolean is_deleted = false;
 
+    // S3 이미지 url
+    private String imageUrl;
 
-    public Event(User user, CreateEventRequest createEventRequest) {
+
+    public Event(User user, CreateEventRequest createEventRequest, String imageUrl) {
         this.user = user;
         this.category = createEventRequest.getCategory();
         this.title = createEventRequest.getTitle();
@@ -56,9 +57,10 @@ public class Event extends Timestamped {
         this.rating = createEventRequest.getRating();
         this.place = createEventRequest.getPlace();
         this.bookAble = createEventRequest.getBookAble();
+        this.imageUrl = imageUrl;
     }
 
-    public void updateEvent(UpdateEventRequest updateEventRequest) {
+    public void updateEvent(UpdateEventRequest updateEventRequest, String imageUrl) {
         if (updateEventRequest.getCategory() != null) {
             this.category = updateEventRequest.getCategory();
         }
@@ -89,10 +91,30 @@ public class Event extends Timestamped {
         if (updateEventRequest.getBookAble() != null) {
             this.bookAble = updateEventRequest.getBookAble();
         }
+        if (updateEventRequest.getImage() != null) {
+            this.imageUrl = imageUrl;
+        }
     }
 
     public void deleteEvent(){
         this.is_deleted = true;
+    }
+
+
+    public Event(Long eventId, String title, String description, String category, LocalDate startDate, LocalDate endDate,
+                 String runtime, String viewRating, Double rating, String place, Boolean bookAble, String dummyImageUrl) {
+        this.eventId = eventId;
+        this.title= title;
+        this.description = description;
+        this.category = category;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.runtime = runtime;
+        this.viewRating = viewRating;
+        this.rating = rating;
+        this.place = place;
+        this.bookAble = bookAble;
+        this.imageUrl = dummyImageUrl;
     }
 
 }

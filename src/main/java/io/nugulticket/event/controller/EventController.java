@@ -11,8 +11,6 @@ import io.nugulticket.event.dto.updateEvent.UpdateEventRequest;
 import io.nugulticket.event.dto.updateEvent.UpdateEventResponse;
 import io.nugulticket.event.service.EventService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,9 +26,8 @@ public class EventController {
     @PostMapping
     public ApiResponse<CreateEventResponse> createEvent(
             @AuthenticationPrincipal AuthUser authUser,
-            @RequestBody CreateEventRequest eventRequest) {
-
-        CreateEventResponse response = eventService.createEvent(authUser, eventRequest);
+            @ModelAttribute CreateEventRequest eventRequest) {
+        CreateEventResponse response = eventService.createEvent(authUser, eventRequest, eventRequest.getImage());
         return ApiResponse.ok(response);
     }
 
@@ -38,7 +35,7 @@ public class EventController {
     public ApiResponse<UpdateEventResponse> updateEvent(
             @AuthenticationPrincipal AuthUser authUser,
             @PathVariable Long eventId,
-            @RequestBody UpdateEventRequest eventRequest) {
+            @ModelAttribute UpdateEventRequest eventRequest) {
 
         UpdateEventResponse response = eventService.updateEvent(authUser, eventId, eventRequest);
         return ApiResponse.ok(response);

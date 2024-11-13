@@ -1,12 +1,64 @@
 spring:
   profiles:
     active: local
+
   application:
     name: nugul-ticket
+
+aws:
+  opensearch:
+    endpoint: ${AWS_OPENSEARCH_ENDPOINT}
 
 jwt:
   secret:
     key: ${JWT_SECRET_KEY}
+  admin-key : ${ADMIN_KEY}
     
 client:
   id: ${CLIENT_ID}
+
+cloud:
+  aws:
+    s3:
+      bucket: nugulticket
+      credentials:
+        access-key: ${S3_ACCESS_KEY}
+        secret-key: ${S3_SECRET_KEY}
+    region:
+      static: ${S3_REGION}
+    stack:
+      auto: false
+
+
+    sqs:
+      region:
+        static: ${SQS_REGION}
+      credentials:
+        access-key: ${SQS_ACCESS_KEY}
+        secret-key: ${SQS_SECRET_KEY}
+      name: NugulTicket.fifo
+      url: ${SQS_TICKETS_URL}
+
+    sns:
+      region:
+        static: ${SQS_REGION}
+      payment:
+          topic:
+            arn: ${SNS_PAYMENT_TOPIC}
+
+email:
+  host: smtp.naver.com
+  port: 465
+  setForm: ${NAVER_EMAIL_USERNAME} # 발신자 이메일 주소
+  password: ${NAVER_EMAIL_PASSWORD} #발신자 비밀번호
+
+  properties:
+    mail:
+      smtp:
+        auth: true
+        ssl:
+          enable: true # SSL 활성화
+
+payment:
+  url: ${PAYMENT_URL}
+

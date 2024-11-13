@@ -13,7 +13,9 @@ import java.time.LocalDateTime;
 @Getter
 @Entity
 @NoArgsConstructor
-@Table(name = "ticket")
+@Table(name = "ticket", indexes = {
+        @Index(name = "idx_ticket_status", columnList = "status")
+})
 public class Ticket {
 
     @Id
@@ -63,7 +65,7 @@ public class Ticket {
         this.qrCode = qrCode;
         this.purchaseDate = LocalDateTime.now();
         this.user = user;
-        this.status=TicketStatus.RESERVED;
+        this.status=TicketStatus.WAITING_RESERVED;
     }
 
     public void requestCancel(){
@@ -71,5 +73,9 @@ public class Ticket {
     }
     public void cancel(){
         this.status=TicketStatus.CANCELLED;
+    }
+
+    public void rollbackSeat(){
+        this.seat.rollbackReserve();
     }
 }

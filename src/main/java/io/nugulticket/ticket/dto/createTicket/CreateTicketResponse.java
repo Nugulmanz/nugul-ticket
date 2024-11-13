@@ -1,7 +1,6 @@
 package io.nugulticket.ticket.dto.createTicket;
 
 import io.nugulticket.event.entity.Event;
-import io.nugulticket.eventtime.entity.EventTime;
 import io.nugulticket.seat.entity.Seat;
 import io.nugulticket.seat.enums.SeatType;
 import io.nugulticket.ticket.entity.Ticket;
@@ -19,6 +18,9 @@ public class CreateTicketResponse {
     private int price;
     private boolean isReserved;
     private LocalDateTime purchaseDate;
+
+    // 이거 추가해주기
+    private String title;
 
     public CreateTicketResponse(Seat seat, Event event, Ticket ticket, Long userId) {
         this.seatId=seat.getId();

@@ -8,7 +8,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -39,7 +38,7 @@ public class EventTimeService {
             EventTime savedEventTime = eventTimeRepository.save(eventTime);
 
             eventTimes.add(savedEventTime);
-            seatService.creatSeat(savedEventTime, price, vipSeatSize, rSeatSize, aSeatSize, aSeatSize);
+            seatService.createSeat(savedEventTime, price, vipSeatSize, rSeatSize, aSeatSize, aSeatSize);
 
             mid = mid.plusDays(1);
         }

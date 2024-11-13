@@ -1,15 +1,20 @@
 package io.nugulticket.ticket.service;
 
 import io.nugulticket.common.AuthUser;
+import io.nugulticket.common.apipayload.status.ErrorStatus;
+import io.nugulticket.common.exception.ApiException;
+import io.nugulticket.common.utils.payment.GenerateOrderIdUtil;
 import io.nugulticket.ticket.config.TicketUtil;
 import io.nugulticket.ticket.dto.response.MyTransferTicketsResponse;
-import io.nugulticket.ticket.dto.response.TicketTransferApplyResponse;
+import io.nugulticket.ticket.dto.response.TicketNeedPaymentResponse;
 import io.nugulticket.ticket.dto.response.TicketTransferCancelResponse;
 import io.nugulticket.ticket.dto.response.TicketTransferResponse;
 import io.nugulticket.ticket.entity.Ticket;
 import io.nugulticket.ticket.entity.TicketTransfer;
 import io.nugulticket.ticket.enums.TicketStatus;
 import io.nugulticket.ticket.repository.TicketTransferRepository;
+import io.nugulticket.user.entity.User;
+import io.nugulticket.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,6 +28,8 @@ public class TicketTransferService {
     private final TicketUtil ticketUtil;
     private final TicketService ticketService;
     private final TicketTransferRepository ticketTransferRepository;
+    private final GenerateOrderIdUtil generateOrderIdUtil;
+    private final UserService userService;
 
     /**
      * 양도 대기중인 Ticket에 양도 신청을 넣는 메서드
@@ -30,22 +37,50 @@ public class TicketTransferService {
      * @return 양도 결과가 담긴 Dto객체
      */
     @Transactional
-    public TicketTransferApplyResponse applyTransfer(AuthUser user, Long ticketId) {
+    public TicketNeedPaymentResponse applyTransferBeforePayment(AuthUser users, Long ticketId) {
+        User user = userService.getUser(users.getId());
         Ticket ticket = ticketService.getTicket(ticketId);
 
         // 해당 티켓 상태가 양도 가능한 상태인지 확인
         if(!ticketUtil.isAbleTicketApplyTransfer(ticket, user.getId())) {
-            throw new IllegalArgumentException();
+            throw new ApiException(ErrorStatus._CANT_TRANSFER_STATE);
         }
 
-        // 해당 티켓의 상태를 변화 => 재양도시 체크하기 위함
+        ticket.changeStatus(TicketStatus.WAITING_RESERVED);
+
+        return TicketNeedPaymentResponse.of(ticket, users,"transfer", generateOrderIdUtil.generateOrderId());
+    }
+
+    /**
+     * 결제 후 티켓 소유권을 이전하는 메서드
+     * @param ticketId 소유권을 이전할 티켓 메서드
+     * @param userId 소유권을 이전 받을 유저 Id
+     * @return 해당 소유권을 이전한 티켓 정보가 담긴 Response 객체
+     */
+    @Transactional
+    public TicketTransferResponse applyTransferAfterPayment(Long ticketId, Long userId) {
+        Ticket ticket = ticketService.getTicket(ticketId);
+
         ticket.changeStatus(TicketStatus.TRANSFERRED);
 
-        // 티켓 양도 결과를 DB에 저장
-        TicketTransfer ticketTransfer = new TicketTransfer(ticket, user.getId());
+        TicketTransfer ticketTransfer = new TicketTransfer(ticket, userId);
         TicketTransfer savedTicketTransfer = ticketTransferRepository.save(ticketTransfer);
 
-        return TicketTransferApplyResponse.of(savedTicketTransfer);
+        return TicketTransferResponse.of(ticket);
+    }
+
+    /**
+     * 결제 실패 후 티켓 상태를 롤백하는 메서드
+     * @param ticketId 소유권을 롤백할 티켓 Id
+     * @return 상태를 롤백 시킨 티켓 정보가 담긴 Response 객체
+     */
+    @Transactional
+    public TicketTransferResponse cancelTransferAfterPayment(Long ticketId) {
+        Ticket ticket = ticketService.getTicket(ticketId);
+
+        ticket.changeStatus(TicketStatus.WAITTRANSFER);
+
+        return TicketTransferResponse.of(ticket);
     }
 
     /**
@@ -59,7 +94,7 @@ public class TicketTransferService {
 
         // 해당 티켓이 양도 가능 상태인지 확인
         if (!ticketUtil.isAbleTicketCancelTransfer(ticket, user.getId())) {
-            throw new IllegalArgumentException();
+            throw new ApiException(ErrorStatus._CANT_TRANSFER_STATE);
         }
 
         // 티켓을 양도 대기 -> 예약 상태로 변화
@@ -79,7 +114,7 @@ public class TicketTransferService {
 
         // 해당 티켓이 양도 가능 상태인지 확인
         if (!ticketUtil.isAbleTicketTransfer(ticket, user.getId())) {
-            throw new IllegalArgumentException();
+            throw new ApiException(ErrorStatus._CANT_TRANSFER_STATE);
         }
 
         // 티켓을 양도 대기 -> 예약 상태로 변화

@@ -8,8 +8,6 @@ import io.nugulticket.user.dto.UserResponse;
 import io.nugulticket.user.dto.UserUpdateRequest;
 import io.nugulticket.user.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
