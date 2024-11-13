@@ -29,6 +29,23 @@ cloud:
     stack:
       auto: false
 
+
+    sqs:
+      region:
+        static: ${SQS_REGION}
+      credentials:
+        access-key: ${SQS_ACCESS_KEY}
+        secret-key: ${SQS_SECRET_KEY}
+      name: NugulTicket.fifo
+      url: ${SQS_TICKETS_URL}
+
+    sns:
+      region:
+        static: ${SQS_REGION}
+      payment:
+          topic:
+            arn: ${SNS_PAYMENT_TOPIC}
+
 email:
   host: smtp.naver.com
   port: 465
@@ -44,3 +61,4 @@ email:
 
 payment:
   url: ${PAYMENT_URL}
+

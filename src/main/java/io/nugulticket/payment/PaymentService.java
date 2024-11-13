@@ -1,7 +1,6 @@
 package io.nugulticket.payment;
 
 import io.nugulticket.auction.service.AuctionService;
-import io.nugulticket.payment.dto.response.PaymentResponse;
 import io.nugulticket.ticket.entity.Ticket;
 import io.nugulticket.ticket.service.TicketService;
 import io.nugulticket.ticket.service.TicketTransferService;

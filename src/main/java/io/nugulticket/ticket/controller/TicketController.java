@@ -4,7 +4,10 @@ import io.nugulticket.common.AuthUser;
 import io.nugulticket.common.apipayload.ApiResponse;
 import io.nugulticket.common.utils.payment.CommunicationPaymentUtil;
 import io.nugulticket.common.utils.payment.GenerateOrderIdUtil;
+import io.nugulticket.config.SQSProtocol;
 import io.nugulticket.payment.dto.request.PaymentRequest;
+import io.nugulticket.sns.service.SnsService;
+import io.nugulticket.sqs.dto.SQSPreOrder;
 import io.nugulticket.ticket.dto.createTicket.CreateTicketRequest;
 import io.nugulticket.ticket.dto.refundTicket.RefundTicketResponse;
 import io.nugulticket.ticket.dto.response.TicketNeedPaymentResponse;
@@ -21,6 +24,7 @@ import org.springframework.web.servlet.ModelAndView;
 public class TicketController {
 
     private final TicketService ticketService;
+    private final SnsService snsService;
     private final CommunicationPaymentUtil communicationPaymentUtil;
 
     // orderId 생성해주는 유틸
@@ -31,6 +35,11 @@ public class TicketController {
                                      @RequestBody CreateTicketRequest reqDto,
                                      @AuthenticationPrincipal AuthUser authUser) {
         TicketNeedPaymentResponse resDto = ticketService.createTicket(reqDto, authUser);
+        SQSPreOrder preOrderDto = new SQSPreOrder(SQSProtocol.TYPE_PRE_ORDER,
+                resDto.getOrderName(),
+                resDto.getAmount());
+
+        snsService.publishToPaymentTopic(preOrderDto.toSNSAttributes());
 
         // ModelAndView 쓰는 이유는, html도 보내줄 수 있어서 씀
         ModelAndView mav = new ModelAndView();
