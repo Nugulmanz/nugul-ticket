@@ -59,8 +59,11 @@ public enum ErrorStatus implements BaseCode {
     OTP_INVALID_VERIFICATION_CODE(HttpStatus.BAD_REQUEST, "400", "유효하지 않은 OTP 인증 코드입니다."),
     OTP_ACCOUNT_NOT_LOCKED(HttpStatus.BAD_REQUEST, "400", "계정이 잠금 상태가 아닙니다. 잠금 해제 코드 발송이 불가능합니다."),
     OTP_MAX_ATTEMPTS_EXCEEDED(HttpStatus.FORBIDDEN, "403", "5회 실패했습니다. 계정 잠금이 되었습니다. 이메일로 잠금 해제 코드를 발송했습니다."),
-    OTP_INVALID_UNLOCK_CODE(HttpStatus.BAD_REQUEST, "400", "잘못된 잠금 해제 코드입니다. 다시 입력해 주세요.");
+    OTP_INVALID_UNLOCK_CODE(HttpStatus.BAD_REQUEST, "400", "잘못된 잠금 해제 코드입니다. 다시 입력해 주세요."),
 
+    //search
+    SEARCH_QUERY_FAILURE(HttpStatus.INTERNAL_SERVER_ERROR, "500", "검 실행 중 오류가 발생했습니다."),
+    OPENSEARCH_FAILURE(HttpStatus.INTERNAL_SERVER_ERROR, "500", "검색 중 오류가 발생했습니다.");
 
     private HttpStatus httpStatus;
     private String statusCode;

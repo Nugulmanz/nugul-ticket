@@ -53,7 +53,7 @@ public class ElasticsearchDataInserter {
             System.out.println("jsonData = " + jsonData);
 
             // Bulk API 형식에 맞게 요청 데이터 추가
-            bulkRequest.append("{ \"index\": { \"_index\": \"events\", \"_id\": \"" + eventDocument.getEventId() + "\" } }\n");
+            bulkRequest.append("{ \"index\": { \"_index\": \"events_current\", \"_id\": \"" + eventDocument.getEventId() + "\" } }\n");
             bulkRequest.append(jsonData + "\n");
         }
 

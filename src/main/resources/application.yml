@@ -1,8 +1,12 @@
 spring:
   profiles:
     active: local
+
   application:
     name: nugul-ticket
+
+  opensearch:
+    endpoint: ${AWS_OPENSEARCH_ENDPOINT}
 
 jwt:
   secret:
@@ -35,3 +39,6 @@ email:
         auth: true
         ssl:
           enable: true # SSL 활성화
+
+payment:
+  url: ${PAYMENT_URL}
