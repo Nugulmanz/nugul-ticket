@@ -12,7 +12,6 @@ import io.nugulticket.user.entity.User;
 import io.nugulticket.user.enums.LoginType;
 import io.nugulticket.user.enums.UserRole;
 import org.springframework.test.util.ReflectionTestUtils;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;

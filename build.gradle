@@ -93,6 +93,11 @@ dependencies {
 
     // Google OTP (Google Authenticator) 의존성
     implementation 'com.warrenstrange:googleauth:1.4.0'
+
+    // SQS
+    implementation platform("io.awspring.cloud:spring-cloud-aws-dependencies:3.0.1")
+    implementation 'io.awspring.cloud:spring-cloud-aws-starter-sqs'
+    implementation 'io.awspring.cloud:spring-cloud-aws-starter-sns'
 }
 
 tasks.named('test') {

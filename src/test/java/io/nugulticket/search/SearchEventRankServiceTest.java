@@ -1,11 +1,8 @@
 package io.nugulticket.search;
 
-import io.nugulticket.common.apipayload.status.ErrorStatus;
-import io.nugulticket.common.exception.ApiException;
 import io.nugulticket.event.service.EventService;
 import io.nugulticket.search.service.SearchEventRankService;
 import io.nugulticket.util.TestUtil;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -21,7 +18,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
 

@@ -7,7 +7,6 @@ import io.nugulticket.auction.dto.createAction.CreateAuctionRequest;
 import io.nugulticket.auction.entity.Auction;
 import io.nugulticket.auction.repository.AuctionRepository;
 import io.nugulticket.auction.service.AuctionService;
-import io.nugulticket.common.apipayload.status.ErrorStatus;
 import io.nugulticket.common.exception.ApiException;
 import io.nugulticket.ticket.entity.Ticket;
 import io.nugulticket.ticket.service.TicketService;
@@ -23,7 +22,6 @@ import java.time.LocalDate;
 import java.util.Optional;
 
 import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
