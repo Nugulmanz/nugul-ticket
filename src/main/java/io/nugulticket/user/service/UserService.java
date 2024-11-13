@@ -6,6 +6,7 @@ import io.nugulticket.user.entity.User;
 import io.nugulticket.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
@@ -78,7 +79,15 @@ public class UserService {
      * 유저 권한이 갱신된 유저를 저장하는 메서드
      * @param user 권한이 갱신된 유저
      */
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void updateUserRole(User user) {
         userRepository.save(user);
+        System.out.println("DB에 저장된 UserRole: " + user.getUserRole()); // 디버그 출력
+    }
+
+    //Otp 재발송 코드
+    public User findById(Long userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
     }
 }

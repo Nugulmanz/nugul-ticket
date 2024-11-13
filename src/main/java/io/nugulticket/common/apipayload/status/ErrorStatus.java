@@ -51,7 +51,16 @@ public enum ErrorStatus implements BaseCode {
     _NOT_FOUND_EMAIL(HttpStatus.NOT_FOUND, "404", "가입되지 않은 이메일입니다."),
     _INVALID_VERIFICATION_CODE(HttpStatus.BAD_REQUEST, "400", "인증 코드가 올바르지 않습니다."),
     _EMAIL_ALREADY_VERIFIED(HttpStatus.CONFLICT, "409", "이메일이 이미 인증되었습니다."),
-    _EMAIL_SEND_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "500", "이메일 발송 중 오류가 발생했습니다.");
+    _EMAIL_SEND_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "500", "이메일 발송 중 오류가 발생했습니다."),
+
+    //otp
+    OTP_VERIFICATION_REQUIRED(HttpStatus.UNAUTHORIZED, "401", "OTP 인증이 필요합니다."),
+    OTP_ACCOUNT_LOCKED(HttpStatus.FORBIDDEN, "403", "계정이 잠겼습니다. 이메일 인증 후 잠금 해제가 가능합니다."),
+    OTP_INVALID_VERIFICATION_CODE(HttpStatus.BAD_REQUEST, "400", "유효하지 않은 OTP 인증 코드입니다."),
+    OTP_ACCOUNT_NOT_LOCKED(HttpStatus.BAD_REQUEST, "400", "계정이 잠금 상태가 아닙니다. 잠금 해제 코드 발송이 불가능합니다."),
+    OTP_MAX_ATTEMPTS_EXCEEDED(HttpStatus.FORBIDDEN, "403", "5회 실패했습니다. 계정 잠금이 되었습니다. 이메일로 잠금 해제 코드를 발송했습니다."),
+    OTP_INVALID_UNLOCK_CODE(HttpStatus.BAD_REQUEST, "400", "잘못된 잠금 해제 코드입니다. 다시 입력해 주세요.");
+
 
     private HttpStatus httpStatus;
     private String statusCode;

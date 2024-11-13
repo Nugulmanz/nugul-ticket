@@ -83,6 +83,9 @@ dependencies {
 
     //이메일 인증
     implementation 'org.springframework.boot:spring-boot-starter-mail'
+
+    // Google OTP (Google Authenticator) 의존성
+    implementation 'com.warrenstrange:googleauth:1.4.0'
 }
 
 tasks.named('test') {
