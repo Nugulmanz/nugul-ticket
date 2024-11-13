@@ -2,8 +2,10 @@ package io.nugulticket.payment.dto.request;
 
 import io.nugulticket.ticket.dto.response.TicketNeedPaymentResponse;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
+@NoArgsConstructor
 public class PaymentRequest {
     String paymentKey;
     String orderId;
@@ -26,4 +28,9 @@ public class PaymentRequest {
         request.ticketId=response.getTicketId();
         return request;
     }
-};
+
+    public PaymentRequest(String orderId) {
+        this.orderId = orderId;
+    }
+
+}

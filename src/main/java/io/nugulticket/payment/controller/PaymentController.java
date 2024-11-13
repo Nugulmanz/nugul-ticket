@@ -58,4 +58,16 @@ public class PaymentController {
 
         return "/payment/checkout";
     }
+
+    //결제 정보 요청하는 REST API
+    @GetMapping("/info/{orderId}")
+    public ResponseEntity<JSONObject> getPaymentInfo (@PathVariable String orderId) {
+        // 결제 서버에 정보 요청
+        PaymentRequest paymentRequest = new PaymentRequest(orderId);
+
+        JSONObject paymentInfo = communicationPaymentUtil.getPaymentInfo(paymentRequest);
+        return ResponseEntity.ok(paymentInfo);
+    }
+
+
 }
