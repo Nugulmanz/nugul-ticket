@@ -1,11 +1,15 @@
 package io.nugulticket.config;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Component;
 import software.amazon.awssdk.services.sqs.SqsAsyncClient;
 import software.amazon.awssdk.services.sqs.model.DeleteMessageResponse;
 import software.amazon.awssdk.services.sqs.model.Message;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicReference;
@@ -37,6 +41,25 @@ public class SQSUtility {
         return result.get();
     }
 
+    public Map<String,  software.amazon.awssdk.services.sqs.model.MessageAttributeValue> parseMessage(Message message) throws JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper();
+        Map<String,  software.amazon.awssdk.services.sqs.model.MessageAttributeValue> result = new HashMap<>();
+
+        JsonNode jsonNode = mapper.readTree(message.body());
+        JsonNode data = jsonNode.get("MessageAttributes");
+        for (Iterator<String> it = data.fieldNames(); it.hasNext(); ) {
+            String f = it.next();
+            software.amazon.awssdk.services.sqs.model.MessageAttributeValue attributeValue =  software.amazon.awssdk.services.sqs.model.MessageAttributeValue.builder()
+                    .stringValue(data.get(f).get("Value").asText())
+                    .dataType(data.get(f).get("Type").asText())
+                    .build();
+
+            result.put(f, attributeValue);
+        }
+
+        return result;
+    }
+
     public String getType(Map<String, software.amazon.awssdk.services.sqs.model.MessageAttributeValue> sqsAttributes) {
         return sqsAttributes.get(SQSProtocol.ATTRIBUTE_NAME_TYPE).stringValue();
     }
@@ -60,6 +83,4 @@ public class SQSUtility {
 
         return snsAttributes;
     }
-
-
 }

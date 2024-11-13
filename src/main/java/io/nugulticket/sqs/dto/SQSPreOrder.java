@@ -2,6 +2,7 @@ package io.nugulticket.sqs.dto;
 
 
 import io.nugulticket.config.SQSProtocol;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -13,6 +14,7 @@ import java.util.Map;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 public class SQSPreOrder implements SQSDto {
 
     private String type;

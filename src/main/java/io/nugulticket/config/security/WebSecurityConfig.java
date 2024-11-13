@@ -47,7 +47,7 @@ public class WebSecurityConfig {
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .logout(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-//                        .requestMatchers("**").permitAll() // 테스트용
+                       .requestMatchers("**").permitAll() // 테스트용
                         .requestMatchers("/api/auth/v1/**", "/api/search/v1/**").permitAll()
                         .requestMatchers("/actuator/**").permitAll()    // 모니터링을 위한 actuator 허용
                         .requestMatchers(HttpMethod.GET, "/api/events/v1/**").permitAll()   // 공연 단건 및 전체 조회

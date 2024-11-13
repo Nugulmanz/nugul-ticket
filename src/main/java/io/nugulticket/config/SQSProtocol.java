@@ -1,7 +1,6 @@
 package io.nugulticket.config;
 
 public class SQSProtocol {
-    // SQS 공통
     public static final String ATTRIBUTE_NAME_TYPE = "type";
 
     // 주문 관련
@@ -12,10 +11,10 @@ public class SQSProtocol {
     public static final String ATTRIBUTE_NAME_USER_ID = "userId";
 
     public static final String ATTRIBUTE_NAME_MESSAGE = "message";
+    public static final String ATTRIBUTE_TRY_COUNT = "tryCount";
 
-    public static String TYPE_PRE_ORDER = "PRE_ORDER";
-    public static String TYPE_APPROVE_PAYMENT = "APPROVE_PAYMENT";
-    public static String TYPE_SUCCESS_PAYMENT = "SUCCESS_PAYMENT";
-    public static String TYPE_CANCEL_PAYMENT = "CANCEL_PAYMENT";
-
+    public static final String TYPE_PRE_ORDER = "PRE_ORDER";
+    public static final String TYPE_APPROVE_PAYMENT = "APPROVE_PAYMENT";
+    public static final String TYPE_SUCCESS_PAYMENT = "SUCCESS_PAYMENT";
+    public static final String TYPE_CANCEL_PAYMENT = "CANCEL_PAYMENT";
 }

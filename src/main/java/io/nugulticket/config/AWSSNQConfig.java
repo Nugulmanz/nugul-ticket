@@ -12,17 +12,14 @@ import software.amazon.awssdk.services.sns.SnsClient;
 @Configuration
 @Getter
 public class AWSSNQConfig {
-    @Value("${cloud.aws.credentials.access-key}")
+    @Value("${cloud.aws.sqs.credentials.access-key}")
     private String awsAccessKey;
 
-    @Value("${cloud.aws.credentials.secret-key}")
+    @Value("${cloud.aws.sqs.credentials.secret-key}")
     private String awsSecretKey;
 
-    @Value("${cloud.aws.region.static}")
+    @Value("${cloud.aws.sqs.region.static}")
     private String awsRegion;
-
-    @Value("${cloud.aws.sns.ticket.topic.arn}")
-    private String snsTicketTopicARN;
 
     @Value("${cloud.aws.sns.payment.topic.arn}")
     private String snsPaymentTopicARN;
