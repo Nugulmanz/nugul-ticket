@@ -39,16 +39,17 @@ public class CreateDummyDataTest {
     @Test
     void createDummyDatas() {
         int userSize = 100;
-        int eventSize = 100;
-        int ticketSize = 1000;
+        int eventSize = 10000;
+        int ticketSize = 200000;
 
         List<CreateEventRequest> createEventRequests = dummyEventRequestFactory.createEventsRequests(dummyDataFactory.getFaker(), eventSize);
 
         List<User> users = dummyDataFactory.createDummyUser(userSize);
-        List<Event> events = dummyDataFactory.createDummyEvent(users, createEventRequests);
-        List<EventTime> eventTimes = dummyDataFactory.createDummyEventTime(events, createEventRequests);
-        List<Seat> seats = dummyDataFactory.createDummySeats(eventTimes, createEventRequests);
-        List<Ticket> tickets = dummyDataFactory.createDummyTickets(seats, users, ticketSize);
+        dummyDataFactory.createDummyEvent(users, createEventRequests);
+        // dummyDataFactory.createDummyEvent(users, createEventRequests);
+//        List<EventTime> eventTimes = dummyDataFactory.createDummyEventTime(events, createEventRequests);
+//        List<Seat> seats = dummyDataFactory.createDummySeats(eventTimes, createEventRequests);
+//        List<Ticket> tickets = dummyDataFactory.createDummyTickets(seats, users, ticketSize);
     }
 
     @Test
