@@ -36,9 +36,6 @@ cloud:
     sns:
       region:
         static: ${SQS_REGION}
-      ticket:
-          topic:
-            arn: ${SNS_TICKET_TOPIC}
       payment:
           topic:
             arn: ${SNS_PAYMENT_TOPIC}
