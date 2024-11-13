@@ -9,6 +9,10 @@ spring:
     redis:
       port: 6379
       host: ${REDIS_HOST}
+      lettuce:
+        cluster:
+          enable: true
+
 
   thymeleaf:
     suffix: .html

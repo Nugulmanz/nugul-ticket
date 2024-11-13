@@ -15,6 +15,8 @@ import io.nugulticket.event.dto.updateEvent.UpdateEventResponse;
 import io.nugulticket.event.entity.Event;
 import io.nugulticket.event.repository.EventRepository;
 import io.nugulticket.eventtime.service.EventTimeService;
+import io.nugulticket.otp.service.OtpRedisService;
+import io.nugulticket.otp.service.OtpRedisService;
 import io.nugulticket.s3file.S3FileService;
 import io.nugulticket.search.elasticsearch.KoreanInitialExtractor;
 import io.nugulticket.search.entity.EventDocument;
@@ -48,6 +50,7 @@ public class EventService {
     private final S3FileService s3FileService;
     private final RedisTemplate<String, Object> redisTemplate;
     private final OpenSearchClient openSearchClient;
+    private final OtpRedisService otpRedisService;
 
     // S3
     private final AmazonS3Client s3Client;
@@ -64,6 +67,18 @@ public class EventService {
      */
     public CreateEventResponse createEvent(AuthUser authUser, CreateEventRequest eventRequest, MultipartFile image) {
         User user = userService.getUser(authUser.getId());
+
+        // Redis에서 OTP 인증 상태 확인 후 만료 시 DB의 상태도 false로 업데이트
+        if (!otpRedisService.isOtpVerified(authUser.getId())) {
+            user.expireOtpVerification();
+            userService.updateUserRole(user);
+            throw new ApiException(ErrorStatus.OTP_VERIFICATION_REQUIRED);
+        }
+
+        // OTP 인증 상태 확인
+        if (!otpRedisService.isOtpVerified(authUser.getId())) {
+            throw new ApiException(ErrorStatus.OTP_VERIFICATION_REQUIRED);
+        }
 
         if (!user.getUserRole().equals(UserRole.SELLER)) {
             throw new ApiException(ErrorStatus.SELLER_ROLE_REQUIRED);

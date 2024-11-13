@@ -24,6 +24,11 @@ public class EmailService {
             "<br><br>" +
             "인증번호 %s";
 
+    private static final String LOCKED_EMAIL_TITLE = "계정 잠금 해제 인증 이메일";
+    private static final String LOCKED_EMAIL_CONTENT_TEMPLATE = "아래의 인증번호를 입력하여 계정 잠금을 해제해주세요." +
+            "<br><br>" +
+            "인증번호 %s";
+
     /**
      * 인증 메일에 필요한 내용을 추가해주는 메서드
      * @param email 인증 메일을 수신할 이메일 주소
@@ -33,6 +38,13 @@ public class EmailService {
         String code = Integer.toString(makeRandomNumber());
         String content = String.format(EMAIL_CONTENT_TEMPLATE, code);
         mailSend(setForm, email, EMAIL_TITLE, content);
+        return code;
+    }
+
+    public String sendUnlockEmail(String email) {
+        String code = Integer.toString(makeRandomNumber());
+        String content = String.format(LOCKED_EMAIL_CONTENT_TEMPLATE, code);
+        mailSend(setForm, email, LOCKED_EMAIL_TITLE, content);
         return code;
     }
 
