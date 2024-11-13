@@ -1,8 +1,12 @@
 spring:
   profiles:
-    active: local
+    active: prod
+
   application:
     name: nugul-ticket
+
+  opensearch:
+    endpoint: ${AWS_OPENSEARCH_ENDPOINT}
 
 jwt:
   secret:
