@@ -54,7 +54,8 @@ public enum ErrorStatus implements BaseCode {
     _EMAIL_SEND_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "500", "이메일 발송 중 오류가 발생했습니다."),
 
     //search
-    SEARCH_QUERY_FAILURE(HttpStatus.INTERNAL_SERVER_ERROR, "500", "검색 쿼리 실행 중 오류가 발생했습니다.");
+    SEARCH_QUERY_FAILURE(HttpStatus.INTERNAL_SERVER_ERROR, "500", "검 실행 중 오류가 발생했습니다."),
+    OPENSEARCH_FAILURE(HttpStatus.INTERNAL_SERVER_ERROR, "500", "검색 중 오류가 발생했습니다.");
 
     private HttpStatus httpStatus;
     private String statusCode;

@@ -18,18 +18,21 @@ import io.nugulticket.eventtime.service.EventTimeService;
 import io.nugulticket.s3file.S3FileService;
 import io.nugulticket.search.elasticsearch.KoreanInitialExtractor;
 import io.nugulticket.search.entity.EventDocument;
-import io.nugulticket.search.repository.EventSearchRepository;
 import io.nugulticket.user.entity.User;
 import io.nugulticket.user.enums.UserRole;
 import io.nugulticket.user.service.UserService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.opensearch.client.opensearch.OpenSearchClient;
+import org.opensearch.client.opensearch.core.DeleteRequest;
+import org.opensearch.client.opensearch.core.IndexRequest;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -44,7 +47,7 @@ public class EventService {
     private final EventTimeService eventTimeService;
     private final S3FileService s3FileService;
     private final RedisTemplate<String, Object> redisTemplate;
-    private final EventSearchRepository eventSearchRepository;
+    private final OpenSearchClient openSearchClient;
 
     // S3
     private final AmazonS3Client s3Client;
@@ -77,15 +80,24 @@ public class EventService {
         // Redis에 공연 이름과 ID 매핑
         redisTemplate.opsForHash().put("eventIdMap", savedEvent.getTitle(), savedEvent.getEventId().toString());
 
-
         EventDocument eventDocument = convertToEventDocument(savedEvent);
 
         // title에서 초성을 추출하여 title_initials 필드에 설정
         String titleInitials = KoreanInitialExtractor.extractInitials(eventDocument.getTitle());
         eventDocument.setTitleInitials(titleInitials);
 
-        // Elasticsearch에 이벤트 저장
-        eventSearchRepository.save(eventDocument);
+        // OpenSearch에 이벤트 저장
+        IndexRequest<EventDocument> indexRequest = IndexRequest.of(i -> i
+                .index("events_current")
+                .id(eventDocument.getEventId().toString())
+                .document(eventDocument)
+        );
+
+        try {
+            openSearchClient.index(indexRequest);
+        } catch (IOException e) {
+            throw new ApiException(ErrorStatus.OPENSEARCH_FAILURE);
+        }
 
         eventTimeService.createEventTimes(event,
                 eventRequest.getStartDate(),
@@ -146,7 +158,19 @@ public class EventService {
         String titleInitials = KoreanInitialExtractor.extractInitials(eventDocument.getTitle());
 
         eventDocument.setTitleInitials(titleInitials);
-        eventSearchRepository.save(eventDocument);
+
+        // OpenSearch에 이벤트 저장
+        IndexRequest<EventDocument> indexRequest = IndexRequest.of(i -> i
+                .index("events_current")
+                .id(eventDocument.getEventId().toString())
+                .document(eventDocument)
+        );
+
+        try {
+            openSearchClient.index(indexRequest);
+        } catch (IOException e) {
+            throw new ApiException(ErrorStatus.OPENSEARCH_FAILURE);
+        }
 
         return new UpdateEventResponse(updatedEvent);
     }
@@ -171,8 +195,16 @@ public class EventService {
         event.deleteEvent();
         eventRepository.save(event);
 
-        // 공연 검색이라 Elasticsearch 에서는 이벤트 완전 삭제
-        eventSearchRepository.deleteById(eventId);
+        // OpenSearch에서 이벤트 완전 삭제
+        try {
+            DeleteRequest deleteRequest = DeleteRequest.of(d -> d
+                    .index("events_current")
+                    .id(eventId.toString())
+            );
+            openSearchClient.delete(deleteRequest);
+        } catch (IOException e) {
+            throw new ApiException(ErrorStatus.OPENSEARCH_FAILURE);
+        }
     }
 
     /**
