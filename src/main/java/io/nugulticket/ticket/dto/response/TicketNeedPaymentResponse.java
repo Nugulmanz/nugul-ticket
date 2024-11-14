@@ -49,14 +49,3 @@ public class TicketNeedPaymentResponse {
         return map;
     }
 }
-
-/**
- model.addAttribute("userId", user.getId());
- model.addAttribute("amount", ticketTransferApplyResponse.getPrice());
- model.addAttribute("orderId", generateOrderIdUtil.generateOrderId());
- model.addAttribute("orderType", "TRANSFER");
- model.addAttribute("orderName", ticketTransferApplyResponse.getTicketTitle());
- model.addAttribute("email", user.getEmail());
- model.addAttribute("ticketId", ticketTransferApplyResponse.getTicketId());
-
- */
