@@ -63,7 +63,10 @@ public enum ErrorStatus implements BaseCode {
 
     //search
     SEARCH_QUERY_FAILURE(HttpStatus.INTERNAL_SERVER_ERROR, "500", "검 실행 중 오류가 발생했습니다."),
-    OPENSEARCH_FAILURE(HttpStatus.INTERNAL_SERVER_ERROR, "500", "검색 중 오류가 발생했습니다.");
+    OPENSEARCH_FAILURE(HttpStatus.INTERNAL_SERVER_ERROR, "500", "검색 중 오류가 발생했습니다."),
+
+    //lock
+    VERSION_CONFLICT(HttpStatus.CONFLICT, "409", "데이터가 최신 상태가 아닙니다. 새로고침 후 다시 시도해 주세요.");
 
     private HttpStatus httpStatus;
     private String statusCode;
