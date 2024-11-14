@@ -23,6 +23,9 @@ public class Ticket {
     @Column(name = "ticket_id")
     private Long ticketId;
 
+    @Version
+    private Integer version;
+
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
