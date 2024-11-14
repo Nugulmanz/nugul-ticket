@@ -1,0 +1,182 @@
+{
+  "taskDefinitionArn": "{TASK_DEFINITION_ARN}",
+  "containerDefinitions": [
+    {
+      "name": "ticket-server-container",
+      "image": "{IMAGE_URL}",
+      "cpu": 0,
+      "portMappings": [
+        {
+          "name": "ticket-server-80-tcp",
+          "containerPort": 80,
+          "hostPort": 80,
+          "protocol": "tcp",
+          "appProtocol": "http"
+        },
+        {
+          "name": "ticket-server-8080-tcp",
+          "containerPort": 8080,
+          "hostPort": 8080,
+          "protocol": "tcp",
+          "appProtocol": "http"
+        }
+      ],
+      "essential": true,
+      "environment": [
+        {
+          "name": "PAYMENT_URL",
+          "value": "{PAYMENT_URL}"
+        },
+        {
+          "name": "AWS_OPENSEARCH_ENDPOINT",
+          "value": "{AWS_OPENSEARCH_ENDPOINT}"
+        },
+        {
+          "name": "REDIS_HOST",
+          "value": "{REDIS_HOST}"
+        },
+        {
+          "name": "PROD_DB_URL",
+          "value": "{PROD_DB_URL}"
+        },
+        {
+          "name": "PROD_DB_USERNAME",
+          "value": "{PROD_DB_USERNAME}"
+        },
+        {
+          "name": "S3_REGION",
+          "value": "{S3_REGION}"
+        },
+        {
+          "name": "NAVER_EMAIL_PASSWORD",
+          "value": "{NAVER_EMAIL_PASSWORD}"
+        },
+        {
+          "name": "S3_ACCESS_KEY",
+          "value": "{S3_ACCESS_KEY}"
+        },
+        {
+          "name": "JWT_SECRET_KEY",
+          "value": "{JWT_SECRET_KEY}"
+        },
+        {
+          "name": "NAVER_EMAIL_USERNAME",
+          "value": "{NAVER_EMAIL_USERNAME}"
+        },
+        {
+          "name": "SQS_ACCESS_KEY",
+          "value": "{SQS_ACCESS_KEY}"
+        },
+        {
+          "name": "SNS_TICKET_TOPIC",
+          "value": "{SNS_TICKET_TOPIC}"
+        },
+        {
+          "name": "SQS_SECRET_KEY",
+          "value": "{SQS_SECRET_KEY}"
+        },
+        {
+          "name": "CLIENT_ID",
+          "value": "{CLIENT_ID}"
+        },
+        {
+          "name": "ADMIN_KEY",
+          "value": "{ADMIN_KEY}"
+        },
+        {
+          "name": "PROD_DB_PASSWORD",
+          "value": "{PROD_DB_PASSWORD}"
+        },
+        {
+          "name": "S3_SECRET_KEY",
+          "value": "{S3_SECRET_KEY}"
+        },
+        {
+          "name": "SNS_PAYMENT_TOPIC",
+          "value": "{SNS_PAYMENT_TOPIC}"
+        },
+        {
+          "name": "SQS_TICKETS_URL",
+          "value": "{SQS_TICKETS_URL}"
+        },
+        {
+          "name": "SQS_REGION",
+          "value": "{SQS_REGION}"
+        }
+      ],
+      "environmentFiles": [],
+      "mountPoints": [],
+      "volumesFrom": [],
+      "ulimits": [],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/ticket-server-task1",
+          "mode": "non-blocking",
+          "awslogs-create-group": "true",
+          "max-buffer-size": "25m",
+          "awslogs-region": "ap-northeast-2",
+          "awslogs-stream-prefix": "ecs"
+        },
+        "secretOptions": []
+      },
+      "systemControls": []
+    }
+  ],
+  "family": "ticket-server-task",
+  "taskRoleArn": "{TASK_ROLE_ARN}",
+  "executionRoleArn": "{EXECUTION_ROLE_ARN}",
+  "networkMode": "awsvpc",
+  "revision": 19,
+  "volumes": [],
+  "status": "ACTIVE",
+  "requiresAttributes": [
+    {
+      "name": "com.amazonaws.ecs.capability.logging-driver.awslogs"
+    },
+    {
+      "name": "ecs.capability.execution-role-awslogs"
+    },
+    {
+      "name": "com.amazonaws.ecs.capability.ecr-auth"
+    },
+    {
+      "name": "com.amazonaws.ecs.capability.docker-remote-api.1.19"
+    },
+    {
+      "name": "com.amazonaws.ecs.capability.docker-remote-api.1.28"
+    },
+    {
+      "name": "com.amazonaws.ecs.capability.task-iam-role"
+    },
+    {
+      "name": "ecs.capability.execution-role-ecr-pull"
+    },
+    {
+      "name": "com.amazonaws.ecs.capability.docker-remote-api.1.18"
+    },
+    {
+      "name": "ecs.capability.task-eni"
+    },
+    {
+      "name": "com.amazonaws.ecs.capability.docker-remote-api.1.29"
+    }
+  ],
+  "placementConstraints": [],
+  "compatibilities": [
+    "EC2",
+    "FARGATE"
+  ],
+  "requiresCompatibilities": [
+    "FARGATE"
+  ],
+  "cpu": "2048",
+  "memory": "4096",
+  "runtimePlatform": {
+    "cpuArchitecture": "X86_64",
+    "operatingSystemFamily": "LINUX"
+  },
+  "registeredAt": "2024-11-14T07:55:24.088Z",
+  "registeredBy": "arn:aws:iam::122610500734:root",
+  "tags": []
+}
