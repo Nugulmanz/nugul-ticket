@@ -71,12 +71,6 @@ dependencies {
     implementation ('com.github.javafaker:javafaker:1.0.2') { exclude module: 'snakeyaml' }
     implementation group: 'org.yaml', name: 'snakeyaml', version: '2.2'
 
-    // elasticsearch
-    implementation 'org.springframework.boot:spring-boot-starter-data-elasticsearch'
-
-//    // Elasticsearch Java API Client
-//    implementation 'co.elastic.clients:elasticsearch-java:8.10.0'
-
     // OpenSearch Java Client dependencies
     implementation("org.opensearch.client:opensearch-rest-client:2.11.0")
     implementation("org.opensearch.client:opensearch-java:2.7.0")

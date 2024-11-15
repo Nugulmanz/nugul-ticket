@@ -95,13 +95,24 @@ public class EventService {
         // Redis에 공연 이름과 ID 매핑
         redisTemplate.opsForHash().put("eventIdMap", savedEvent.getTitle(), savedEvent.getEventId().toString());
 
-        EventDocument eventDocument = convertToEventDocument(savedEvent);
+        // EventDocument 생성 및 titleInitials 필드 설정
+        EventDocument eventDocument = EventDocument.builder()
+                .eventId(savedEvent.getEventId())
+                .category(savedEvent.getCategory())
+                .title(savedEvent.getTitle())
+                .description(savedEvent.getDescription())
+                .startDate(String.valueOf(savedEvent.getStartDate()))
+                .endDate(String.valueOf(savedEvent.getEndDate()))
+                .runtime(savedEvent.getRuntime())
+                .viewRating(savedEvent.getViewRating())
+                .rating(savedEvent.getRating())
+                .place(savedEvent.getPlace())
+                .bookAble(savedEvent.getBookAble())
+                .imageUrl(savedEvent.getImageUrl())
+                .titleInitials(KoreanInitialExtractor.extractInitials(savedEvent.getTitle())) // 초성 설정
+                .build();
 
-        // title에서 초성을 추출하여 title_initials 필드에 설정
-        String titleInitials = KoreanInitialExtractor.extractInitials(eventDocument.getTitle());
-        eventDocument.setTitleInitials(titleInitials);
-
-        // OpenSearch에 이벤트 저장
+        // OpenSearch 인덱싱
         IndexRequest<EventDocument> indexRequest = IndexRequest.of(i -> i
                 .index("events_current")
                 .id(eventDocument.getEventId().toString())
@@ -167,14 +178,24 @@ public class EventService {
         // MySQL에 수정된 이벤트 저장
         Event updatedEvent = eventRepository.save(event);
 
-        // Elasticsearch에 수정된 이벤트 저장
-        EventDocument eventDocument = convertToEventDocument(updatedEvent);
-        // title에서 초성을 추출하여 title_initials 필드에 설정
-        String titleInitials = KoreanInitialExtractor.extractInitials(eventDocument.getTitle());
+        // EventDocument 생성 및 titleInitials 필드 설정
+        EventDocument eventDocument = EventDocument.builder()
+                .eventId(updatedEvent.getEventId())
+                .category(updatedEvent.getCategory())
+                .title(updatedEvent.getTitle())
+                .description(updatedEvent.getDescription())
+                .startDate(String.valueOf(updatedEvent.getStartDate()))
+                .endDate(String.valueOf(updatedEvent.getEndDate()))
+                .runtime(updatedEvent.getRuntime())
+                .viewRating(updatedEvent.getViewRating())
+                .rating(updatedEvent.getRating())
+                .place(updatedEvent.getPlace())
+                .bookAble(updatedEvent.getBookAble())
+                .imageUrl(updatedEvent.getImageUrl())
+                .titleInitials(KoreanInitialExtractor.extractInitials(updatedEvent.getTitle())) // 초성 설정
+                .build();
 
-        eventDocument.setTitleInitials(titleInitials);
-
-        // OpenSearch에 이벤트 저장
+        // OpenSearch 인덱싱
         IndexRequest<EventDocument> indexRequest = IndexRequest.of(i -> i
                 .index("events_current")
                 .id(eventDocument.getEventId().toString())

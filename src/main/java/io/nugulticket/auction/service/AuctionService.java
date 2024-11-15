@@ -12,6 +12,7 @@ import io.nugulticket.ticket.entity.Ticket;
 import io.nugulticket.ticket.service.TicketService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -47,7 +48,7 @@ public class AuctionService {
      */
     @Transactional
     public BidActionResponse updateAction(long auctionId, BidActionRequest reqDto) {
-        Auction auction = auctionRepository.findById(auctionId).orElseThrow(
+        Auction auction = auctionRepository.findByIdWithPessimisticLock(auctionId).orElseThrow(
                 ()-> new ApiException(ErrorStatus._NOT_FOUND_AUCTION));
 
         if(auction.getCurrentBid()>=reqDto.getBid()) {
@@ -56,10 +57,10 @@ public class AuctionService {
         if(LocalDate.now().isAfter(auction.getEndAt())){
             throw new ApiException(ErrorStatus._EXPIRED_ACTION);
         }
+
         auction.setBid(reqDto.getBid());
         Auction saveAuction = auctionRepository.save(auction);
         return new BidActionResponse(saveAuction);
-
     }
 
     /**
