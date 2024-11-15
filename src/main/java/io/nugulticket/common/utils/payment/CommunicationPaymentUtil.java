@@ -15,7 +15,6 @@ public class CommunicationPaymentUtil {
     private String paymentServerUrl;
     private final String PREPROCESS_PATH = "/preprocess";
     private final String POSTPROCESS_PATH = "/confirm/payment";
-    private final String GETINFO_PATH = "/info/payment";
 
 
 
@@ -38,13 +37,6 @@ public class CommunicationPaymentUtil {
         bodyMap.put("paymentKey", paymentRequest.getPaymentKey());
 
         return requestProcess(bodyMap, POSTPROCESS_PATH);
-    }
-
-    // 결제 정보 요청
-    public JSONObject getPaymentInfo(PaymentRequest paymentRequest) {
-        Map<String, Object> bodyMap = getBaseBody(paymentRequest.getAmount(), paymentRequest.getOrderId(), paymentRequest.getUserId());
-
-        return requestProcess(bodyMap, GETINFO_PATH);
     }
 
     private Map<String, Object> getBaseBody(int amount, String orderId, long userId) {

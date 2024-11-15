@@ -62,3 +62,9 @@ email:
 payment:
   url: ${PAYMENT_URL}
 
+grpc:
+  server:
+    port: 50051
+  payment:
+    url: ${GRPC_PAYMENT_URL}
+
