@@ -1,3 +1,12 @@
 rootProject.name = 'nugul-ticket'
 
-includeBuild('../grpc-proto')
+def grpcProtoPath = file('grpc-proto')
+if (!grpcProtoPath.exists()) {
+    println 'grpc-proto directory not found. Cloning...'
+    exec {
+        commandLine 'git', 'clone', 'https://github.com/Nugulmanz/grpc-proto.git', 'grpc-proto'
+    }
+    println 'grpc-proto cloned successfully.'
+}
+
+includeBuild('grpc-proto')

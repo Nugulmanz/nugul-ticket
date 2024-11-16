@@ -24,6 +24,15 @@ repositories {
     mavenCentral()
 }
 
+sourceSets {
+    main {
+        java {
+            srcDirs += file('grpc-proto/build/generated/source/proto/main/java')
+            srcDirs += file('grpc-proto/build/generated/source/proto/main/grpc')
+        }
+    }
+}
+
 protobuf {
     protoc { artifact = "com.google.protobuf:protoc:3.23.0" }
     plugins {
@@ -118,8 +127,13 @@ dependencies {
     implementation "io.grpc:grpc-stub:1.58.0"
     implementation 'javax.annotation:javax.annotation-api:1.3.2'
 
-    implementation 'com.sparta:grpc-proto:0.0.1-SNAPSHOT'
 }
+
+// 빌드 전에 grpc-proto의 Java 파일이 생성
+tasks.named('compileJava') {
+    dependsOn gradle.includedBuild('grpc-proto').task(':generateProto')
+}
+
 
 tasks.named('test') {
     useJUnitPlatform()
