@@ -1,8 +1,11 @@
 package io.nugulticket.payment.gRPC;
 
 import com.example.payment.grpc.PaymentServiceGrpc;
+import com.example.payment.grpc.PaymentServiceProto;
 import com.example.payment.grpc.PaymentServiceProto.PaymentRequest;
 import com.example.payment.grpc.PaymentServiceProto.PaymentResponse;
+import com.example.payment.grpc.PaymentServiceProto.UserDetails;
+import com.example.payment.grpc.PaymentServiceProto.Address;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import jakarta.annotation.PostConstruct;
@@ -10,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 
 // 결제 서버에 결제 정보를 요청할 때 사용하는 gRPC 클라이언트
 // 이 클래스는 결제 서버의 gRPC 메서드(ProcessPayment)를 호출하여 결제 정보를 받아오고, 이 정보를 티켓 서버의 비즈니스 로직에 활용
@@ -32,16 +36,30 @@ public class PaymentServiceClient {
 
         ManagedChannel channel = ManagedChannelBuilder.forAddress(host, port)
                 .usePlaintext()
+                .maxInboundMessageSize(100 * 1024 * 1024) // 메시지 최대 크기를 100MB로 설정
                 .build();
         paymentServiceStub = PaymentServiceGrpc.newBlockingStub(channel);
     }
 
-
     // 결제 서버에 결제 정보를 요청하는 메서드
-    public PaymentResponse getPaymentInfo(String orderId, long userId) {
+    public PaymentResponse getPaymentInfo(String orderId, long userId, String userRole, String email, List<String> largeStrings) {
+        UserDetails userDetails = UserDetails.newBuilder()
+                .setUserRole(userRole)
+                .setEmail(email)
+                .setAddress(Address.newBuilder()
+                        .setStreet("123 Main St")
+                        .setCity("Metropolis")
+                        .setState("CA")
+                        .setZip("12345")
+                        .build())
+                .addAllLargeStrings(largeStrings)
+                .build();
+
+
         PaymentRequest paymentRequest = PaymentRequest.newBuilder()
                 .setOrderId(orderId)
                 .setUserId(userId)
+                .setUser(userDetails)
                 .build();
 
         // 결제 서버의 GetPaymentInfo 메서드 호출
