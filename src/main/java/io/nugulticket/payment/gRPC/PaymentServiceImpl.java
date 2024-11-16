@@ -5,14 +5,12 @@ import com.example.payment.grpc.PaymentServiceProto.PaymentRequest;
 import com.example.payment.grpc.PaymentServiceProto.PaymentResponse;
 import io.grpc.stub.StreamObserver;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
+import net.devh.boot.grpc.server.service.GrpcService;
 
 // 티켓 서버에서 제공하는 gRPC 서비스 구현체
 // 다른 서비스가 티켓 서버에 요청을 보낼 때, TicketServiceImpl이 이 요청을 처리
 // 티켓 서버가 결제 서버에서 데이터를 가져와 사용자에게 반환할 때 로직을 수행
-@Service
-@Slf4j
+@GrpcService
 @RequiredArgsConstructor
 public class PaymentServiceImpl extends PaymentServiceGrpc.PaymentServiceImplBase {
 
