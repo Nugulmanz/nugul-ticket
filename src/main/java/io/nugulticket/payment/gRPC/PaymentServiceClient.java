@@ -1,11 +1,11 @@
 package io.nugulticket.payment.gRPC;
 
 import com.example.payment.grpc.PaymentServiceGrpc;
-import com.example.payment.grpc.PaymentServiceProto;
 import com.example.payment.grpc.PaymentServiceProto.PaymentRequest;
 import com.example.payment.grpc.PaymentServiceProto.PaymentResponse;
 import com.example.payment.grpc.PaymentServiceProto.UserDetails;
 import com.example.payment.grpc.PaymentServiceProto.Address;
+import com.example.payment.grpc.PaymentServiceProto.EventDetails;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import jakarta.annotation.PostConstruct;
@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 // 결제 서버에 결제 정보를 요청할 때 사용하는 gRPC 클라이언트
@@ -42,7 +43,7 @@ public class PaymentServiceClient {
     }
 
     // 결제 서버에 결제 정보를 요청하는 메서드
-    public PaymentResponse getPaymentInfo(String orderId, long userId, String userRole, String email, List<String> largeStrings) {
+    public PaymentResponse getPaymentInfo(String orderId, long userId, String userRole, String email, List<EventDetails> events) {
         UserDetails userDetails = UserDetails.newBuilder()
                 .setUserRole(userRole)
                 .setEmail(email)
@@ -52,18 +53,34 @@ public class PaymentServiceClient {
                         .setState("CA")
                         .setZip("12345")
                         .build())
-                .addAllLargeStrings(largeStrings)
                 .build();
 
+        // EventDetails 리스트 생성
+        events = createEvents(100); // 예: 100개의 이벤트 생성
 
         PaymentRequest paymentRequest = PaymentRequest.newBuilder()
                 .setOrderId(orderId)
                 .setUserId(userId)
                 .setUser(userDetails)
+                .addAllEvent(events)
                 .build();
 
         // 결제 서버의 GetPaymentInfo 메서드 호출
         return paymentServiceStub.getPaymentInfo(paymentRequest);
+    }
+
+    // EventDetails 생성 메서드
+    private List<EventDetails> createEvents(int count) {
+        List<EventDetails> events = new ArrayList<>();
+        for (int i = 0; i < count; i++) {
+            events.add(EventDetails.newBuilder()
+                    .setEventId("event-" + i)
+                    .setTitle("Event Title " + i)
+                    .setCategory("Category " + (i % 5))
+                    .setPlace("Venue " + i)
+                    .build());
+        }
+        return events;
     }
 
 }

@@ -10,10 +10,10 @@ import io.nugulticket.payment.gRPC.PaymentServiceClient;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.ArrayList;
-import java.util.List;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
@@ -33,16 +33,13 @@ public class PaymentInfoController {
             throw new ApiException(ErrorStatus._PERMISSION_DENIED);
         }
 
-        // largeStrings 생성
-        List<String> largeStrings = generateLargeStrings();
-
         // gRPC 호출
         PaymentResponse response = paymentServiceClient.getPaymentInfo(
                 request.getOrderId(),
                 request.getUserId(),
                 String.valueOf(authUser.getUserRole()),
                 authUser.getEmail(),
-                largeStrings
+                null
         );
 
         PaymentInfoResponse paymentInfoResponse = new PaymentInfoResponse(
@@ -54,15 +51,5 @@ public class PaymentInfoController {
         );
 
         return ResponseEntity.ok(paymentInfoResponse);
-    }
-
-    // largeStrings 생성 메서드
-    private List<String> generateLargeStrings() {
-        String longString = "a".repeat(65350); // 65350자 문자열 생성
-        List<String> largeStrings = new ArrayList<>();
-        for (int i = 0; i < 1000; i++) {        // 1000개의 문자열 추가
-            largeStrings.add(longString);
-        }
-        return largeStrings;
     }
 }
