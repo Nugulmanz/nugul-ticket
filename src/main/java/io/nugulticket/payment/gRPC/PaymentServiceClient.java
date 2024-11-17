@@ -56,7 +56,7 @@ public class PaymentServiceClient {
                 .build();
 
         // EventDetails 리스트 생성
-        events = createEvents(100); // 예: 100개의 이벤트 생성
+        events = createEvents(10000); // 예: 10000개의 이벤트 생성
 
         PaymentRequest paymentRequest = PaymentRequest.newBuilder()
                 .setOrderId(orderId)

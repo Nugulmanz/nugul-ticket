@@ -1,24 +1,34 @@
 package io.nugulticket.payment.controller;
 
+import io.nugulticket.common.utils.payment.CommunicationPaymentUtil;
 import io.nugulticket.common.utils.payment.GenerateOrderIdUtil;
 import io.nugulticket.config.SQSProtocol;
 import io.nugulticket.payment.dto.request.PaymentRequest;
+import io.nugulticket.payment.dto.request.RestRequest;
+import io.nugulticket.payment.entity.Address;
+import io.nugulticket.payment.entity.EventDetails;
+import io.nugulticket.payment.entity.UserDetails;
 import io.nugulticket.sns.service.SnsService;
 import io.nugulticket.sqs.dto.SQSApprovePayment;
 import io.nugulticket.sqs.dto.SQSPreOrder;
 import io.nugulticket.ticket.dto.response.TicketNeedPaymentResponse;
 import lombok.RequiredArgsConstructor;
+import net.minidev.json.JSONObject;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import software.amazon.awssdk.services.sns.model.PublishResponse;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/payment")
 public class PaymentController {
 
+    private final CommunicationPaymentUtil communicationPaymentUtil;
     private final GenerateOrderIdUtil generateOrderIdUtil;
     private final SnsService snsService;
 
@@ -65,5 +75,43 @@ public class PaymentController {
 
         return "/payment/checkout";
     }
+
+    //결제 정보 요청하는 REST API
+    @GetMapping("/rest/info")
+    public ResponseEntity<JSONObject> getPaymentInfo (@RequestParam String orderId, @RequestParam long userId) {
+        Address address = new Address("123 Main St", "Metropolis", "CA", "12345");
+
+        // UserDetails 객체 생성
+        UserDetails userDetails = new UserDetails(
+                "USER_ROLE_ADMIN",
+                "test@example.com",
+                address
+        );
+
+        // EventDetails 리스트 생성
+        List<EventDetails> events = createEvents(10000); // 10000개의 이벤트 생성
+
+        // 결제 서버에 정보 요청
+        RestRequest restRequest = new RestRequest(orderId, userId, userDetails, events);
+
+        // REST API 호출
+        JSONObject paymentInfo = communicationPaymentUtil.getPaymentInfo(restRequest);
+        return ResponseEntity.ok(paymentInfo);
+    }
+
+    // EventDetails 리스트 생성 메서드
+    private List<EventDetails> createEvents(int count) {
+        List<EventDetails> events = new ArrayList<>();
+        for (int i = 0; i < count; i++) {
+            events.add(new EventDetails(
+                    "event-" + i,
+                    "Event Title " + i,
+                    "Category " + (i % 5),
+                    "Venue " + i
+            ));
+        }
+        return events;
+    }
+
 
 }
