@@ -101,6 +101,10 @@
         {
           "name": "SQS_REGION",
           "value": "{SQS_REGION}"
+        },
+        {
+          "name": "GRPC_PAYMENT_URL",
+          "value": "{GRPC_PAYMENT_URL}"
         }
       ],
       "logConfiguration": {
