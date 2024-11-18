@@ -5,6 +5,7 @@ import com.amazonaws.services.s3.model.ObjectMetadata;
 import io.nugulticket.common.apipayload.status.ErrorStatus;
 import io.nugulticket.common.exception.ApiException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -20,6 +21,9 @@ public class S3FileService {
 
     // S3
     private final AmazonS3Client s3Client;
+
+    @Value("${cloud.aws.cloudfront.domain}")
+    private String cloudFrontDomain;
 
     // 이미지 파일 크기 제한
     private static final long MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
@@ -48,7 +52,8 @@ public class S3FileService {
             // S3에 파일 업로드
             s3Client.putObject(bucket, fileName, image.getInputStream(), metadata);
 
-            return s3Client.getUrl(bucket, fileName).toString();
+            // CloudFront URL 반환
+            return String.format("%s/%s", cloudFrontDomain, fileName);
         } catch (IOException e) {
             throw new ApiException(ErrorStatus._FILE_UPLOAD_FAILED);
         }
