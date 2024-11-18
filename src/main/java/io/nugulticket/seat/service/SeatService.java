@@ -1,6 +1,7 @@
 package io.nugulticket.seat.service;
 
 import io.nugulticket.eventtime.entity.EventTime;
+import io.nugulticket.seat.dto.SeatResponse;
 import io.nugulticket.seat.entity.Seat;
 import io.nugulticket.seat.enums.SeatType;
 import io.nugulticket.seat.repository.SeatRepository;
@@ -10,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -59,6 +61,24 @@ public class SeatService {
         for(int i = 0; i < seatSize; ++i) {
             seats.add(new Seat(eventTime, Integer.toString(offset + i + 1), price,seatType));
         }
+    }
+
+    /**
+     * 특정 공연의 회차 id를 받아 해당 공연 회차의 좌석 정보를 반환하는 메서드
+     * @param eventTimeId : 이벤트 회차 id
+     * @return List<SeatResponse> : 전체 좌석 목록
+     */
+    public List<SeatResponse> getSeats(int eventTimeId) {
+        List<Seat> seats = seatRepository.findByEventTimeId(eventTimeId);
+        return seats.stream()
+                .map(seat -> new SeatResponse(
+                        seat.getId(),
+                        seat.getSeatNumber(),
+                        seat.isReserved(),
+                        seat.getPrice(),
+                        seat.getSeatType().toString()
+                ))
+                .collect(Collectors.toList());
     }
 
     /**
