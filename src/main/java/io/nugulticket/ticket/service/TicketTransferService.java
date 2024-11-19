@@ -4,6 +4,7 @@ import io.nugulticket.common.AuthUser;
 import io.nugulticket.common.apipayload.status.ErrorStatus;
 import io.nugulticket.common.exception.ApiException;
 import io.nugulticket.common.utils.payment.GenerateOrderIdUtil;
+import io.nugulticket.lock.FairLock;
 import io.nugulticket.ticket.config.TicketUtil;
 import io.nugulticket.ticket.dto.response.MyTransferTicketsResponse;
 import io.nugulticket.ticket.dto.response.TicketNeedPaymentResponse;
@@ -37,6 +38,7 @@ public class TicketTransferService {
      * @return 양도 결과가 담긴 Dto객체
      */
     @Transactional
+    @FairLock(key = "applyTransferBeforePayment")
     public TicketNeedPaymentResponse applyTransferBeforePayment(AuthUser users, Long ticketId) {
         User user = userService.getUser(users.getId());
         Ticket ticket = ticketService.getTicket(ticketId);
