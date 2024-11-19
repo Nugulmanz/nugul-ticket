@@ -7,6 +7,7 @@ import io.nugulticket.auction.dto.createAction.CreateAuctionRequest;
 import io.nugulticket.auction.entity.Auction;
 import io.nugulticket.auction.repository.AuctionRepository;
 import io.nugulticket.auction.service.AuctionService;
+import io.nugulticket.common.apipayload.status.ErrorStatus;
 import io.nugulticket.common.exception.ApiException;
 import io.nugulticket.ticket.entity.Ticket;
 import io.nugulticket.ticket.service.TicketService;
@@ -22,6 +23,7 @@ import java.time.LocalDate;
 import java.util.Optional;
 
 import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -83,7 +85,7 @@ class AuctionServiceTest {
         ReflectionTestUtils.setField(mockAuction, "currentBid", 100); // 현재 입찰가 설정
         ReflectionTestUtils.setField(mockAuction, "endAt", LocalDate.now().plusDays(1)); // 경매 종료 날짜 설정
 
-        when(auctionRepository.findById(auctionId)).thenReturn(Optional.of(mockAuction));
+        when(auctionRepository.findByIdWithPessimisticLock(auctionId)).thenReturn(Optional.of(mockAuction));
         when(auctionRepository.save(any(Auction.class))).thenReturn(mockAuction);
 
         // When
@@ -91,7 +93,7 @@ class AuctionServiceTest {
 
         // Then
         assertNotNull(response);
-        verify(auctionRepository, times(1)).findById(auctionId);
+        verify(auctionRepository, times(1)).findByIdWithPessimisticLock(auctionId);
         verify(auctionRepository, times(1)).save(any(Auction.class));
     }
 
@@ -104,13 +106,13 @@ class AuctionServiceTest {
 
         mockAuction = new Auction();
         ReflectionTestUtils.setField(mockAuction, "currentBid", 100); // 현재 입찰가 설정
-        when(auctionRepository.findById(auctionId)).thenReturn(Optional.of(mockAuction));
+        when(auctionRepository.findByIdWithPessimisticLock(auctionId)).thenReturn(Optional.of(mockAuction));
 
         // When & Then: 예외가 발생하는지만 확인
         assertThrows(ApiException.class, () -> auctionService.updateAction(auctionId, request));
 
         // Repository 호출 검증
-        verify(auctionRepository, times(1)).findById(auctionId);
+        verify(auctionRepository, times(1)).findByIdWithPessimisticLock(auctionId);
         verify(auctionRepository, never()).save(any(Auction.class));
     }
 
@@ -125,14 +127,70 @@ class AuctionServiceTest {
         ReflectionTestUtils.setField(mockAuction, "currentBid", 100);
         ReflectionTestUtils.setField(mockAuction, "endAt", LocalDate.now().minusDays(1)); // 이미 마감된 경매
 
-        when(auctionRepository.findById(auctionId)).thenReturn(Optional.of(mockAuction));
+        when(auctionRepository.findByIdWithPessimisticLock(auctionId)).thenReturn(Optional.of(mockAuction));
 
         // When & Then
         ApiException exception = assertThrows(ApiException.class, () ->
                 auctionService.updateAction(auctionId, request));
 
-        verify(auctionRepository, atLeastOnce()).findById(auctionId);
+        verify(auctionRepository, atLeastOnce()).findByIdWithPessimisticLock(auctionId);
         verify(auctionRepository, never()).save(any(Auction.class));
+    }
+
+    @Test
+    void testUpdateAction_Fails_NotFound() {
+        // Given
+        long auctionId = 1L;
+        BidActionRequest request = new BidActionRequest();
+        ReflectionTestUtils.setField(request, "bid", 200);
+
+        mockAuction = new Auction();
+        ReflectionTestUtils.setField(mockAuction, "currentBid", 100);
+        ReflectionTestUtils.setField(mockAuction, "endAt", LocalDate.now().minusDays(1)); // 이미 마감된 경매
+
+        when(auctionRepository.findByIdWithPessimisticLock(auctionId)).thenReturn(Optional.empty());
+
+        // When & Then
+        ApiException exception = assertThrows(ApiException.class, () ->
+                auctionService.updateAction(auctionId, request));
+
+
+        assertEquals(request.getBid(), 200);
+        assertEquals(exception.getErrorCode(), ErrorStatus._NOT_FOUND_AUCTION);
+        verify(auctionRepository, atLeastOnce()).findByIdWithPessimisticLock(auctionId);
+        verify(auctionRepository, never()).save(any(Auction.class));
+    }
+
+    @Test
+    void testEndAuction_Error_NotFound() {
+        // Given
+        long auctionId = 1L;
+
+        when(auctionRepository.findById(auctionId)).thenReturn(Optional.empty());
+
+        // When & Then
+        ApiException exception = assertThrows(ApiException.class, () ->
+                auctionService.endAuction(auctionId));
+
+        assertEquals(exception.getErrorCode(), ErrorStatus._NOT_FOUND_AUCTION);
+        verify(auctionRepository, never()).save(any(Auction.class));
+    }
+
+    @Test
+    void testEndAuction() {
+        // Given
+        long auctionId = 1L;
+
+        mockAuction = new Auction();
+        ReflectionTestUtils.setField(mockAuction, "currentBid", 100);
+        ReflectionTestUtils.setField(mockAuction, "endAt", LocalDate.now().minusDays(1)); // 이미 마감된 경매
+
+        when(auctionRepository.findById(auctionId)).thenReturn(Optional.of(mockAuction));
+
+        // When & Then
+        auctionService.endAuction(auctionId);
+
+        verify(auctionRepository, atLeastOnce()).save(any(Auction.class));
     }
 
 }
