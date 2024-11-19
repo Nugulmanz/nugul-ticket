@@ -29,6 +29,7 @@ public enum ErrorStatus implements BaseCode {
     _ALREADY_RESERVED(HttpStatus.NOT_ACCEPTABLE,"406", "이미 예약된 좌석입니다."),
     _NOT_FOUND_TICKET(HttpStatus.NOT_FOUND, "404", "존재하지 않는 티켓입니다"),
     _CANT_TRANSFER_STATE(HttpStatus.BAD_REQUEST, "406", "티켓 양도가 불가능한 상태 입니다"),
+    QR_CODE_NOT_FOUND(HttpStatus.NOT_FOUND, "404", "해당 티켓의 QR 코드를 찾을 수 없습니다."),
 
     // user
     _NOT_FOUND_USER(HttpStatus.NOT_FOUND, "404", "존재하지 않는 유저입니다"),
@@ -66,7 +67,13 @@ public enum ErrorStatus implements BaseCode {
     OPENSEARCH_FAILURE(HttpStatus.INTERNAL_SERVER_ERROR, "500", "검색 중 오류가 발생했습니다."),
 
     //lock
-    VERSION_CONFLICT(HttpStatus.CONFLICT, "409", "데이터가 최신 상태가 아닙니다. 새로고침 후 다시 시도해 주세요.");
+    VERSION_CONFLICT(HttpStatus.CONFLICT, "409", "데이터가 최신 상태가 아닙니다. 새로고침 후 다시 시도해 주세요."),
+
+    //gpt
+    GPT_API_BAD_REQUEST(HttpStatus.BAD_REQUEST, "400", "GPT 요청이 잘못되었습니다. 입력 데이터를 확인하세요."),
+    GPT_API_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "500", "GPT API 서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요."),
+    GPT_API_RESPONSE_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "500", "GPT API 응답 처리 중 오류가 발생했습니다."),
+    GENERAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "500", "예기치 못한 서버 오류가 발생했습니다.");
 
     private HttpStatus httpStatus;
     private String statusCode;
