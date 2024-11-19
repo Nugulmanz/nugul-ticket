@@ -113,6 +113,10 @@
         {
           "name": "CLOUDFRONT_DOMAIN",
           "value": "{CLOUDFRONT_DOMAIN}"
+        },
+        {
+          "name": "OPENAI_API_KEY",
+          "value": "{OPENAI_API_KEY}"
         }
       ],
       "logConfiguration": {
