@@ -8,6 +8,7 @@ import io.nugulticket.auction.entity.Auction;
 import io.nugulticket.auction.repository.AuctionRepository;
 import io.nugulticket.common.apipayload.status.ErrorStatus;
 import io.nugulticket.common.exception.ApiException;
+import io.nugulticket.lock.FairLock;
 import io.nugulticket.ticket.entity.Ticket;
 import io.nugulticket.ticket.service.TicketService;
 import lombok.RequiredArgsConstructor;
@@ -47,6 +48,7 @@ public class AuctionService {
      * @return 해당 경매의 현재 정보가 담긴 Response 객체
      */
     @Transactional
+    @FairLock(key = "updateAuction")
     public BidActionResponse updateAction(long auctionId, BidActionRequest reqDto) {
         Auction auction = auctionRepository.findByIdWithPessimisticLock(auctionId).orElseThrow(
                 ()-> new ApiException(ErrorStatus._NOT_FOUND_AUCTION));
