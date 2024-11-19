@@ -6,6 +6,6 @@ import java.lang.annotation.Target;
 
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface FairLock {
+public @interface RedisDistributedLock {
     String key(); // 락의 키
 }

@@ -1,13 +1,10 @@
 package io.nugulticket.lock;
 
-import io.nugulticket.lock.FairLockAspect;
-import io.nugulticket.lock.FairLock;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
@@ -18,10 +15,10 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class RedisFairLockTest {
+public class RedisRedisDistributedLockTest {
 
     @InjectMocks
-    private FairLockAspect fairLockAspect; // AOP 테스트 대상
+    private RedisDistributedLockAspect redisDistributedLockAspect; // AOP 테스트 대상
 
     @Mock
     private RedissonClient redissonClient; // Redis 클라이언트 모킹
@@ -41,11 +38,11 @@ public class RedisFairLockTest {
         when(joinPoint.proceed()).thenReturn("Success!");
 
         // Mock FairLock annotation
-        FairLock fairLock = mock(FairLock.class);
-        when(fairLock.key()).thenReturn(lockKey);
+        RedisDistributedLock redisDistributedLock = mock(RedisDistributedLock.class);
+        when(redisDistributedLock.key()).thenReturn(lockKey);
 
         // When
-        Object result = fairLockAspect.applyFairLock(joinPoint, fairLock);
+        Object result = redisDistributedLockAspect.applyFairLock(joinPoint, redisDistributedLock);
 
         // Then
         assertEquals("Success!", result); // 메서드 실행 결과 확인
@@ -62,12 +59,12 @@ public class RedisFairLockTest {
 
         // Mock ProceedingJoinPoint
         ProceedingJoinPoint joinPoint = mock(ProceedingJoinPoint.class);
-        FairLock fairLock = mock(FairLock.class);
-        when(fairLock.key()).thenReturn(lockKey);
+        RedisDistributedLock redisDistributedLock = mock(RedisDistributedLock.class);
+        when(redisDistributedLock.key()).thenReturn(lockKey);
 
         // When
         RuntimeException exception = assertThrows(RuntimeException.class, () -> {
-            fairLockAspect.applyFairLock(joinPoint, fairLock);
+            redisDistributedLockAspect.applyFairLock(joinPoint, redisDistributedLock);
         });
 
         // Then
@@ -84,12 +81,12 @@ public class RedisFairLockTest {
 
         // Mock ProceedingJoinPoint
         ProceedingJoinPoint joinPoint = mock(ProceedingJoinPoint.class);
-        FairLock fairLock = mock(FairLock.class);
-        when(fairLock.key()).thenReturn(lockKey);
+        RedisDistributedLock redisDistributedLock = mock(RedisDistributedLock.class);
+        when(redisDistributedLock.key()).thenReturn(lockKey);
 
         // When
         RuntimeException exception = assertThrows(RuntimeException.class, () -> {
-            fairLockAspect.applyFairLock(joinPoint, fairLock);
+            redisDistributedLockAspect.applyFairLock(joinPoint, redisDistributedLock);
         });
 
         // Then

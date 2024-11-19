@@ -6,7 +6,7 @@ import io.nugulticket.common.exception.ApiException;
 import io.nugulticket.common.utils.payment.GenerateOrderIdUtil;
 import io.nugulticket.event.entity.Event;
 import io.nugulticket.event.service.EventService;
-import io.nugulticket.lock.FairLock;
+import io.nugulticket.lock.RedisDistributedLock;
 import io.nugulticket.seat.entity.Seat;
 import io.nugulticket.seat.service.SeatService;
 import io.nugulticket.ticket.dto.createTicket.CreateTicketRequest;
@@ -77,7 +77,7 @@ public class TicketService {
      * @return 결제에 사용될 정보가 담긴 Response 객체
      */
     @Transactional
-    @FairLock(key = "createTicket")
+    @RedisDistributedLock(key = "createTicket")
     public TicketNeedPaymentResponse createTicket(CreateTicketRequest reqDto, AuthUser authUser) {
         Seat seat = seatService.findSeatById(reqDto.getSeatId()); // 락 필요
         if(seat.isReserved()){

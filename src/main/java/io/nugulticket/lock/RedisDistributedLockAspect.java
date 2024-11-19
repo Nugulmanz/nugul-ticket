@@ -13,18 +13,18 @@ import java.util.concurrent.TimeUnit;
 @Aspect
 @Component
 @Slf4j
-public class FairLockAspect {
+public class RedisDistributedLockAspect {
 
     private final RedissonClient redissonClient;
 
-    public FairLockAspect(RedissonClient redissonClient) {
+    public RedisDistributedLockAspect(RedissonClient redissonClient) {
         this.redissonClient = redissonClient;
     }
 
-    @Around("@annotation(fairLock)")
-    public Object applyFairLock(ProceedingJoinPoint joinPoint, FairLock fairLock) throws Throwable {
+    @Around("@annotation(redisDistributedLock)")
+    public Object applyFairLock(ProceedingJoinPoint joinPoint, RedisDistributedLock redisDistributedLock) throws Throwable {
         log.info("applyFairLock");
-        String lockKey = fairLock.key(); // 애노테이션에 지정한 키
+        String lockKey = redisDistributedLock.key(); // 애노테이션에 지정한 키
         RLock lock = redissonClient.getFairLock(lockKey); // 공정락 생성
 
         try {
