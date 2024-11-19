@@ -40,6 +40,7 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
+
 @Service
 @RequiredArgsConstructor
 public class EventService {
@@ -68,14 +69,12 @@ public class EventService {
     public CreateEventResponse createEvent(AuthUser authUser, CreateEventRequest eventRequest, MultipartFile image) {
         User user = userService.getUser(authUser.getId());
 
-        // Redis에서 OTP 인증 상태 확인 후 만료 시 DB의 상태도 false로 업데이트
         if (!otpRedisService.isOtpVerified(authUser.getId())) {
             user.expireOtpVerification();
             userService.updateUserRole(user);
             throw new ApiException(ErrorStatus.OTP_VERIFICATION_REQUIRED);
         }
 
-        // OTP 인증 상태 확인
         if (!otpRedisService.isOtpVerified(authUser.getId())) {
             throw new ApiException(ErrorStatus.OTP_VERIFICATION_REQUIRED);
         }
@@ -313,4 +312,16 @@ public class EventService {
                 .imageUrl(event.getImageUrl())
                 .build();
     }
+
+    // 검색 키워드를 기반으로 유사한 공연 찾기
+    public List<Event> findSimilarEvents(List<Object> searchKeywords) {
+        if (searchKeywords == null || searchKeywords.isEmpty()) {
+            // 검색 키워드가 없을 경우 기본 추천 로직 추가 (옵션)
+            return List.of(); // 기본 추천 이벤트가 있다면 eventRepository에서 조회 가능
+        }
+
+        // 검색 키워드를 기반으로 유사한 이벤트 조회
+        return eventRepository.findSimilarEvents(searchKeywords);
+    }
+
 }
