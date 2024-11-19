@@ -49,6 +49,7 @@ public class WebSecurityConfig {
                 .authorizeHttpRequests(auth -> auth
 //                        .requestMatchers("**").permitAll() // 테스트용
                         .requestMatchers("/api/sqs/**").permitAll() // SQS 테스트용
+                        .requestMatchers("/api/chat/**").permitAll()
                         .requestMatchers("/health/**").permitAll()  // 배포 : ALB health check 및 접속 테스트용
                         .requestMatchers("/api/auth/v1/**", "/api/search/v1/**").permitAll()
                         .requestMatchers("/actuator/**").permitAll()    // 모니터링을 위한 actuator 허용

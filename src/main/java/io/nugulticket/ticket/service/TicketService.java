@@ -179,5 +179,24 @@ public class TicketService {
         return ticketRepository.findByKeywords(keyword, eventDate, pageable);
     }
 
+    /**
+     * 특정 Ticket ID를 기반으로 QR 코드 정보를 조회하는 메서드
+     *
+     * @param ticketId  조회할 티켓의 고유 ID
+     * @return          해당 티켓에 저장된 QR 코드 문자열 (QR 코드 정보가 포함된 문자열)
+     */
+    public String getQRCodeByTicketId(Long ticketId) {
+        // 티켓 조회
+        Ticket ticket = ticketRepository.findById(ticketId)
+                .orElseThrow(() -> new ApiException(ErrorStatus._NOT_FOUND_TICKET));
+
+        // QR 코드 확인
+        if (ticket.getQrCode() == null || ticket.getQrCode().isEmpty()) {
+            throw new ApiException(ErrorStatus.QR_CODE_NOT_FOUND);
+        }
+
+        return ticket.getQrCode(); // 정상 반환
+    }
+
 
 }

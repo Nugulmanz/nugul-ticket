@@ -132,6 +132,10 @@ dependencies {
     implementation 'net.devh:grpc-spring-boot-starter:3.1.0.RELEASE'
     implementation 'com.google.protobuf:protobuf-java:4.28.3'
 
+
+    //QR코드
+    implementation 'com.google.zxing:core:3.5.2'
+    implementation 'com.google.zxing:javase:3.5.2'
 }
 
 // 빌드 전에 grpc-proto의 Java 파일이 생성
