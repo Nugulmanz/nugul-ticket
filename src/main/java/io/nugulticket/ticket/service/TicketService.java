@@ -6,6 +6,7 @@ import io.nugulticket.common.exception.ApiException;
 import io.nugulticket.common.utils.payment.GenerateOrderIdUtil;
 import io.nugulticket.event.entity.Event;
 import io.nugulticket.event.service.EventService;
+import io.nugulticket.lock.RedisDistributedLock;
 import io.nugulticket.seat.entity.Seat;
 import io.nugulticket.seat.service.SeatService;
 import io.nugulticket.ticket.dto.createTicket.CreateTicketRequest;
@@ -69,6 +70,11 @@ public class TicketService {
         return ticketRepository.findAllEqualParamIdJoinFetchSeatAndEvent(status, userId);
     }
 
+    @Transactional(readOnly = true)
+    public Ticket getTicketJoinFetchSeatAndEventTime(Long ticketId) {
+        return ticketRepository.findByIdJoinFetchSeatAndEventTime(ticketId);
+    }
+
     /**
      * 티켓을 예매하는 메서드 ( 상태는 결제 대기 상태로 생성 )
      * @param reqDto 티켓 예매에 필요한 정보가 담긴 Request 객체
@@ -76,6 +82,7 @@ public class TicketService {
      * @return 결제에 사용될 정보가 담긴 Response 객체
      */
     @Transactional
+    @RedisDistributedLock(key = "createTicket")
     public TicketNeedPaymentResponse createTicket(CreateTicketRequest reqDto, AuthUser authUser) {
         Seat seat = seatService.findSeatById(reqDto.getSeatId()); // 락 필요
         if(seat.isReserved()){
@@ -171,4 +178,6 @@ public class TicketService {
     public Page<Ticket> getTicketsFromKeywords(String keyword, LocalDate eventDate, Pageable pageable) {
         return ticketRepository.findByKeywords(keyword, eventDate, pageable);
     }
+
+
 }

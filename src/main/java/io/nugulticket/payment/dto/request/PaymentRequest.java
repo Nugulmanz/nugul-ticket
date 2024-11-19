@@ -29,8 +29,4 @@ public class PaymentRequest {
         return request;
     }
 
-    public PaymentRequest(String orderId) {
-        this.orderId = orderId;
-    }
-
 }

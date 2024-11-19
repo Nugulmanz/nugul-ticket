@@ -4,19 +4,28 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import io.awspring.cloud.sqs.annotation.SqsListener;
 import io.nugulticket.config.SQSProtocol;
 import io.nugulticket.config.SQSUtility;
+import io.nugulticket.seat.entity.Seat;
 import io.nugulticket.sqs.dto.SQSFailPayment;
 import io.nugulticket.sqs.dto.SQSSuccessPayment;
 import io.nugulticket.ticket.service.TicketService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import software.amazon.awssdk.services.sqs.SqsClient;
 import software.amazon.awssdk.services.sqs.model.Message;
 import software.amazon.awssdk.services.sqs.model.MessageAttributeValue;
+import software.amazon.awssdk.services.sqs.model.SendMessageRequest;
 
 import java.util.Map;
 
 @RequiredArgsConstructor
 @Service
 public class SqsService {
+
+    @Value("${cloud.aws.sqs.url-realtime}")
+    private String awsSqsRealtimeUrl;
+    private final SqsClient sqsClient;
+
     private final SQSUtility sqsUtility;
     private final TicketService ticketService;
 
@@ -46,6 +55,10 @@ public class SqsService {
         successPaymentDto.fromSQSAttributes(messageAttribute);
 
         ticketService.reserveTicket(successPaymentDto.getTicketId());
+
+        // 실시간 서버에 티켓 상태 변경 메세지 전송(SQS)
+        Seat seat = ticketService.getTicketJoinFetchSeatAndEventTime(successPaymentDto.getTicketId()).getSeat();
+        sendMessage(seat.getId(), seat.getEventTime().getId());
     }
 
     private void failPayment(Map<String , MessageAttributeValue> messageAttribute) {
@@ -55,5 +68,14 @@ public class SqsService {
         ticketService.cancelTicket(failPaymentDto.getTicketId());
 
         System.out.println(failPaymentDto.getMessage());
+    }
+
+    public void sendMessage(Long seatId, int eventTimeId) {
+        String messageBody = String.format("{\"seatId\":%d, \"status\":\"RESERVED\", \"eventTimeId\":%d}", seatId, eventTimeId);
+        SendMessageRequest request = SendMessageRequest.builder()
+                .queueUrl(awsSqsRealtimeUrl)
+                .messageBody(messageBody)
+                .build();
+        sqsClient.sendMessage(request);
     }
 }

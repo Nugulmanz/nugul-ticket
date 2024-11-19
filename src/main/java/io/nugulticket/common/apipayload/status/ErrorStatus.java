@@ -62,7 +62,7 @@ public enum ErrorStatus implements BaseCode {
     OTP_INVALID_UNLOCK_CODE(HttpStatus.BAD_REQUEST, "400", "잘못된 잠금 해제 코드입니다. 다시 입력해 주세요."),
 
     //search
-    SEARCH_QUERY_FAILURE(HttpStatus.INTERNAL_SERVER_ERROR, "500", "검 실행 중 오류가 발생했습니다."),
+    SEARCH_QUERY_FAILURE(HttpStatus.INTERNAL_SERVER_ERROR, "500", "검색 실행 중 오류가 발생했습니다."),
     OPENSEARCH_FAILURE(HttpStatus.INTERNAL_SERVER_ERROR, "500", "검색 중 오류가 발생했습니다."),
 
     //lock

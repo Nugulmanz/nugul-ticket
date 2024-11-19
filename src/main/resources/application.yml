@@ -29,6 +29,9 @@ cloud:
     stack:
       auto: false
 
+    cloudfront:
+      domain: ${CLOUDFRONT_DOMAIN}
+
 
     sqs:
       region:
@@ -38,6 +41,7 @@ cloud:
         secret-key: ${SQS_SECRET_KEY}
       name: NugulTicket.fifo
       url: ${SQS_TICKETS_URL}
+      url-realtime: ${SQS_REALTIME_URL}
 
     sns:
       region:
@@ -61,4 +65,10 @@ email:
 
 payment:
   url: ${PAYMENT_URL}
+
+grpc:
+  server:
+    port: 50051
+  payment:
+    url: ${GRPC_PAYMENT_URL}
 

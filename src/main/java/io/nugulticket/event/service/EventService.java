@@ -228,6 +228,10 @@ public class EventService {
         Event event = eventRepository.findById(eventId)
                 .orElseThrow(() -> new ApiException(ErrorStatus.EVENT_NOT_FOUND));
 
+        // S3에서 이미지 삭제
+        String eventImageName = s3FileService.extractFileNameFromUrl(event.getImageUrl());
+        s3Client.deleteObject(bucket, eventImageName);
+
         event.deleteEvent();
         eventRepository.save(event);
 
