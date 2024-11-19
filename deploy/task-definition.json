@@ -105,6 +105,10 @@
         {
           "name": "GRPC_PAYMENT_URL",
           "value": "{GRPC_PAYMENT_URL}"
+        },
+        {
+          "name": "SQS_REALTIME_URL",
+          "value": "{SQS_REALTIME_URL}"
         }
       ],
       "logConfiguration": {
