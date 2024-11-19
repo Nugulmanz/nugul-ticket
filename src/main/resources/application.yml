@@ -29,6 +29,9 @@ cloud:
     stack:
       auto: false
 
+    cloudfront:
+      domain: ${CLOUDFRONT_DOMAIN}
+
 
     sqs:
       region:
@@ -38,6 +41,7 @@ cloud:
         secret-key: ${SQS_SECRET_KEY}
       name: NugulTicket.fifo
       url: ${SQS_TICKETS_URL}
+      url-realtime: ${SQS_REALTIME_URL}
 
     sns:
       region:
@@ -67,3 +71,9 @@ openai:
     key: ${OPENAI_API_KEY} # 환경 변수로 설정된 OpenAI API Key
     url: https://api.openai.com/v1/chat/completions
     model: gpt-3.5-turbo # 사용할 모델 (필요에 따라 변경 가능)
+grpc:
+  server:
+    port: 50051
+  payment:
+    url: ${GRPC_PAYMENT_URL}
+

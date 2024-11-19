@@ -69,4 +69,10 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
             "and (:eventDate IS NULL OR :eventDate BETWEEN e.startDate AND e.endDate) " +
             "order by t.ticketId")
     Page<Ticket> findByKeywords(String keyword, LocalDate eventDate, Pageable pageable);
+
+    @Query("select t from Ticket t " +
+            "join fetch t.seat s " +
+            "join fetch s.eventTime et " +
+            "where t.ticketId = :ticketId")
+    Ticket findByIdJoinFetchSeatAndEventTime(Long ticketId);
 }
