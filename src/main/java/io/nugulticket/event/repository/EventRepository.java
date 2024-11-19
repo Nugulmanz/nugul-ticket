@@ -3,6 +3,7 @@ package io.nugulticket.event.repository;
 import io.nugulticket.event.entity.Event;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -21,4 +22,9 @@ public interface EventRepository extends JpaRepository<Event,Long> {
     List<Event> findByBetweenTwoDate(
             LocalDate startDate, LocalDate endDate);
     List<Event> findByUser_Id(Long id);
+
+    @Query("SELECT e FROM Event e " +
+            "WHERE e.category LIKE %:searchKeyword% " +
+            "OR e.title LIKE %:searchKeyword%")
+    List<Event> findSimilarEvents(@Param("searchKeyword") List<Object> searchKeywords);
 }

@@ -66,6 +66,11 @@ email:
 payment:
   url: ${PAYMENT_URL}
 
+openai:
+  api:
+    key: ${OPENAI_API_KEY} # 환경 변수로 설정된 OpenAI API Key
+    url: https://api.openai.com/v1/chat/completions
+    model: gpt-3.5-turbo # 사용할 모델 (필요에 따라 변경 가능)
 grpc:
   server:
     port: 50051

@@ -27,6 +27,11 @@ public class OtpService {
 
     private static final int MAX_OTP_ATTEMPTS = 5;
 
+    /**
+     * QR 코드 생성을 위한 OTP 키 생성 메서드
+     * @param authUser 인증된 사용자 정보
+     * @return QR 코드 URL (Google Authenticator와 연동할 수 있는 URL)
+     */
     public String generateQrCode(AuthUser authUser) {
 
         Long userId = authUser.getId();
@@ -41,19 +46,21 @@ public class OtpService {
         return GoogleAuthenticatorQRGenerator.getOtpAuthURL("NugulTicket", String.valueOf(userId), credentials);
     }
 
+    /**
+     * OTP 검증 메서드
+     *
+     * @param authUser 인증된 사용자 정보
+     * @param otp      사용자가 입력한 OTP 코드
+     * @return OTP 검증 성공 여부
+     * @throws ApiException 이메일 미인증, OTP 실패, 계정 잠금 등 다양한 에러 상태를 처리
+     */
     @Transactional
     public boolean verifyOtp(AuthUser authUser, int otp) {
         Long userId = authUser.getId();
         User user = userService.getUser(userId);
 
-        if(!user.isEmailVerified()) {
+        if (!user.isEmailVerified()) {
             throw new ApiException(ErrorStatus._EMAIL_ALREADY_VERIFIED);
-        }
-
-        if (!otpRedisService.isOtpVerified(userId)) {
-            user.expireOtpVerification();
-            userService.updateUserRole(user);
-            throw new ApiException(ErrorStatus.OTP_VERIFICATION_REQUIRED);
         }
 
         if (otpRedisService.isAccountLocked(userId)) {
@@ -64,34 +71,40 @@ public class OtpService {
                 .orElseThrow(() -> new ApiException(ErrorStatus.OTP_INVALID_VERIFICATION_CODE));
 
         boolean isValidOtp = googleAuthenticator.authorize(otpKey.getOtpSecretKey(), otp);
-
-        if (isValidOtp) {
-            user.verifyOtp();
-            userService.updateUserRole(user);
-
-            otpRedisService.setOtpVerified(userId);
-            otpRedisService.resetFailedOtpAttempts(userId);
-            return true;
-        } else {
+        if (!isValidOtp) {
             otpRedisService.incrementFailedOtpAttempts(userId);
             int failedAttempts = otpRedisService.getFailedOtpAttempts(userId);
 
             if (failedAttempts >= MAX_OTP_ATTEMPTS) {
                 otpRedisService.lockAccount(userId);
-
-                String code = emailService.sendUnlockEmail(otpKey.getUser().getEmail());
-                otpRedisService.setCodeForUnlock(userId, code);
+                String unlockCode = emailService.sendUnlockEmail(user.getEmail());
+                otpRedisService.setCodeForUnlock(userId, unlockCode);
 
                 user.changeRole(UserRole.LOCKED);
                 userService.updateUserRole(user);
 
                 throw new ApiException(ErrorStatus.OTP_MAX_ATTEMPTS_EXCEEDED);
             }
-
-            return false;
+            throw new ApiException(ErrorStatus.OTP_INVALID_VERIFICATION_CODE);
         }
+
+        otpRedisService.setOtpVerified(userId);
+        otpRedisService.resetFailedOtpAttempts(userId);
+
+        user.verifyOtp();
+        userService.updateUserRole(user);
+
+        return true;
     }
 
+    /**
+     * 계정 잠금을 해제하는 메서드
+     *
+     * @param authUser 인증된 사용자 정보
+     * @param code     사용자가 입력한 잠금 해제 코드
+     * @return 잠금 해제 성공 메시지
+     * @throws ApiException 잘못된 해제 코드인 경우 예외 처리
+     */
     public String unlockAccount(AuthUser authUser, String code) {
         Long userId = authUser.getId();
 
@@ -107,7 +120,13 @@ public class OtpService {
 
         return "계정 잠금이 해제되었습니다.";
     }
-
+    /**
+     * 계정 잠금 해제 코드를 재발송하는 메서드
+     *
+     * @param authUser 인증된 사용자 정보
+     * @return 재발송 성공 메시지
+     * @throws ApiException 계정이 잠겨있지 않은 경우 예외 처리
+     */
     public String resendUnlockCode(AuthUser authUser) {
         Long userId = authUser.getId();
         User user = userService.getUser(userId);

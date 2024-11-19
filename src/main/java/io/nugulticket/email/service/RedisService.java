@@ -2,11 +2,13 @@ package io.nugulticket.email.service;
 
 import io.nugulticket.common.apipayload.status.ErrorStatus;
 import io.nugulticket.common.exception.ApiException;
+import io.nugulticket.config.RedisKeyUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -40,4 +42,29 @@ public class RedisService {
         }
         return code.toString();
     }
+
+    /**
+     * 사용자가 검색한 키워드를 Redis에 저장.
+     * 키워드는 리스트 형태로 관리되며, 만료 기간은 7일로 설정.
+     *
+     * @param userId  검색 키워드를 저장할 사용자 ID
+     * @param keyword 저장할 검색 키워드
+     */
+    public void saveSearchKeyword(Long userId, String keyword) {
+        String key = RedisKeyUtil.getSearchKeywordKey(userId);
+        redisTemplate.opsForList().leftPush(key, keyword);
+        redisTemplate.expire(key, 7, TimeUnit.DAYS);
+    }
+
+    /**
+     * Redis에서 특정 사용자의 검색 키워드 목록 조회.
+     *
+     * @param userId 검색 키워드를 조회할 사용자 ID
+     * @return 해당 사용자의 검색 키워드 리스트
+     */
+    public List<Object> getSearchKeywords(Long userId) {
+        String key = RedisKeyUtil.getSearchKeywordKey(userId);
+        return redisTemplate.opsForList().range(key, 0, -1);
+    }
+
 }
