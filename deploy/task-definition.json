@@ -109,6 +109,10 @@
         {
           "name": "SQS_REALTIME_URL",
           "value": "{SQS_REALTIME_URL}"
+        },
+        {
+          "name": "CLOUDFRONT_DOMAIN",
+          "value": "{CLOUDFRONT_DOMAIN}"
         }
       ],
       "logConfiguration": {
