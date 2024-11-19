@@ -55,6 +55,16 @@ public class TicketController {
         return mav;
     }
 
+    @ResponseBody
+    @PostMapping("/test")
+    public ApiResponse<TicketNeedPaymentResponse> reserveTicket(
+            @RequestBody CreateTicketRequest reqDto,
+            @AuthenticationPrincipal AuthUser authUser) {
+        TicketNeedPaymentResponse resDto = ticketService.createTicket(reqDto, authUser);
+
+        return ApiResponse.ok(resDto);
+    }
+
     @PatchMapping("/{ticketId}/refund")
     public ApiResponse<RefundTicketResponse> refundTicket(@PathVariable Long ticketId,
                                                           @AuthenticationPrincipal AuthUser authUser) {
