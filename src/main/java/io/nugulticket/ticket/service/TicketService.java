@@ -69,6 +69,11 @@ public class TicketService {
         return ticketRepository.findAllEqualParamIdJoinFetchSeatAndEvent(status, userId);
     }
 
+    @Transactional(readOnly = true)
+    public Ticket getTicketJoinFetchSeatAndEventTime(Long ticketId) {
+        return ticketRepository.findByIdJoinFetchSeatAndEventTime(ticketId);
+    }
+
     /**
      * 티켓을 예매하는 메서드 ( 상태는 결제 대기 상태로 생성 )
      * @param reqDto 티켓 예매에 필요한 정보가 담긴 Request 객체
@@ -171,4 +176,6 @@ public class TicketService {
     public Page<Ticket> getTicketsFromKeywords(String keyword, LocalDate eventDate, Pageable pageable) {
         return ticketRepository.findByKeywords(keyword, eventDate, pageable);
     }
+
+
 }
