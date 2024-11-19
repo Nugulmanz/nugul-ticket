@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class RedisRedisDistributedLockTest {
+public class RedisDistributedLockTest {
 
     @InjectMocks
     private RedisDistributedLockAspect redisDistributedLockAspect; // AOP 테스트 대상
