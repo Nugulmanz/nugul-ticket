@@ -41,6 +41,7 @@ cloud:
         secret-key: ${SQS_SECRET_KEY}
       name: NugulTicket.fifo
       url: ${SQS_TICKETS_URL}
+      url-realtime: ${SQS_REALTIME_URL}
 
     sns:
       region:

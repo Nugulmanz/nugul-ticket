@@ -5,9 +5,12 @@ import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.AwsCredentials;
+import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.sqs.SqsAsyncClient;
+import software.amazon.awssdk.services.sqs.SqsClient;
 
 @Getter
 @Configuration
@@ -43,6 +46,28 @@ public class AWSSQSConfig {
                     }
                 })
                 .region(Region.of(awsRegion))
+                .build();
+    }
+
+    /**
+     * AWS SQS 서비스와 동기적으로 통신하는 클라이언트 생성
+     * @return SQS서비스와 통신하는 클라이언트 객체
+     */
+    @Bean
+    public SqsClient getSqsClient() {
+        return SqsClient.builder()
+                .credentialsProvider(()->new AwsCredentials(){
+                    @Override
+                    public String accessKeyId() {
+                        return awsAccessKEy;
+                    }
+
+                    @Override
+                    public String secretAccessKey() {
+                        return awsSecretKey;
+                    }
+                })
+                .region(Region.of(awsRegion)) // AWS 리전 설정
                 .build();
     }
 
