@@ -41,7 +41,7 @@ class SearchEventRankServiceTest {
     @Mock
     private EventService eventService;
 
-    private static final String EVENT_RANKING_KEY = "eventRanking";
+    private static final String EVENT_RANKING_KEY = "event:ranking";
     private static final String EVENT_ID_MAP_KEY = "eventIdMap";
 
 
