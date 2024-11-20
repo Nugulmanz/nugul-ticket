@@ -9,13 +9,14 @@ import io.nugulticket.user.entity.User;
 import io.nugulticket.user.enums.LoginType;
 import io.nugulticket.user.enums.UserRole;
 import io.nugulticket.user.service.UserService;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
