@@ -32,19 +32,4 @@ public class EventDocument {
     private String titleInitials;  //제목 초성 필드
 
 
-    public EventDocument(Long eventId, String category, String title, String description, String formattedStartDate, String formattedEndDate,
-                         String runtime, String viewRating, Double rating, String place, Boolean bookAble, String imageUrl) {
-        this.eventId = eventId;
-        this.title = title;
-        this.description = description;
-        this.category = category;
-        this.startDate = formattedStartDate;
-        this.endDate = formattedEndDate;
-        this.runtime = runtime;
-        this.viewRating = viewRating;
-        this.rating = rating;
-        this.place = place;
-        this.bookAble = bookAble;
-        this.imageUrl = imageUrl;
-    }
 }
