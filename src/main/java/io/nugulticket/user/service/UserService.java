@@ -31,49 +31,33 @@ public class UserService {
         return UserResponse.from(user);
     }
 
-    /**
-     * 주어진 email로 해당 유저가 이미 존재하는지 확인
-     *
-     * @param email 조회할 email
-     * @return boolean(true = 존재함, false = 없음)
-     */
+    // 주어진 email로 해당 유저가 이미 존재하는지 확인
     public Boolean isUser(String email) {
         return userRepository.findByEmail(email).isPresent();
     }
 
-    /**
-     * userId로 해당 유저 조회 및 반환
-     */
+     // userId로 해당 유저 조회 및 반환
     public User getUser(Long userId) {
         return userRepository.findUserById(userId);
     }
 
-    /**
-     * email로 해당 유저 조회 및 반환
-     */
+
+    // email로 해당 유저 조회 및 반환
     public User getUserFromEmail(String email) {
         return userRepository.findUserByEmail(email);
     }
 
-    /**
-     * 유저 정보를 저장하는 메서드
-     */
+    // 유저 정보를 저장하는 메서드
     public User addUser(User user) {
         return userRepository.save(user);
     }
 
-    /**
-     * email로 해당 유저 조회 및 반환
-     */
+    // email로 해당 유저 조회 및 반환
     public Optional<User> findByEmail(String email) {
         return userRepository.findByEmail(email);
     }
 
-    /**
-     * 유저 권한이 갱신된 유저를 저장하는 메서드
-     *
-     * @param user 권한이 갱신된 유저
-     */
+    // 유저 권한이 갱신된 유저를 저장하는 메서드
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void updateUserRole(User user) {
         userRepository.save(user);

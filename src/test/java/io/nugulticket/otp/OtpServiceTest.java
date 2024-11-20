@@ -1,23 +1,18 @@
 package io.nugulticket.otp;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
-
 import com.warrenstrange.googleauth.GoogleAuthenticator;
 import com.warrenstrange.googleauth.GoogleAuthenticatorKey;
 import io.nugulticket.common.AuthUser;
 import io.nugulticket.common.apipayload.status.ErrorStatus;
 import io.nugulticket.common.exception.ApiException;
-import io.nugulticket.email.service.EmailService;
 import io.nugulticket.otp.entity.OtpKey;
 import io.nugulticket.otp.repository.OtpKeyRepository;
 import io.nugulticket.otp.service.OtpRedisService;
 import io.nugulticket.otp.service.OtpService;
+import io.nugulticket.user.entity.User;
 import io.nugulticket.user.enums.LoginType;
 import io.nugulticket.user.enums.UserRole;
 import io.nugulticket.user.service.UserService;
-import io.nugulticket.user.entity.User;
-
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -27,6 +22,9 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
 @ExtendWith(MockitoExtension.class)
 class OtpServiceTest {
 
@@ -35,9 +33,6 @@ class OtpServiceTest {
 
     @Mock
     private OtpRedisService otpRedisService;
-
-    @Mock
-    private EmailService emailService;
 
     @Mock
     private UserService userService;
@@ -101,9 +96,9 @@ class OtpServiceTest {
 
         // User 객체를 Mocking하여 생성
         User user = mock(User.class);
-        lenient().when(user.getId()).thenReturn(1L); // lenient 적용
-        lenient().when(user.getEmail()).thenReturn("test@example.com"); // lenient 적용
-        lenient().when(user.getUserRole()).thenReturn(UserRole.USER); // lenient 적용
+        lenient().when(user.getId()).thenReturn(1L);
+        lenient().when(user.getEmail()).thenReturn("test@example.com");
+        lenient().when(user.getUserRole()).thenReturn(UserRole.USER);
         when(user.isEmailVerified()).thenReturn(true);
 
         // OtpKey 객체 생성

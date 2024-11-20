@@ -34,7 +34,6 @@ public class OtpService {
      * @return QR 코드 URL (Google Authenticator와 연동할 수 있는 URL)
      */
     public String generateQrCode(AuthUser authUser) {
-
         Long userId = authUser.getId();
 
         otpKeyRepository.deleteById(userId);
@@ -72,12 +71,14 @@ public class OtpService {
                 .orElseThrow(() -> new ApiException(ErrorStatus.OTP_INVALID_VERIFICATION_CODE));
 
         boolean isValidOtp = googleAuthenticator.authorize(otpKey.getOtpSecretKey(), otp);
+
         if (!isValidOtp) {
             otpRedisService.incrementFailedOtpAttempts(userId);
             int failedAttempts = otpRedisService.getFailedOtpAttempts(userId);
 
             if (failedAttempts >= MAX_OTP_ATTEMPTS) {
                 otpRedisService.lockAccount(userId);
+
                 String unlockCode = emailService.sendUnlockEmail(user.getEmail());
                 otpRedisService.setCodeForUnlock(userId, unlockCode);
 
