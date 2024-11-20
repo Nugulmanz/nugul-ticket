@@ -17,6 +17,7 @@ public class DummyUserFactory {
 
     /**
      * Random한 User 데이터를 만들어주는 메서드
+     *
      * @param size DummyData 개수
      * @return 완성된 User dummyData
      */

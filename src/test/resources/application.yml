@@ -41,7 +41,7 @@ aws:
 jwt:
   secret:
     key: ${JWT_SECRET_KEY}
-  admin-key : ${ADMIN_KEY}
+  admin-key: ${ADMIN_KEY}
 
 client:
   id: ${CLIENT_ID}

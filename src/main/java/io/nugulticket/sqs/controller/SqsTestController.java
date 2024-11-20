@@ -16,6 +16,6 @@ public class SqsTestController {
         sqsService.sendMessage(seatId, eventTimeId);
         return "Message sent = seat: "
                 + seatId + ", eventTimeId: "
-                + eventTimeId +", status: RESERVED";
+                + eventTimeId + ", status: RESERVED";
     }
 }

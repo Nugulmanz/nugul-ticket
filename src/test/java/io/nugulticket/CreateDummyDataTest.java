@@ -34,7 +34,7 @@
 //
 //    @Test
 //    void createDummyDatas() {
-//        int userSize = 100;
+//        int userSize = 1000;
 //        int eventSize = 10000;
 //        int ticketSize = 200000;
 //

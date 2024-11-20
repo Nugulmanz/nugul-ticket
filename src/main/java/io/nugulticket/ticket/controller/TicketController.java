@@ -32,8 +32,8 @@ public class TicketController {
 
     @RequestMapping
     public ModelAndView createTicket(
-                                     @RequestBody CreateTicketRequest reqDto,
-                                     @AuthenticationPrincipal AuthUser authUser) {
+            @RequestBody CreateTicketRequest reqDto,
+            @AuthenticationPrincipal AuthUser authUser) {
         TicketNeedPaymentResponse resDto = ticketService.createTicket(reqDto, authUser);
         SQSPreOrder preOrderDto = new SQSPreOrder(SQSProtocol.TYPE_PRE_ORDER,
                 resDto.getOrderName(),

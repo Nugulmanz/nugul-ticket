@@ -12,8 +12,8 @@ aws:
 jwt:
   secret:
     key: ${JWT_SECRET_KEY}
-  admin-key : ${ADMIN_KEY}
-    
+  admin-key: ${ADMIN_KEY}
+
 client:
   id: ${CLIENT_ID}
 
@@ -47,8 +47,8 @@ cloud:
       region:
         static: ${SQS_REGION}
       payment:
-          topic:
-            arn: ${SNS_PAYMENT_TOPIC}
+        topic:
+          arn: ${SNS_PAYMENT_TOPIC}
 
 email:
   host: smtp.naver.com

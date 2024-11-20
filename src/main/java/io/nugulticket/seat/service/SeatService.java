@@ -21,12 +21,13 @@ public class SeatService {
 
     /**
      * 좌석을 생성하는 메서드
-     * @param eventTime 공연 일자 + 시각
-     * @param price 좌석당 가격
+     *
+     * @param eventTime   공연 일자 + 시각
+     * @param price       좌석당 가격
      * @param vipSeatSize vip 등급의 좌석 개수
-     * @param rSeatSize R 등급의 좌석 개수
-     * @param sSeatSize S 등급의 좌석 개수
-     * @param aSeatSize A 등급의 좌석 개수
+     * @param rSeatSize   R 등급의 좌석 개수
+     * @param sSeatSize   S 등급의 좌석 개수
+     * @param aSeatSize   A 등급의 좌석 개수
      * @return 생성된 좌석 객체가 담긴 List
      */
     @Transactional
@@ -50,21 +51,23 @@ public class SeatService {
 
     /**
      * EventTime, price, seatSize, seatType을 사용하여 만든 Seat객체를 seats에 삽입하는 메서드
-     * @param seats 데이터를 담을 List 객체
+     *
+     * @param seats     데이터를 담을 List 객체
      * @param eventTime 공연이 진행되는 시간
-     * @param offset 등급별 좌석 시작 Index offset
-     * @param price 좌석 가격
-     * @param seatSize 좌석 개수
-     * @param seatType 좌석 타입 ( VIP, R, S, A )
+     * @param offset    등급별 좌석 시작 Index offset
+     * @param price     좌석 가격
+     * @param seatSize  좌석 개수
+     * @param seatType  좌석 타입 ( VIP, R, S, A )
      */
     private void addSeat(List<Seat> seats, EventTime eventTime, int offset, int price, int seatSize, SeatType seatType) {
-        for(int i = 0; i < seatSize; ++i) {
-            seats.add(new Seat(eventTime, Integer.toString(offset + i + 1), price,seatType));
+        for (int i = 0; i < seatSize; ++i) {
+            seats.add(new Seat(eventTime, Integer.toString(offset + i + 1), price, seatType));
         }
     }
 
     /**
      * 특정 공연의 회차 id를 받아 해당 공연 회차의 좌석 정보를 반환하는 메서드
+     *
      * @param eventTimeId : 이벤트 회차 id
      * @return List<SeatResponse> : 전체 좌석 목록
      */
@@ -83,6 +86,7 @@ public class SeatService {
 
     /**
      * 해당 ID에 해당하는 Seat객체를 반환하는 메서드
+     *
      * @param id 조회할 Seat Id
      * @return 해당 ID에 해당하는 Seat 객체
      */

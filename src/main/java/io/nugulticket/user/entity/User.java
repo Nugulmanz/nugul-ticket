@@ -94,7 +94,7 @@ public class User extends Timestamped {
     }
 
 
-    public void deleteAccount(){
+    public void deleteAccount() {
         this.deletedAt = LocalDateTime.now();
     }
 
@@ -119,10 +119,9 @@ public class User extends Timestamped {
         this.address = address;
     }
 
-    public void becomeSeller(){
+    public void becomeSeller() {
         this.userRole = UserRole.SELLER;
     }
-
 
 
 }

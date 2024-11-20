@@ -17,7 +17,7 @@ public class DummyEventRequestFactory {
     private final int MAX_A_SEAT_PRICE = MIN_A_SEAT_PRICE + PRICE_OFFSET;
 
     private final int MIN_S_SEAT_PRICE = MAX_A_SEAT_PRICE;
-    private final int MAX_S_SEAT_PRICE = MIN_S_SEAT_PRICE  + PRICE_OFFSET;
+    private final int MAX_S_SEAT_PRICE = MIN_S_SEAT_PRICE + PRICE_OFFSET;
 
     private final int MIN_R_SEAT_PRICE = MAX_S_SEAT_PRICE;
     private final int MAX_R_SEAT_PRICE = MIN_R_SEAT_PRICE + PRICE_OFFSET;
@@ -28,7 +28,7 @@ public class DummyEventRequestFactory {
     private final int MIN_SEAT_COUNT = 5;
     private final int MAX_SEAT_COUNT = 5;
 
-    private final List<String> CATEGORI = new ArrayList<>(){{
+    private final List<String> CATEGORI = new ArrayList<>() {{
         add("뮤지컬");
         add("영화");
         add("공연");

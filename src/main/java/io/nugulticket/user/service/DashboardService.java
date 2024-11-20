@@ -34,18 +34,18 @@ public class DashboardService {
      * 판매자 승인
      *
      * @param authUser : 로그인 유저
-     * @param userId : 판매자로 만들어줄 유저
+     * @param userId   : 판매자로 만들어줄 유저
      * @return : 판매자로 바뀐 user, userRole
      */
     @Transactional
-    public AuthorityAcceptResponse authorityAccept(AuthUser authUser,Long userId) {
-        if(!authUser.getAuthorities().equals(UserRole.Authority.ADMIN)){
+    public AuthorityAcceptResponse authorityAccept(AuthUser authUser, Long userId) {
+        if (!authUser.getAuthorities().equals(UserRole.Authority.ADMIN)) {
             throw new ApiException(ErrorStatus._FORBIDDEN_USER);
         }
 
         User user = userService.getUser(userId);
         user.becomeSeller();
-        return new AuthorityAcceptResponse(user.getId(),user.getUserRole());
+        return new AuthorityAcceptResponse(user.getId(), user.getUserRole());
     }
 
 
@@ -64,17 +64,18 @@ public class DashboardService {
 
     /**
      * 환불을 진행하는 메서드
+     *
      * @param authUser : 로그인 유저
-     * @param eventId : 이벤트 아이디
+     * @param eventId  : 이벤트 아이디
      * @param ticketId : 티켓 아이디
-     * @param reqDto : 환불한 유저
+     * @param reqDto   : 환불한 유저
      * @return : 티켓 아이디와 상태
      */
-    public AcceptRefundResponse acceptRefund(AuthUser authUser, long eventId, long ticketId, AcceptRefundRequest reqDto){
-        if(!authUser.getAuthorities().equals(UserRole.Authority.SELLER)){
+    public AcceptRefundResponse acceptRefund(AuthUser authUser, long eventId, long ticketId, AcceptRefundRequest reqDto) {
+        if (!authUser.getAuthorities().equals(UserRole.Authority.SELLER)) {
             throw new ApiException(ErrorStatus._FORBIDDEN_ROLE);
         }
-        Ticket ticket = ticketService.getRefundTicket(reqDto.getUserId(),eventId,ticketId);
+        Ticket ticket = ticketService.getRefundTicket(reqDto.getUserId(), eventId, ticketId);
         ticket.cancel();
 
         return new AcceptRefundResponse(ticket);

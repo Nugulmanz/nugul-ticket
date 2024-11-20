@@ -1,7 +1,6 @@
 package io.nugulticket.auth;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import io.nugulticket.auction.entity.Auction;
 import io.nugulticket.auth.dto.kakaoLogin.KakaoLoginResponse;
 import io.nugulticket.auth.dto.updateKakaoUserInfo.UpdateKakaoUserInfoRequest;
 import io.nugulticket.auth.dto.updateKakaoUserInfo.UpdateKakaoUserInfoResponse;

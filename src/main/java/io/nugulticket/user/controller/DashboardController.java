@@ -35,9 +35,9 @@ public class DashboardController {
 
     @PatchMapping("/seller/v1/event/{eventId}/ticket/{ticketId}/refund")
     public ApiResponse<AcceptRefundResponse> acceptRefund(@AuthenticationPrincipal AuthUser authUser,
-                                                             @PathVariable long eventId,
-                                                             @PathVariable long ticketId,
-                                                             @RequestBody AcceptRefundRequest reqDto) {
+                                                          @PathVariable long eventId,
+                                                          @PathVariable long ticketId,
+                                                          @RequestBody AcceptRefundRequest reqDto) {
         AcceptRefundResponse resDto = dashboardService.acceptRefund(authUser, eventId, ticketId, reqDto);
         return ApiResponse.ok(resDto);
     }

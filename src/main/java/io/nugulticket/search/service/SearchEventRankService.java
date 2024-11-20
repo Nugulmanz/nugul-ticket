@@ -24,6 +24,7 @@ public class SearchEventRankService {
 
     /**
      * keyword를 삽입하고 해당 keyword에 해당하는 Score값을 반환하는 메서드
+     *
      * @param keyword 삽입할 keyword
      * @param eventId 삽입할 공연 Id
      * @return Score / EventId / 공연 Response 객체 정보가 담긴 Map 객체
@@ -51,6 +52,7 @@ public class SearchEventRankService {
 
     /**
      * 1 ~ count 등수까지 조회하여 반환하는 메서드
+     *
      * @param count 최대 등수
      * @return 1 ~ count 등수까지의 공연 정보가 담긴 List 객체
      */
@@ -65,6 +67,7 @@ public class SearchEventRankService {
 
     /**
      * 해당 공연 타이틀에 해당하는 event Id를 반환하는 메서드
+     *
      * @param eventTitle 조회할 공연 타이틀
      * @return 해당 공연 타이틀에 해당하는 eventID
      */

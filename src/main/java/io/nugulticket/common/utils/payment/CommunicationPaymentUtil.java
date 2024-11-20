@@ -24,7 +24,6 @@ public class CommunicationPaymentUtil {
     private final String GETINFO_PATH = "/info/payment";
 
 
-
     private WebClient getWebClient() { // localhost:8081
         return WebClient.builder()
                 .baseUrl(paymentServerUrl)

@@ -23,23 +23,23 @@ public enum ErrorStatus implements BaseCode {
     // auction
     _Lower_Than_Current_Bid(HttpStatus.BAD_REQUEST, "400", "최근 입찰가 보다 높아야 합니다."),
     _EXPIRED_ACTION(HttpStatus.BAD_REQUEST, "400", "종료된 경매입니다."),
-    _NOT_FOUND_AUCTION(HttpStatus.NOT_FOUND,"404", "존재하지 않는 경매입니다."),
+    _NOT_FOUND_AUCTION(HttpStatus.NOT_FOUND, "404", "존재하지 않는 경매입니다."),
 
     // ticket
-    _ALREADY_RESERVED(HttpStatus.NOT_ACCEPTABLE,"406", "이미 예약된 좌석입니다."),
+    _ALREADY_RESERVED(HttpStatus.NOT_ACCEPTABLE, "406", "이미 예약된 좌석입니다."),
     _NOT_FOUND_TICKET(HttpStatus.NOT_FOUND, "404", "존재하지 않는 티켓입니다"),
     _CANT_TRANSFER_STATE(HttpStatus.BAD_REQUEST, "406", "티켓 양도가 불가능한 상태 입니다"),
     QR_CODE_NOT_FOUND(HttpStatus.NOT_FOUND, "404", "해당 티켓의 QR 코드를 찾을 수 없습니다."),
 
     // user
     _NOT_FOUND_USER(HttpStatus.NOT_FOUND, "404", "존재하지 않는 유저입니다"),
-    _FORBIDDEN_USER(HttpStatus.FORBIDDEN,"403", "어드민 유저만 접근할 수 있습니다."),
-    _FORBIDDEN_ROLE(HttpStatus.FORBIDDEN,"403", "접근할 수 없는 권한입니다."),
+    _FORBIDDEN_USER(HttpStatus.FORBIDDEN, "403", "어드민 유저만 접근할 수 있습니다."),
+    _FORBIDDEN_ROLE(HttpStatus.FORBIDDEN, "403", "접근할 수 없는 권한입니다."),
     ROLE_CHANGE_NOT_ALLOWED(HttpStatus.FORBIDDEN, "403", "UNVERIFIED_USER 상태에서만 역할 변경이 가능합니다."),
 
     // event
     SELLER_ROLE_REQUIRED(HttpStatus.FORBIDDEN, "403", "SELLER 권한이 필요합니다."),
-    EVENT_NOT_FOUND(HttpStatus.NOT_FOUND, "404","해당 공연을 찾을 수 없습니다."),
+    EVENT_NOT_FOUND(HttpStatus.NOT_FOUND, "404", "해당 공연을 찾을 수 없습니다."),
     ADMIN_ROLE_REQUIRED(HttpStatus.FORBIDDEN, "403", "ADMIN 권한이 필요합니다."),
 
     // image
