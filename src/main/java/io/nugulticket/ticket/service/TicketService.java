@@ -40,9 +40,6 @@ public class TicketService {
 
     /**
      * 해당 Id를 가진 티켓을 반환하는 메서드
-     *
-     * @param id 조회할 Id
-     * @return 해당 Id를 가진 티켓 / 없을 경우 NotFoundException 발생
      */
     @Transactional(readOnly = true)
     public Ticket getTicket(Long id) {
@@ -51,9 +48,6 @@ public class TicketService {
 
     /**
      * 해당 Id를 가진 티켓을 반환하는 메서드
-     *
-     * @param id 조회할 Id
-     * @return 해당 Id를 가진 티켓 / 없을 경우 NotFoundException 발생
      */
     @Transactional(readOnly = true)
     public Ticket getTicketJoinFetchSeat(Long id) {
@@ -101,30 +95,11 @@ public class TicketService {
         ticket.createTicket(event, seat, user, qrCode);
         seat.seatReserved();
         Ticket t = ticketRepository.save(ticket);
-//        Ticket t = creatingTicket(authUser, seat);
-
-//        CreateTicketResponse resDto123 = new CreateTicketResponse(seat, event, ticket, authUser.getId());
         return TicketNeedPaymentResponse.of(t, authUser, "ticket", generateOrderIdUtil.generateOrderId());
     }
 
-//    @Transactional
-//    public Ticket creatingTicket(AuthUser authUser, Seat seat) {
-//        // 티켓 생성 및 저장
-//        Long eventId = seat.getEventTime().getEvent().getEventId(); // n+1 문제 있을 듯
-//        Event event = eventService.getEventFromId(eventId);
-//        String qrCode = createQRCode();
-//        Ticket ticket = new Ticket();
-//        User user = userService.getUser(authUser.getId());
-//        ticket.createTicket(event, seat, user, qrCode);
-//        seat.seatReserved();
-//        Ticket t = ticketRepository.save(ticket);
-//        return t;
-//    }
-
     /**
      * id에 대당하는 티켓 상태를 예매 완료 상태로 바꾸는 메서드
-     *
-     * @param id 티켓 상태를 바꿀 티켓 Id
      */
     @Transactional
     public void reserveTicket(Long id) {
@@ -134,8 +109,6 @@ public class TicketService {
 
     /**
      * id에 대당하는 티켓 상태를 예매 취소 상태로 바꾸는 메서드
-     *
-     * @param id 티켓 상태를 바꿀 티켓 Id
      */
     @Transactional
     public void cancelTicket(Long id) {
@@ -192,11 +165,6 @@ public class TicketService {
 
     /**
      * 키워드 / 공연 일자 / 페이징 정보를 토대로 Ticket 정보를 반환하는 메서드
-     *
-     * @param keyword   조회할 공연 키워드
-     * @param eventDate 조회할 공연 일자
-     * @param pageable  Page, Size가 담긴 페이징 정보
-     * @return 해당 정보들을 포함하고 있는 페이징된 Ticket 정보들
      */
     @Transactional(readOnly = true)
     public Page<Ticket> getTicketsFromKeywords(String keyword, LocalDate eventDate, Pageable pageable) {

@@ -264,8 +264,6 @@ public class EventService {
 
     /**
      * 모든 공연 정보를 조회하는 메서드
-     *
-     * @return 모든 공연 정보가 담긴 Response 객체
      */
     @Transactional(readOnly = true)
     public List<GetAllEventResponse> getAllEvents() {
@@ -279,9 +277,6 @@ public class EventService {
 
     /**
      * eventId에 해당하는 공연 정보를 반환하는 메서드
-     *
-     * @param eventId 조회할 eventId
-     * @return 해당 eventId에 해당하는 Event 객체
      */
     @Transactional(readOnly = true)
     public Event getEventFromId(Long eventId) {
@@ -290,9 +285,6 @@ public class EventService {
 
     /**
      * userId에 해당하는 유저가 작성한 공연 목록을 조회하는 메서드
-     *
-     * @param userId 조회할 eventId
-     * @return 해당 eventId에 해당하는 Event 객체
      */
     @Transactional(readOnly = true)
     public List<Event> getEventFromUserId(Long userId) {

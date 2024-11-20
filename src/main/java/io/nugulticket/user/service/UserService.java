@@ -43,9 +43,6 @@ public class UserService {
 
     /**
      * userId로 해당 유저 조회 및 반환
-     *
-     * @param userId 조회할 userId
-     * @return 해당 userId를 갖고 있는 User
      */
     public User getUser(Long userId) {
         return userRepository.findUserById(userId);
@@ -53,9 +50,6 @@ public class UserService {
 
     /**
      * email로 해당 유저 조회 및 반환
-     *
-     * @param email 조회할 이메일
-     * @return 해당 이메일을 사용중인 유저 반환
      */
     public User getUserFromEmail(String email) {
         return userRepository.findUserByEmail(email);
@@ -63,9 +57,6 @@ public class UserService {
 
     /**
      * 유저 정보를 저장하는 메서드
-     *
-     * @param user 저장할 User 정보
-     * @return 저장된 User 정보
      */
     public User addUser(User user) {
         return userRepository.save(user);
@@ -73,9 +64,6 @@ public class UserService {
 
     /**
      * email로 해당 유저 조회 및 반환
-     *
-     * @param email 조회할 이메일
-     * @return Optional로 감싸진 해당 이메일을 사용중인 유저 반환
      */
     public Optional<User> findByEmail(String email) {
         return userRepository.findByEmail(email);

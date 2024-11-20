@@ -20,6 +20,18 @@ public class EventTimeService {
     private final EventTimeRepository eventTimeRepository;
     private final SeatService seatService;
 
+    /**
+     * 이벤트 회차 정보를 생성하는 메서드
+     * @param event 이벤트 객체
+     * @param start 이벤트 시작 날짜
+     * @param end 이벤트 종료 날짜
+     * @param time 이벤트 시간
+     * @param price 가격
+     * @param vipSeatSize vip석 자리 수
+     * @param rSeatSize r석 자리 수
+     * @param aSeatSize a석 자리 수
+     * @return 생성된 EventTime 리스트
+     */
     @Transactional
     public List<EventTime> createEventTimes(Event event,
                                             LocalDate start,
