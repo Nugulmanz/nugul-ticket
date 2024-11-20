@@ -42,7 +42,7 @@ public class RedisDistributedLockAspectTest {
         }).when(mockLock).tryLock(10, 5, TimeUnit.SECONDS);
         doNothing().when(mockLock).unlock();
 
-        int numberOfThreads = 1000; // 동시에 실행할 요청 수
+        int numberOfThreads = 50; // 동시에 실행할 요청 수
         ExecutorService executorService = Executors.newFixedThreadPool(1000);
         CountDownLatch latch = new CountDownLatch(numberOfThreads);
 

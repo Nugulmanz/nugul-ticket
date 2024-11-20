@@ -33,7 +33,7 @@ class SearchRankServiceTest {
     @Mock
     private ZSetOperations<String, Object> zSetOperations;
 
-    private static final String SEARCH_RANKING_KEY = "searchRanking";
+    private static final String SEARCH_RANKING_KEY = "search:ranking";
 
     @BeforeEach
     void setUp() {
