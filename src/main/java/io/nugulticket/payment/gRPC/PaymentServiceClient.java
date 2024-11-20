@@ -29,7 +29,7 @@ public class PaymentServiceClient {
 
     // gRPC 채널을 설정하고, 결제 서버의 gRPC 서비스를 호출할 수 있는 PaymentServiceBlockingStub 객체를 생성
     @PostConstruct
-    public void init () {
+    public void init() {
         // 호스트와 포트를 분리하여 설정
         String[] urlParts = paymentServerUrl.split(":");
         String host = urlParts[0];

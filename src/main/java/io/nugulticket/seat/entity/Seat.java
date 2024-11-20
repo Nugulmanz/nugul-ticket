@@ -33,12 +33,13 @@ public class Seat {
     @Enumerated(EnumType.STRING)
     private SeatType seatType;
 
-    private boolean isDelete=false;
+    private boolean isDelete = false;
 
     public void seatReserved() {
         this.isReserved = true;
     }
-    public void rollbackReserve(){
+
+    public void rollbackReserve() {
         this.isReserved = false;
     }
 

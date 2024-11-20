@@ -47,6 +47,7 @@ public class KakaoService {
 
     /**
      * 카카오를 통해 User계정을 로그인 하고 bearerToken을 받는 메서드
+     *
      * @param code 카카오에서 제공한 로그인 Code
      * @return 해당 유저의 bearerToken
      */
@@ -117,10 +118,11 @@ public class KakaoService {
 
     /**
      * 액세스토큰으로 사용자정보(닉네임, 이메일)을 가져오는 메서드
+     *
      * @param accessToken Kakao로 부터 발급 받은 액세스 토큰
      * @return 해당 사용자의 정보가 담긴 Dto 객체
      */
-    public KakaoUserDto getKakaoUserInfo(String accessToken)  throws JsonProcessingException {
+    public KakaoUserDto getKakaoUserInfo(String accessToken) throws JsonProcessingException {
         log.info("accessToken : " + accessToken);
         // 요청 URL 만들기
         URI uri = UriComponentsBuilder
@@ -160,6 +162,7 @@ public class KakaoService {
 
     /**
      * 해당 유저가 이미 가입되어 있는지 확인하고, 가입되어 있지 않다면 회원가입을 진행하는 메서드
+     *
      * @param kakaoUserDto Kakao 유저 정보가 담긴 Dto객체
      * @return 가입 되어 있을 경우 : 가입 된 유저 정보 / 가입 되어 있지 않은 경우 : 회원가입이 진행된 유저 정보
      */
@@ -185,11 +188,11 @@ public class KakaoService {
                 String encodedPassword = passwordEncoder.encode(password);
 
                 kakaoUser = new User(kakaoUserDto.getNickname(),
-                                    kakaoEmail,
-                                    socialId,
-                                    encodedPassword,
-                                    kakaoUserDto.getUserRole(),
-                                    kakaoUserDto.getLoginType());
+                        kakaoEmail,
+                        socialId,
+                        encodedPassword,
+                        kakaoUserDto.getUserRole(),
+                        kakaoUserDto.getLoginType());
             }
             userRepository.save(kakaoUser);
         }
@@ -199,14 +202,15 @@ public class KakaoService {
 
     /**
      * 소셜로그인한 유저의 추가정보를 업데이트하는 메서드
-     * @param authUser 현재 로그인 한 유저 정보
+     *
+     * @param authUser                   현재 로그인 한 유저 정보
      * @param updateKakaoUserInfoRequest 업데이트에 필요한 추가 정보가 담긴 Request 객체
      * @return 업데이트한 정보를 보여주는 response 객체
      */
     @Transactional
-    public UpdateKakaoUserInfoResponse updateKakaoUserInfo (AuthUser authUser, UpdateKakaoUserInfoRequest updateKakaoUserInfoRequest) {
+    public UpdateKakaoUserInfoResponse updateKakaoUserInfo(AuthUser authUser, UpdateKakaoUserInfoRequest updateKakaoUserInfoRequest) {
         User kakaoUser = userRepository.findById(authUser.getId())
-                .orElseThrow(()-> new ApiException(ErrorStatus._NOT_FOUND_USER));
+                .orElseThrow(() -> new ApiException(ErrorStatus._NOT_FOUND_USER));
 
         // 카카오 로그인한 사람이 아닐 경우 예외 처리
         if (kakaoUser.getLoginType() != LoginType.SOCIAL) {
@@ -214,8 +218,8 @@ public class KakaoService {
         }
 
         kakaoUser.updateUserInfo(updateKakaoUserInfoRequest.getUsername(),
-                            updateKakaoUserInfoRequest.getPhoneNumber(),
-                            updateKakaoUserInfoRequest.getAddress());
+                updateKakaoUserInfoRequest.getPhoneNumber(),
+                updateKakaoUserInfoRequest.getAddress());
 
         userRepository.save(kakaoUser);
         return UpdateKakaoUserInfoResponse.of(kakaoUser);

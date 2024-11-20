@@ -96,7 +96,7 @@ public class Event extends Timestamped {
         }
     }
 
-    public void deleteEvent(){
+    public void deleteEvent() {
         this.is_deleted = true;
     }
 
@@ -104,7 +104,7 @@ public class Event extends Timestamped {
     public Event(Long eventId, String title, String description, String category, LocalDate startDate, LocalDate endDate,
                  String runtime, String viewRating, Double rating, String place, Boolean bookAble, String dummyImageUrl) {
         this.eventId = eventId;
-        this.title= title;
+        this.title = title;
         this.description = description;
         this.category = category;
         this.startDate = startDate;

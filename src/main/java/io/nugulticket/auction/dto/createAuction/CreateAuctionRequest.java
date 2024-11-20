@@ -1,4 +1,4 @@
-package io.nugulticket.auction.dto.createAction;
+package io.nugulticket.auction.dto.createAuction;
 
 import lombok.Getter;
 

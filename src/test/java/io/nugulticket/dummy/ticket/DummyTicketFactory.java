@@ -29,7 +29,7 @@ public class DummyTicketFactory {
 
             User randUser = users.get(next);
 
-            tickets.add(createTicket(seats.get(i),randUser));
+            tickets.add(createTicket(seats.get(i), randUser));
         }
 
         return tickets;

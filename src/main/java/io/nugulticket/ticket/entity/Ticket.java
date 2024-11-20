@@ -44,7 +44,7 @@ public class Ticket {
     private TicketStatus status;
 
     @Column(nullable = false)
-    private boolean isDeleted=false;
+    private boolean isDeleted = false;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
     @JoinColumn(name = "event_id")
@@ -56,29 +56,31 @@ public class Ticket {
 
     /**
      * 티켓 상태를 변화 시키는 메서드
+     *
      * @param newStatus 새로운 상태 ( RESERVED, CANCELLED, WAITTRANSFER, TRANSFERRED, AUCTION ... )
      */
     public void changeStatus(TicketStatus newStatus) {
         this.status = newStatus;
     }
 
-    public void createTicket(Event event, Seat seat, User user, String qrCode){
+    public void createTicket(Event event, Seat seat, User user, String qrCode) {
         this.event = event;
         this.seat = seat;
         this.qrCode = qrCode;
         this.purchaseDate = LocalDateTime.now();
         this.user = user;
-        this.status=TicketStatus.WAITING_RESERVED;
+        this.status = TicketStatus.WAITING_RESERVED;
     }
 
-    public void requestCancel(){
-        this.status=TicketStatus.WAIT_CANCEL;
-    }
-    public void cancel(){
-        this.status=TicketStatus.CANCELLED;
+    public void requestCancel() {
+        this.status = TicketStatus.WAIT_CANCEL;
     }
 
-    public void rollbackSeat(){
+    public void cancel() {
+        this.status = TicketStatus.CANCELLED;
+    }
+
+    public void rollbackSeat() {
         this.seat.rollbackReserve();
     }
 }

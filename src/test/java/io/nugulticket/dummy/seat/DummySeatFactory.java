@@ -12,8 +12,8 @@ import java.util.List;
 @Component
 public class DummySeatFactory {
     private void addSeat(List<Seat> seats, EventTime eventTime, int offset, int price, int seatSize, SeatType seatType) {
-        for(int i = 0; i < seatSize; ++i) {
-            seats.add(new Seat(eventTime, Integer.toString(offset + i + 1), price,seatType));
+        for (int i = 0; i < seatSize; ++i) {
+            seats.add(new Seat(eventTime, Integer.toString(offset + i + 1), price, seatType));
         }
     }
 
@@ -40,7 +40,7 @@ public class DummySeatFactory {
     public List<Seat> createDummySeats(List<EventTime> eventTimes, List<CreateEventRequest> requests) {
         List<Seat> seats = new ArrayList<>();
 
-        for(int i = 0; i < requests.size(); ++i) {
+        for (int i = 0; i < requests.size(); ++i) {
             createSeat(seats, eventTimes.get(i), requests.get(i));
         }
 

@@ -36,7 +36,7 @@ public class SqsService {
     @SqsListener(value = "${cloud.aws.sqs.name}")
     public void receiveMessage(Message message) throws JsonProcessingException {
         System.out.println(message);
-        Map<String , MessageAttributeValue> messageAttribute = sqsUtility.parseMessage(message);
+        Map<String, MessageAttributeValue> messageAttribute = sqsUtility.parseMessage(message);
         final String type = sqsUtility.getType(messageAttribute);
 
         switch (type) {
@@ -50,7 +50,7 @@ public class SqsService {
         }
     }
 
-    private void successPayment(Map<String , MessageAttributeValue> messageAttribute) {
+    private void successPayment(Map<String, MessageAttributeValue> messageAttribute) {
         SQSSuccessPayment successPaymentDto = new SQSSuccessPayment();
         successPaymentDto.fromSQSAttributes(messageAttribute);
 
@@ -61,7 +61,7 @@ public class SqsService {
         sendMessage(seat.getId(), seat.getEventTime().getId());
     }
 
-    private void failPayment(Map<String , MessageAttributeValue> messageAttribute) {
+    private void failPayment(Map<String, MessageAttributeValue> messageAttribute) {
         SQSFailPayment failPaymentDto = new SQSFailPayment();
         failPaymentDto.fromSQSAttributes(messageAttribute);
 

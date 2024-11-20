@@ -78,7 +78,7 @@ public class PaymentController {
 
     //결제 정보 요청하는 REST API
     @GetMapping("/rest/info")
-    public ResponseEntity<JSONObject> getPaymentInfo (@RequestParam String orderId, @RequestParam long userId) {
+    public ResponseEntity<JSONObject> getPaymentInfo(@RequestParam String orderId, @RequestParam long userId) {
         Address address = new Address("123 Main St", "Metropolis", "CA", "12345");
 
         // UserDetails 객체 생성

@@ -32,7 +32,7 @@ public class PaymentServiceImpl extends PaymentServiceGrpc.PaymentServiceImplBas
         List<EventDetails> events = request.getEventList();
 
         // 결제 서버에 결제 정보를 요청하는 로직
-        PaymentResponse paymentResponse = paymentClient.getPaymentInfo(orderId, userId, userRole, email, events );
+        PaymentResponse paymentResponse = paymentClient.getPaymentInfo(orderId, userId, userRole, email, events);
 
         // 클라이언트로 응답 전송
         responseObserver.onNext(paymentResponse);

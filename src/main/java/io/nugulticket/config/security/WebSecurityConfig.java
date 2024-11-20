@@ -48,19 +48,19 @@ public class WebSecurityConfig {
                 .logout(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
 //                        .requestMatchers("**").permitAll() // 테스트용
-                        .requestMatchers("/api/sqs/**").permitAll() // SQS 테스트용
-                        .requestMatchers("/api/chat/**").permitAll()
-                        .requestMatchers("/health/**").permitAll()  // 배포 : ALB health check 및 접속 테스트용
-                        .requestMatchers("/api/auth/v1/**", "/api/search/v1/**").permitAll()
-                        .requestMatchers("/actuator/**").permitAll()    // 모니터링을 위한 actuator 허용
-                        .requestMatchers(HttpMethod.GET, "/api/events/v1/**").permitAll()   // 공연 단건 및 전체 조회
-                        .requestMatchers("/api/admin/v1/**").hasAuthority(UserRole.ADMIN.toString())
-                        .requestMatchers(HttpMethod.DELETE, "/api/events/v1/**").hasAuthority(UserRole.ADMIN.toString()) // 공연 삭제
-                        .requestMatchers("/api/seller/v1/**").hasAuthority(UserRole.SELLER.toString())
-                        .requestMatchers(HttpMethod.POST, "/api/events/v1/**").hasAuthority(UserRole.SELLER.toString())  // 공연 생성
-                        .requestMatchers(HttpMethod.PATCH, "/api/events/v1/**").hasAuthority(UserRole.SELLER.toString()) // 공연 수정
-                        .requestMatchers(HttpMethod.POST, "/api/email/verify-code").hasAuthority(UserRole.UNVERIFIED_USER.toString()) // 이메일 인증 코드 검증은 UNVERIFIED_USER 권한을 가진 사용자 허용
-                        .anyRequest().authenticated()
+                                .requestMatchers("/api/sqs/**").permitAll() // SQS 테스트용
+                                .requestMatchers("/api/chat/**").permitAll()
+                                .requestMatchers("/health/**").permitAll()  // 배포 : ALB health check 및 접속 테스트용
+                                .requestMatchers("/api/auth/v1/**", "/api/search/v1/**").permitAll()
+                                .requestMatchers("/actuator/**").permitAll()    // 모니터링을 위한 actuator 허용
+                                .requestMatchers(HttpMethod.GET, "/api/events/v1/**").permitAll()   // 공연 단건 및 전체 조회
+                                .requestMatchers("/api/admin/v1/**").hasAuthority(UserRole.ADMIN.toString())
+                                .requestMatchers(HttpMethod.DELETE, "/api/events/v1/**").hasAuthority(UserRole.ADMIN.toString()) // 공연 삭제
+                                .requestMatchers("/api/seller/v1/**").hasAuthority(UserRole.SELLER.toString())
+                                .requestMatchers(HttpMethod.POST, "/api/events/v1/**").hasAuthority(UserRole.SELLER.toString())  // 공연 생성
+                                .requestMatchers(HttpMethod.PATCH, "/api/events/v1/**").hasAuthority(UserRole.SELLER.toString()) // 공연 수정
+                                .requestMatchers(HttpMethod.POST, "/api/email/verify-code").hasAuthority(UserRole.UNVERIFIED_USER.toString()) // 이메일 인증 코드 검증은 UNVERIFIED_USER 권한을 가진 사용자 허용
+                                .anyRequest().authenticated()
                 )
                 .build();
     }
