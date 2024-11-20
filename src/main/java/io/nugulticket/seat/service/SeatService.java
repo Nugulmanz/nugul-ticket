@@ -86,9 +86,6 @@ public class SeatService {
 
     /**
      * 해당 ID에 해당하는 Seat객체를 반환하는 메서드
-     *
-     * @param id 조회할 Seat Id
-     * @return 해당 ID에 해당하는 Seat 객체
      */
     public Seat findSeatById(Long id) {
         return seatRepository.findById(id)

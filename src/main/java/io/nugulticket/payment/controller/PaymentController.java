@@ -8,12 +8,14 @@ import io.nugulticket.sqs.dto.SQSApprovePayment;
 import io.nugulticket.sqs.dto.SQSPreOrder;
 import io.nugulticket.ticket.dto.response.TicketNeedPaymentResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import software.amazon.awssdk.services.sns.model.PublishResponse;
 
+@Slf4j
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/payment")
@@ -26,7 +28,7 @@ public class PaymentController {
     @ResponseBody
     @PostMapping("/confirm")
     public ResponseEntity<String> confirmPayments(@RequestBody PaymentRequest paymentRequest) {
-        System.out.println("들어왔어");
+        log.info("confirm payments");
 
         // 최종 결제 승인
         SQSApprovePayment sqsApprovePayment = new SQSApprovePayment(

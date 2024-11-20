@@ -130,8 +130,6 @@ public class TicketTransferService {
 
     /**
      * 내가 양도하거나, 양도 받은 Ticket 이력을 조회하는 메서드
-     *
-     * @return 내가 양도하거나, 양도 받은 Ticket 이력이 담긴 Dto객체
      */
     @Transactional(readOnly = true)
     public MyTransferTicketsResponse getMyTransferTicket(AuthUser user) {
