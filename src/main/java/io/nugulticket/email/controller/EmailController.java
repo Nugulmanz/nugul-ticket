@@ -38,7 +38,7 @@ public class EmailController {
         redisService.setCode(email, code);
         return "인증 코드가 발송되었습니다.";
     }
-    
+
     @PreAuthorize("hasAuthority('UNVERIFIED_USER')")
     @Transactional
     @PostMapping("/verify-code")

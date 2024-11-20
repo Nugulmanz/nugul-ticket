@@ -10,7 +10,7 @@ import java.util.Map;
 
 @Getter
 @Setter
-public class SQSSuccessPayment  implements SQSDto {
+public class SQSSuccessPayment implements SQSDto {
     private String type;
     private long ticketId;
 

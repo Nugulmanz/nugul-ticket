@@ -29,7 +29,7 @@ public class TicketCompletedResponse {
         this.endDate = ticket.getEvent().getEndDate();
 
         Seat seat = ticket.getSeat();
-        if(seat != null) {
+        if (seat != null) {
             this.seatNumber = seat.getSeatNumber();
             this.seatPrice = seat.getPrice();
             this.seatType = seat.getSeatType();

@@ -129,7 +129,6 @@ class AuthServiceTest {
     }
 
 
-
     @Test
     @DisplayName("로그인 성공")
     void loginSuccess() {

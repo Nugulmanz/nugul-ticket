@@ -18,11 +18,12 @@ public class SnsService {
 
     /**
      * PaymentTopic SNS에 메시지를 삽입하는 메서드
+     *
      * @param messageAttributes 삽입할 Attributes
      * @return message ID가 담긴 Response
      */
     public PublishResponse publishToPaymentTopic(Map<String, MessageAttributeValue> messageAttributes) {
-        PublishRequest publishRequest = getPublishRequest(awsConfig.getSnsPaymentTopicARN(),  "payment","paymenttest", messageAttributes);
+        PublishRequest publishRequest = getPublishRequest(awsConfig.getSnsPaymentTopicARN(), "payment", "paymenttest", messageAttributes);
 
         return publish(publishRequest);
     }

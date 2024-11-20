@@ -9,7 +9,7 @@ public class AcceptRefundResponse {
     private Long ticketId;
     private TicketStatus ticketStatus;
 
-    public AcceptRefundResponse(Ticket ticket){
+    public AcceptRefundResponse(Ticket ticket) {
         this.ticketId = ticket.getTicketId();
         this.ticketStatus = ticket.getStatus();
     }

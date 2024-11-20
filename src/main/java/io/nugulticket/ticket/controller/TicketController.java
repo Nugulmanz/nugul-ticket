@@ -32,8 +32,8 @@ public class TicketController {
 
     @RequestMapping
     public ModelAndView createTicket(
-                                     @RequestBody CreateTicketRequest reqDto,
-                                     @AuthenticationPrincipal AuthUser authUser) {
+            @RequestBody CreateTicketRequest reqDto,
+            @AuthenticationPrincipal AuthUser authUser) {
         TicketNeedPaymentResponse resDto = ticketService.createTicket(reqDto, authUser);
         SQSPreOrder preOrderDto = new SQSPreOrder(SQSProtocol.TYPE_PRE_ORDER,
                 resDto.getOrderName(),
@@ -53,6 +53,16 @@ public class TicketController {
         mav.addAllObjects(resDto.toMap());
 
         return mav;
+    }
+
+    @ResponseBody
+    @PostMapping("/test")
+    public ApiResponse<TicketNeedPaymentResponse> reserveTicket(
+            @RequestBody CreateTicketRequest reqDto,
+            @AuthenticationPrincipal AuthUser authUser) {
+        TicketNeedPaymentResponse resDto = ticketService.createTicket(reqDto, authUser);
+
+        return ApiResponse.ok(resDto);
     }
 
     @PatchMapping("/{ticketId}/refund")

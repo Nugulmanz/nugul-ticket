@@ -16,7 +16,6 @@ import io.nugulticket.event.entity.Event;
 import io.nugulticket.event.repository.EventRepository;
 import io.nugulticket.eventtime.service.EventTimeService;
 import io.nugulticket.otp.service.OtpRedisService;
-import io.nugulticket.otp.service.OtpRedisService;
 import io.nugulticket.s3file.S3FileService;
 import io.nugulticket.search.elasticsearch.KoreanInitialExtractor;
 import io.nugulticket.search.entity.EventDocument;
@@ -37,7 +36,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 
@@ -61,9 +59,10 @@ public class EventService {
 
     /**
      * 공연 정보를 생성하는 메서드
-     * @param authUser 현재 로그인 중인 SELLER 권한인 유저 정보
+     *
+     * @param authUser     현재 로그인 중인 SELLER 권한인 유저 정보
      * @param eventRequest 공연 생성에 필요한 정보가 담긴 Request 객체
-     * @param image 공연 프로필 이미지
+     * @param image        공연 프로필 이미지
      * @return 생성된 공연 정보가 담긴 Response 객체
      */
     public CreateEventResponse createEvent(AuthUser authUser, CreateEventRequest eventRequest, MultipartFile image) {
@@ -86,7 +85,7 @@ public class EventService {
         // 업로드한 파일의 S3 URL 주소
         String imageUrl = s3FileService.uploadFile(image, bucket);
 
-        Event event = new Event(user,eventRequest, imageUrl);
+        Event event = new Event(user, eventRequest, imageUrl);
 
         // MySQL에 이벤트 저장
         Event savedEvent = eventRepository.save(event);
@@ -138,8 +137,9 @@ public class EventService {
 
     /**
      * 공연 정보를 수정하는 메서드
-     * @param authUser 현재 로그인 중인 SELLER 권한의 유저
-     * @param eventId 수정할 공연 Id
+     *
+     * @param authUser     현재 로그인 중인 SELLER 권한의 유저
+     * @param eventId      수정할 공연 Id
      * @param eventRequest 공연 수정에 필요한 정보가 담긴 Request 객체
      * @return 수정된 공연 정보가 담긴 Response 객체
      */
@@ -212,8 +212,9 @@ public class EventService {
 
     /**
      * 등록된 공연을 삭제하는 메서드
+     *
      * @param authUser 현재 로그인 중인 SELLER 권한의 유저 정보
-     * @param eventId 삭제할 공연 ID
+     * @param eventId  삭제할 공연 ID
      */
     @Transactional
     public void deleteEvent(AuthUser authUser, Long eventId) {
@@ -248,6 +249,7 @@ public class EventService {
 
     /**
      * eventId에 해당하는 공연 정보를 반환하는 메서드
+     *
      * @param eventId 조회할 eventId
      * @return 해당 eventId 정보를 포함하고 있는 공연 정보가 담긴 Response 객체
      */
@@ -262,6 +264,7 @@ public class EventService {
 
     /**
      * 모든 공연 정보를 조회하는 메서드
+     *
      * @return 모든 공연 정보가 담긴 Response 객체
      */
     @Transactional(readOnly = true)
@@ -276,6 +279,7 @@ public class EventService {
 
     /**
      * eventId에 해당하는 공연 정보를 반환하는 메서드
+     *
      * @param eventId 조회할 eventId
      * @return 해당 eventId에 해당하는 Event 객체
      */
@@ -286,6 +290,7 @@ public class EventService {
 
     /**
      * userId에 해당하는 유저가 작성한 공연 목록을 조회하는 메서드
+     *
      * @param userId 조회할 eventId
      * @return 해당 eventId에 해당하는 Event 객체
      */
@@ -296,7 +301,8 @@ public class EventService {
 
     /**
      * 해당 연 / 월에 진행되는 공연 정보를 조회하는 메서드
-     * @param year 조회할 연도
+     *
+     * @param year  조회할 연도
      * @param month 조회할 월
      * @return 해당 연 / 월에 진행되는 공연 정보가 담긴 Response 객체
      */
@@ -309,44 +315,6 @@ public class EventService {
 
         List<EventSimpleResponse> simpleResponses = events.stream().map(EventSimpleResponse::of).toList();
         return CalenderEventResponse.of(simpleResponses);
-    }
-
-    /**
-     * Event 객체를 EventDocument 형태로 변환하여 반환하는 메서드
-     *      엘라스틱 서치에 데이터를 삽입할 때 사용
-     * @param event 변환할 Event 객체
-     * @return Event 객체가 변환된 EventDocument 객체
-     */
-    public EventDocument convertToEventDocument (Event event) {
-        // ISO 8601 형식으로 날짜 변환
-        String formattedStartDate = event.getStartDate().format(DateTimeFormatter.ISO_LOCAL_DATE);
-        String formattedEndDate = event.getEndDate().format(DateTimeFormatter.ISO_LOCAL_DATE);
-
-        return EventDocument.builder()
-                .eventId(event.getEventId())
-                .category(event.getCategory())
-                .title(event.getTitle())
-                .description(event.getDescription())
-                .startDate(formattedStartDate)  // 문자열로 변환된 날짜 사용
-                .endDate(formattedEndDate)  // 문자열로 변환된 날짜 사용
-                .runtime(event.getRuntime())
-                .viewRating(event.getViewRating())
-                .rating(event.getRating())
-                .place(event.getPlace())
-                .bookAble(event.getBookAble())
-                .imageUrl(event.getImageUrl())
-                .build();
-    }
-
-    // 검색 키워드를 기반으로 유사한 공연 찾기
-    public List<Event> findSimilarEvents(List<Object> searchKeywords) {
-        if (searchKeywords == null || searchKeywords.isEmpty()) {
-            // 검색 키워드가 없을 경우 기본 추천 로직 추가 (옵션)
-            return List.of(); // 기본 추천 이벤트가 있다면 eventRepository에서 조회 가능
-        }
-
-        // 검색 키워드를 기반으로 유사한 이벤트 조회
-        return eventRepository.findSimilarEvents(searchKeywords);
     }
 
 }

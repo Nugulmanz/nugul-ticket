@@ -44,9 +44,9 @@ public class AuthController {
 
     @DeleteMapping("/v1/signout/{userId}")
     public ApiResponse<String> deleteUser(@AuthenticationPrincipal AuthUser authUser,
-                                           @PathVariable Long userId) {
+                                          @PathVariable Long userId) {
         // 현재 로그인한 사용자가 탈퇴하려는 계정과 동일한지 확인
-        if(!authUser.getId().equals(userId)) {
+        if (!authUser.getId().equals(userId)) {
             return ApiResponse.fail(ErrorStatus._NOT_AUTHENTICATIONPRINCIPAL_USER);
         }
         authService.deleteUser(userId);
@@ -54,14 +54,14 @@ public class AuthController {
     }
 
     @GetMapping("/v1/login/kakao")
-    public ApiResponse<KakaoLoginResponse> kakaoLogin (@RequestParam String code) throws JsonProcessingException {
+    public ApiResponse<KakaoLoginResponse> kakaoLogin(@RequestParam String code) throws JsonProcessingException {
         return ApiResponse.ok(kakaoService.kakaoLogin(code));
     }
 
 
     @PutMapping("/v1/login/kakao")
-    public ApiResponse<UpdateKakaoUserInfoResponse> updateKakaoUserInfo (@AuthenticationPrincipal AuthUser authUser,
-                                                                            @RequestBody UpdateKakaoUserInfoRequest updateKakaoUserInfoRequest) {
+    public ApiResponse<UpdateKakaoUserInfoResponse> updateKakaoUserInfo(@AuthenticationPrincipal AuthUser authUser,
+                                                                        @RequestBody UpdateKakaoUserInfoRequest updateKakaoUserInfoRequest) {
         return ApiResponse.ok(kakaoService.updateKakaoUserInfo(authUser, updateKakaoUserInfoRequest));
     }
 

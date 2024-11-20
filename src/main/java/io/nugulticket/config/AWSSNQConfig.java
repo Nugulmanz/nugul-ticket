@@ -26,6 +26,7 @@ public class AWSSNQConfig {
 
     /**
      * snsClient 세팅
+     *
      * @return aws와 동기화 준비가 끝난 snsClient
      */
     @Bean

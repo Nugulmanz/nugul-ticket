@@ -95,6 +95,7 @@ public class GptService {
             throw new ApiException(ErrorStatus.GPT_API_RESPONSE_ERROR);
         }
     }
+
     /**
      * GPT API 응답에서 메시지 내용을 추출하는 메서드
      *

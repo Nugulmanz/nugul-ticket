@@ -30,7 +30,8 @@ public class S3FileService {
 
     /**
      * 이미지를 등록하고 URL 추출하는 메서드
-     * @param image 이미지 정보
+     *
+     * @param image  이미지 정보
      * @param bucket AWS만든 Bucket 이름
      * @return String 타입의 url
      */
@@ -60,7 +61,8 @@ public class S3FileService {
     }
 
     /**
-     *  파일 유효성 검사 (크기와 파일 형식 제한)
+     * 파일 유효성 검사 (크기와 파일 형식 제한)
+     *
      * @param file 검사를 진행할 이미지 파일
      */
     private void validateFile(MultipartFile file) {
@@ -80,6 +82,7 @@ public class S3FileService {
 
     /**
      * 파일 확장자 검사
+     *
      * @param contentType 검사를 진행할 파일의 확장자
      * @return true : 지원하는 확장자 / false : 지원하지 않는 확장자
      */
@@ -90,6 +93,7 @@ public class S3FileService {
 
     /**
      * 이미지 파일 이름 변경하는 메서드
+     *
      * @param originalFileName 원본 파일 이름
      * @return 이미지 등록 날짜 + 원본 파일 이름 형태의 문자열
      */
@@ -101,6 +105,7 @@ public class S3FileService {
 
     /**
      * 등록된 사진 기존 URL 원본 파일이름으로 디코딩하는 메서드
+     *
      * @param url 현재 등록된 사진의 URL
      * @return String 타입의 원본 파일 이름
      */

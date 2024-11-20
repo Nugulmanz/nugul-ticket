@@ -21,7 +21,6 @@ public class TicketCancelledResponse {
     private String qrCode;
 
 
-
     public TicketCancelledResponse(Ticket ticket) {
         this.ticketId = ticket.getTicketId();
         this.qrCode = ticket.getQrCode();
@@ -31,7 +30,7 @@ public class TicketCancelledResponse {
         this.endDate = ticket.getEvent().getEndDate();
 
         Seat seat = ticket.getSeat();
-        if(seat != null) {
+        if (seat != null) {
             this.seatNumber = seat.getSeatNumber();
             this.seatPrice = seat.getPrice();
             this.seatType = seat.getSeatType();

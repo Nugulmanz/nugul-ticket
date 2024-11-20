@@ -27,6 +27,13 @@ public class TestUtil {
         return user;
     }
 
+    public static User getUserIdAndSocial(long id) {
+        User user = getUser();
+        ReflectionTestUtils.setField(user, "id", id);
+        ReflectionTestUtils.setField(user, "loginType", LoginType.SOCIAL);
+        return user;
+    }
+
     public static User getUserIdAndUserRole(long id, UserRole userRole) {
         User user = getUser(id);
         ReflectionTestUtils.setField(user, "userRole", userRole);

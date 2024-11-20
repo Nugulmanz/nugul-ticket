@@ -2,13 +2,19 @@ package io.nugulticket.auth;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.nugulticket.auth.dto.kakaoLogin.KakaoLoginResponse;
+import io.nugulticket.auth.dto.updateKakaoUserInfo.UpdateKakaoUserInfoRequest;
+import io.nugulticket.auth.dto.updateKakaoUserInfo.UpdateKakaoUserInfoResponse;
 import io.nugulticket.auth.service.KakaoService;
+import io.nugulticket.common.AuthUser;
+import io.nugulticket.common.apipayload.status.ErrorStatus;
+import io.nugulticket.common.exception.ApiException;
 import io.nugulticket.common.utils.JwtUtil;
 import io.nugulticket.user.dto.KakaoUserDto;
 import io.nugulticket.user.entity.User;
 import io.nugulticket.user.enums.LoginType;
 import io.nugulticket.user.enums.UserRole;
 import io.nugulticket.user.repository.UserRepository;
+import io.nugulticket.util.TestUtil;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -24,8 +30,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ActiveProfiles("test")
@@ -129,5 +134,69 @@ public class KakaoServiceTest {
         verify(userRepository, times(1)).save(any(User.class));
     }
 
+    @Test
+    public void testRegisterKakaoUserIfNeeded_AlreadyUser() {
+        // Given
+        KakaoUserDto kakaoUserDto = new KakaoUserDto(12345L, "testNickname", "test@example.com");
+        kakaoUserDto.setUserRole(UserRole.USER);
+        kakaoUserDto.setLoginType(LoginType.SOCIAL);
 
+        User user = TestUtil.getUser(1L);
+
+        Mockito.when(userRepository.findBySocialId(kakaoUserDto.getId())).thenReturn(Optional.empty());
+        Mockito.when(userRepository.findByEmail(kakaoUserDto.getEmail())).thenReturn(Optional.of(user));
+
+        // When
+        User newUser = kakaoService.registerKakaoUserIfNeeded(kakaoUserDto);
+
+        // Then
+        assertNotNull(newUser);
+        verify(userRepository, times(1)).save(any(User.class));
+    }
+
+    @Test
+    public void test_updateKakaoUserInfo_NotFound() {
+        // Given
+        UpdateKakaoUserInfoRequest updateKakaoUserInfoRequest = new UpdateKakaoUserInfoRequest("Kim", "testNickname", "test@example.com");
+        User user = TestUtil.getUser(1L);
+        AuthUser authUser = TestUtil.getAuthUser(user);
+
+        Mockito.when(userRepository.findById(user.getId())).thenReturn(Optional.empty());
+
+        ApiException exception = assertThrows(ApiException.class, () ->
+                kakaoService.updateKakaoUserInfo(authUser, updateKakaoUserInfoRequest));
+
+        assertEquals(exception.getErrorCode(), ErrorStatus._NOT_FOUND_USER);
+    }
+
+    @Test
+    public void test_updateKakaoUserInfo_PermissionDenied() {
+        // Given
+        UpdateKakaoUserInfoRequest updateKakaoUserInfoRequest = new UpdateKakaoUserInfoRequest("Kim", "testNickname", "test@example.com");
+        User user = TestUtil.getUser(1L);
+        AuthUser authUser = TestUtil.getAuthUser(user);
+
+        Mockito.when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
+
+        ApiException exception = assertThrows(ApiException.class, () ->
+                kakaoService.updateKakaoUserInfo(authUser, updateKakaoUserInfoRequest));
+
+        assertEquals(exception.getErrorCode(), ErrorStatus._PERMISSION_DENIED);
+    }
+
+    @Test
+    public void test_updateKakaoUserInfo() {
+        // Given
+        UpdateKakaoUserInfoRequest updateKakaoUserInfoRequest = new UpdateKakaoUserInfoRequest("Kim", "testNickname", "test@example.com");
+        User user = TestUtil.getUserIdAndSocial(1L);
+        AuthUser authUser = TestUtil.getAuthUser(user);
+
+        Mockito.when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
+
+        UpdateKakaoUserInfoResponse updateKakaoUserInfoResponse = kakaoService.updateKakaoUserInfo(authUser, updateKakaoUserInfoRequest);
+
+        // Then
+        assertNotNull(updateKakaoUserInfoResponse);
+        verify(userRepository, times(1)).save(any(User.class));
+    }
 }

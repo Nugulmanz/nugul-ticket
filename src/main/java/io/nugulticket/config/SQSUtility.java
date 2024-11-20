@@ -18,9 +18,10 @@ import java.util.concurrent.atomic.AtomicReference;
 public class SQSUtility {
     /**
      * Queue에서 Message를 삭제 하는 메서드
+     *
      * @param sqsAsyncClient sqs 비동기 Client
-     * @param sqsUrl sqsQueue URL
-     * @param message 삭제할 내용의 Message
+     * @param sqsUrl         sqsQueue URL
+     * @param message        삭제할 내용의 Message
      * @return 삭제 처리 결과가 담긴 Response 객체
      */
     public DeleteMessageResponse deleteMessage(SqsAsyncClient sqsAsyncClient, String sqsUrl, Message message) {
@@ -35,21 +36,22 @@ public class SQSUtility {
             } else {
                 System.out.println(deleteMessageResponse.sdkHttpResponse().isSuccessful());
                 result.set(deleteMessageResponse);
-            };
+            }
+            ;
         }));
 
         return result.get();
     }
 
-    public Map<String,  software.amazon.awssdk.services.sqs.model.MessageAttributeValue> parseMessage(Message message) throws JsonProcessingException {
+    public Map<String, software.amazon.awssdk.services.sqs.model.MessageAttributeValue> parseMessage(Message message) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
-        Map<String,  software.amazon.awssdk.services.sqs.model.MessageAttributeValue> result = new HashMap<>();
+        Map<String, software.amazon.awssdk.services.sqs.model.MessageAttributeValue> result = new HashMap<>();
 
         JsonNode jsonNode = mapper.readTree(message.body());
         JsonNode data = jsonNode.get("MessageAttributes");
         for (Iterator<String> it = data.fieldNames(); it.hasNext(); ) {
             String f = it.next();
-            software.amazon.awssdk.services.sqs.model.MessageAttributeValue attributeValue =  software.amazon.awssdk.services.sqs.model.MessageAttributeValue.builder()
+            software.amazon.awssdk.services.sqs.model.MessageAttributeValue attributeValue = software.amazon.awssdk.services.sqs.model.MessageAttributeValue.builder()
                     .stringValue(data.get(f).get("Value").asText())
                     .dataType(data.get(f).get("Type").asText())
                     .build();

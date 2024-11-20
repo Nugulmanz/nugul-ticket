@@ -16,8 +16,6 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
-// 결제 서버에 결제 정보를 요청할 때 사용하는 gRPC 클라이언트
-// 이 클래스는 결제 서버의 gRPC 메서드(ProcessPayment)를 호출하여 결제 정보를 받아오고, 이 정보를 티켓 서버의 비즈니스 로직에 활용
 @Service
 @RequiredArgsConstructor
 public class PaymentServiceClient {
@@ -27,9 +25,11 @@ public class PaymentServiceClient {
 
     private PaymentServiceGrpc.PaymentServiceBlockingStub paymentServiceStub;
 
-    // gRPC 채널을 설정하고, 결제 서버의 gRPC 서비스를 호출할 수 있는 PaymentServiceBlockingStub 객체를 생성
+    /**
+     * gRPC 채널을 설정하고, 결제 서버의 gRPC 서비스를 호출할 수 있는 PaymentServiceBlockingStub 객체를 생성
+     */
     @PostConstruct
-    public void init () {
+    public void init() {
         // 호스트와 포트를 분리하여 설정
         String[] urlParts = paymentServerUrl.split(":");
         String host = urlParts[0];
@@ -42,7 +42,15 @@ public class PaymentServiceClient {
         paymentServiceStub = PaymentServiceGrpc.newBlockingStub(channel);
     }
 
-    // 결제 서버에 결제 정보를 요청하는 메서드
+    /**
+     * 결제 서버에 결제 정보를 요청하는 메서드
+     * @param orderId
+     * @param userId
+     * @param userRole
+     * @param email
+     * @param events
+     * @return 결제 서버 쪽에서 반환하는 결제정보
+     */
     public PaymentResponse getPaymentInfo(String orderId, long userId, String userRole, String email, List<EventDetails> events) {
         UserDetails userDetails = UserDetails.newBuilder()
                 .setUserRole(userRole)
@@ -69,7 +77,11 @@ public class PaymentServiceClient {
         return paymentServiceStub.getPaymentInfo(paymentRequest);
     }
 
-    // EventDetails 생성 메서드
+    /**
+     * EventDetails 생성 메서드
+     * @param count 생성횟수
+     * @return 리스트 형태의 EventDetails
+     */
     private List<EventDetails> createEvents(int count) {
         List<EventDetails> events = new ArrayList<>();
         for (int i = 0; i < count; i++) {

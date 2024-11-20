@@ -22,7 +22,7 @@ public class UserController {
                                                 @PathVariable Long userId,
                                                 @RequestBody UserUpdateRequest updateRequest) {
         // 현재 로그인한 사용자가 업데이트 계정과 동일한지 확인
-        if(!authUser.getId().equals(userId)) {
+        if (!authUser.getId().equals(userId)) {
             throw new ApiException(ErrorStatus._NOT_AUTHENTICATIONPRINCIPAL_USER);
         }
         return ApiResponse.ok(userService.updateUser(userId, updateRequest));

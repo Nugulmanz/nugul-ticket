@@ -12,7 +12,7 @@ public class GetAllEventResponse {
     private String place;
     private LocalDate startDate;
     private LocalDate endDate;
-  //  private String eventPeriod;
+    //  private String eventPeriod;
 
     public GetAllEventResponse(Event event) {
         this.title = event.getTitle();
