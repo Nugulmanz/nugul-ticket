@@ -1,5 +1,7 @@
 package io.nugulticket.seat.service;
 
+import io.nugulticket.common.apipayload.status.ErrorStatus;
+import io.nugulticket.common.exception.ApiException;
 import io.nugulticket.eventtime.entity.EventTime;
 import io.nugulticket.seat.dto.SeatResponse;
 import io.nugulticket.seat.entity.Seat;
@@ -89,7 +91,6 @@ public class SeatService {
      */
     public Seat findSeatById(Long id) {
         return seatRepository.findById(id)
-                // 예외 처리 나중에 수정(api response)
-                .orElseThrow(() -> new IllegalArgumentException("해당 좌석을 찾을 수 없습니다."));
+                .orElseThrow(() -> new ApiException(ErrorStatus._NOT_FOUND_SEAT));
     }
 }

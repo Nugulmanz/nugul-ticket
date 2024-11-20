@@ -25,14 +25,14 @@ public class AuctionController {
 
     // 경매 입찰
     @PutMapping("/{auctionId}/bid")
-    public ApiResponse<BidAuctionResponse> bidAction(@PathVariable long auctionId, @RequestBody BidAuctionRequest reqDto) {
+    public ApiResponse<BidAuctionResponse> bidAuction(@PathVariable long auctionId, @RequestBody BidAuctionRequest reqDto) {
         BidAuctionResponse resDto = auctionService.updateAuction(auctionId, reqDto);
         return ApiResponse.ok(resDto);
     }
 
     // 경매 종료 : 이거 필요 없는 것 같은데
     @PutMapping("/{auctionId}")
-    public void endAction(@PathVariable long auctionId) {
+    public void endAuction(@PathVariable long auctionId) {
         auctionService.endAuction(auctionId);
 
     }
