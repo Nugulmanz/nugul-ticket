@@ -16,7 +16,6 @@ import io.nugulticket.event.entity.Event;
 import io.nugulticket.event.repository.EventRepository;
 import io.nugulticket.eventtime.service.EventTimeService;
 import io.nugulticket.otp.service.OtpRedisService;
-import io.nugulticket.otp.service.OtpRedisService;
 import io.nugulticket.s3file.S3FileService;
 import io.nugulticket.search.elasticsearch.KoreanInitialExtractor;
 import io.nugulticket.search.entity.EventDocument;
@@ -37,7 +36,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 
@@ -317,45 +315,6 @@ public class EventService {
 
         List<EventSimpleResponse> simpleResponses = events.stream().map(EventSimpleResponse::of).toList();
         return CalenderEventResponse.of(simpleResponses);
-    }
-
-    /**
-     * Event 객체를 EventDocument 형태로 변환하여 반환하는 메서드
-     * 엘라스틱 서치에 데이터를 삽입할 때 사용
-     *
-     * @param event 변환할 Event 객체
-     * @return Event 객체가 변환된 EventDocument 객체
-     */
-    public EventDocument convertToEventDocument(Event event) {
-        // ISO 8601 형식으로 날짜 변환
-        String formattedStartDate = event.getStartDate().format(DateTimeFormatter.ISO_LOCAL_DATE);
-        String formattedEndDate = event.getEndDate().format(DateTimeFormatter.ISO_LOCAL_DATE);
-
-        return EventDocument.builder()
-                .eventId(event.getEventId())
-                .category(event.getCategory())
-                .title(event.getTitle())
-                .description(event.getDescription())
-                .startDate(formattedStartDate)  // 문자열로 변환된 날짜 사용
-                .endDate(formattedEndDate)  // 문자열로 변환된 날짜 사용
-                .runtime(event.getRuntime())
-                .viewRating(event.getViewRating())
-                .rating(event.getRating())
-                .place(event.getPlace())
-                .bookAble(event.getBookAble())
-                .imageUrl(event.getImageUrl())
-                .build();
-    }
-
-    // 검색 키워드를 기반으로 유사한 공연 찾기
-    public List<Event> findSimilarEvents(List<Object> searchKeywords) {
-        if (searchKeywords == null || searchKeywords.isEmpty()) {
-            // 검색 키워드가 없을 경우 기본 추천 로직 추가 (옵션)
-            return List.of(); // 기본 추천 이벤트가 있다면 eventRepository에서 조회 가능
-        }
-
-        // 검색 키워드를 기반으로 유사한 이벤트 조회
-        return eventRepository.findSimilarEvents(searchKeywords);
     }
 
 }
