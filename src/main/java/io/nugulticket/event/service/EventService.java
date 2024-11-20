@@ -16,7 +16,6 @@ import io.nugulticket.event.entity.Event;
 import io.nugulticket.event.repository.EventRepository;
 import io.nugulticket.eventtime.service.EventTimeService;
 import io.nugulticket.otp.service.OtpRedisService;
-import io.nugulticket.otp.service.OtpRedisService;
 import io.nugulticket.s3file.S3FileService;
 import io.nugulticket.search.elasticsearch.KoreanInitialExtractor;
 import io.nugulticket.search.entity.EventDocument;
@@ -147,7 +146,6 @@ public class EventService {
      */
     @Transactional
     public UpdateEventResponse updateEvent(AuthUser authUser, Long eventId, UpdateEventRequest eventRequest) {
-
         User user = userService.getUser(authUser.getId());
 
         if (!user.getUserRole().equals(UserRole.SELLER)) {
@@ -220,7 +218,6 @@ public class EventService {
      */
     @Transactional
     public void deleteEvent(AuthUser authUser, Long eventId) {
-
         User adminUser = userService.getUser(authUser.getId());
 
         if (!adminUser.getUserRole().equals(UserRole.ADMIN)) {
@@ -257,7 +254,6 @@ public class EventService {
      */
     @Transactional(readOnly = true)
     public GetEventResponse getEvent(Long eventId) {
-
         Event event = eventRepository.findById(eventId)
                 .orElseThrow(() -> new ApiException(ErrorStatus.EVENT_NOT_FOUND));
 
@@ -271,7 +267,6 @@ public class EventService {
      */
     @Transactional(readOnly = true)
     public List<GetAllEventResponse> getAllEvents() {
-
         List<Event> events = eventRepository.findAll();
 
         return events.stream()
@@ -347,10 +342,15 @@ public class EventService {
                 .build();
     }
 
-    // 검색 키워드를 기반으로 유사한 공연 찾기
+    /**
+     * 주어진 검색 키워드를 기반으로 유사한 이벤트를 조회하는 메서드.
+     *
+     * @param searchKeywords 검색 키워드 리스트. 유저가 관심 있는 키워드가 포함.
+     * @return 검색 키워드와 유사한 이벤트의 리스트. 검색 키워드가 없으면 빈 리스트를 반환.
+     */
     public List<Event> findSimilarEvents(List<Object> searchKeywords) {
         if (searchKeywords == null || searchKeywords.isEmpty()) {
-            // 검색 키워드가 없을 경우 기본 추천 로직 추가 (옵션)
+            // 검색 키워드가 없을 경우 기본 추천 로직 추가
             return List.of(); // 기본 추천 이벤트가 있다면 eventRepository에서 조회 가능
         }
 
