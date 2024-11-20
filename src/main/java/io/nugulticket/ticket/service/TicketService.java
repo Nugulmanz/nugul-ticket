@@ -92,23 +92,6 @@ public class TicketService {
             throw new ApiException(ErrorStatus._ALREADY_RESERVED);
         }
 
-//        // 티켓 생성 및 저장
-//        Long eventId = seat.getEventTime().getEvent().getEventId(); // n+1 문제 있을 듯
-//        Event event = eventService.getEventFromId(eventId);
-//        String qrCode = createQRCode();
-//        Ticket ticket = new Ticket();
-//        User user = userService.getUser(authUser.getId());
-//        ticket.createTicket(event, seat, user, qrCode);
-//        seat.seatReserved();
-//        Ticket t = ticketRepository.save(ticket);
-        Ticket t = creatingTicket(authUser, seat);
-
-//        CreateTicketResponse resDto123 = new CreateTicketResponse(seat, event, ticket, authUser.getId());
-        return TicketNeedPaymentResponse.of(t, authUser, "ticket", generateOrderIdUtil.generateOrderId());
-    }
-
-    @Transactional
-    public Ticket creatingTicket(AuthUser authUser, Seat seat) {
         // 티켓 생성 및 저장
         Long eventId = seat.getEventTime().getEvent().getEventId(); // n+1 문제 있을 듯
         Event event = eventService.getEventFromId(eventId);
@@ -118,8 +101,25 @@ public class TicketService {
         ticket.createTicket(event, seat, user, qrCode);
         seat.seatReserved();
         Ticket t = ticketRepository.save(ticket);
-        return t;
+//        Ticket t = creatingTicket(authUser, seat);
+
+//        CreateTicketResponse resDto123 = new CreateTicketResponse(seat, event, ticket, authUser.getId());
+        return TicketNeedPaymentResponse.of(t, authUser, "ticket", generateOrderIdUtil.generateOrderId());
     }
+
+//    @Transactional
+//    public Ticket creatingTicket(AuthUser authUser, Seat seat) {
+//        // 티켓 생성 및 저장
+//        Long eventId = seat.getEventTime().getEvent().getEventId(); // n+1 문제 있을 듯
+//        Event event = eventService.getEventFromId(eventId);
+//        String qrCode = createQRCode();
+//        Ticket ticket = new Ticket();
+//        User user = userService.getUser(authUser.getId());
+//        ticket.createTicket(event, seat, user, qrCode);
+//        seat.seatReserved();
+//        Ticket t = ticketRepository.save(ticket);
+//        return t;
+//    }
 
     /**
      * id에 대당하는 티켓 상태를 예매 완료 상태로 바꾸는 메서드
