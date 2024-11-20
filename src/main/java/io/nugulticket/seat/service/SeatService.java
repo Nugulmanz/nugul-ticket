@@ -86,8 +86,9 @@ public class SeatService {
                 .collect(Collectors.toList());
     }
 
-
-    // 해당 ID에 해당하는 Seat객체를 반환하는 메서드
+    /**
+     * 해당 ID에 해당하는 Seat객체를 반환하는 메서드
+     */
     public Seat findSeatById(Long id) {
         return seatRepository.findById(id)
                 .orElseThrow(() -> new ApiException(ErrorStatus._NOT_FOUND_SEAT));
