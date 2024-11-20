@@ -1,6 +1,6 @@
 package io.nugulticket.auction.entity;
 
-import io.nugulticket.auction.dto.createAction.CreateAuctionRequest;
+import io.nugulticket.auction.dto.createAuction.CreateAuctionRequest;
 import io.nugulticket.common.Timestamped;
 import io.nugulticket.ticket.entity.Ticket;
 import jakarta.persistence.*;

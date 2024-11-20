@@ -1,4 +1,4 @@
-package io.nugulticket.auction.dto.createAction;
+package io.nugulticket.auction.dto.bidAuction;
 
 import io.nugulticket.auction.entity.Auction;
 import lombok.Getter;
@@ -6,18 +6,14 @@ import lombok.Getter;
 import java.time.LocalDate;
 
 @Getter
-public class CreateActionResponse {
-    private Long auctionId;
-    private Long ticketId;
+public class BidAuctionResponse {
     private int startingBid;
     private int currentBid;
     private LocalDate startAt;
     private LocalDate endAt;
     private LocalDate createdAt;
 
-    public CreateActionResponse(Auction auction) {
-        this.auctionId = auction.getAuctionId();
-        this.ticketId = auction.getTicket().getTicketId();
+    public BidAuctionResponse(Auction auction) {
         this.startingBid = auction.getStartingBid();
         this.currentBid = auction.getCurrentBid();
         this.startAt = auction.getStartAt();

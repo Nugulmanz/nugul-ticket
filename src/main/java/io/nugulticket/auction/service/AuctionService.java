@@ -1,9 +1,9 @@
 package io.nugulticket.auction.service;
 
-import io.nugulticket.auction.dto.bidAction.BidActionRequest;
-import io.nugulticket.auction.dto.bidAction.BidActionResponse;
-import io.nugulticket.auction.dto.createAction.CreateActionResponse;
-import io.nugulticket.auction.dto.createAction.CreateAuctionRequest;
+import io.nugulticket.auction.dto.bidAuction.BidAuctionRequest;
+import io.nugulticket.auction.dto.bidAuction.BidAuctionResponse;
+import io.nugulticket.auction.dto.createAuction.CreateAuctionResponse;
+import io.nugulticket.auction.dto.createAuction.CreateAuctionRequest;
 import io.nugulticket.auction.entity.Auction;
 import io.nugulticket.auction.repository.AuctionRepository;
 import io.nugulticket.common.apipayload.status.ErrorStatus;
@@ -31,11 +31,11 @@ public class AuctionService {
      * @return 생성된 경매 정보가 담긴 Response 객체
      */
     @Transactional
-    public CreateActionResponse createAction(CreateAuctionRequest reqDto) {
+    public CreateAuctionResponse createAuction(CreateAuctionRequest reqDto) {
         Ticket ticket = ticketService.getTicket(reqDto.ticketId);
         Auction auction = new Auction(reqDto, ticket);
         Auction saveAuction = auctionRepository.save(auction);
-        return new CreateActionResponse(saveAuction);
+        return new CreateAuctionResponse(saveAuction);
 
     }
 
@@ -46,7 +46,7 @@ public class AuctionService {
      * @return 해당 경매의 현재 정보가 담긴 Response 객체
      */
     @RedisDistributedLock(key = "updateAuction")
-    public BidActionResponse updateAction(long auctionId, BidActionRequest reqDto) {
+    public BidAuctionResponse updateAuction(long auctionId, BidAuctionRequest reqDto) {
         Auction auction = auctionRepository.findByIdWithPessimisticLock(auctionId).orElseThrow(
                 ()-> new ApiException(ErrorStatus._NOT_FOUND_AUCTION));
 
@@ -59,7 +59,7 @@ public class AuctionService {
 
         auction.setBid(reqDto.getBid());
         Auction saveAuction = auctionRepository.save(auction);
-        return new BidActionResponse(saveAuction);
+        return new BidAuctionResponse(saveAuction);
     }
 
     /**

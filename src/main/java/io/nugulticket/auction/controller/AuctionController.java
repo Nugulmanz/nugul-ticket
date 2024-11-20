@@ -1,9 +1,9 @@
 package io.nugulticket.auction.controller;
 
-import io.nugulticket.auction.dto.bidAction.BidActionRequest;
-import io.nugulticket.auction.dto.bidAction.BidActionResponse;
-import io.nugulticket.auction.dto.createAction.CreateActionResponse;
-import io.nugulticket.auction.dto.createAction.CreateAuctionRequest;
+import io.nugulticket.auction.dto.bidAuction.BidAuctionRequest;
+import io.nugulticket.auction.dto.bidAuction.BidAuctionResponse;
+import io.nugulticket.auction.dto.createAuction.CreateAuctionResponse;
+import io.nugulticket.auction.dto.createAuction.CreateAuctionRequest;
 import io.nugulticket.auction.service.AuctionService;
 import io.nugulticket.common.apipayload.ApiResponse;
 import lombok.RequiredArgsConstructor;
@@ -18,15 +18,15 @@ public class AuctionController {
 
     // 경매 생성
     @PostMapping
-    public ApiResponse<CreateActionResponse> createAction(@RequestBody CreateAuctionRequest reqDto) {
-        CreateActionResponse resDto = auctionService.createAction(reqDto);
+    public ApiResponse<CreateAuctionResponse> createAuction(@RequestBody CreateAuctionRequest reqDto) {
+        CreateAuctionResponse resDto = auctionService.createAuction(reqDto);
         return ApiResponse.ok(resDto);
     }
 
     // 경매 입찰
     @PutMapping("/{auctionId}/bid")
-    public ApiResponse<BidActionResponse> bidAction(@PathVariable long auctionId, @RequestBody BidActionRequest reqDto) {
-        BidActionResponse resDto = auctionService.updateAction(auctionId, reqDto);
+    public ApiResponse<BidAuctionResponse> bidAction(@PathVariable long auctionId, @RequestBody BidAuctionRequest reqDto) {
+        BidAuctionResponse resDto = auctionService.updateAuction(auctionId, reqDto);
         return ApiResponse.ok(resDto);
     }
 
