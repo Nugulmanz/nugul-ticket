@@ -13,6 +13,7 @@ import io.nugulticket.ticket.dto.response.TicketTransferResponse;
 import io.nugulticket.ticket.entity.Ticket;
 import io.nugulticket.ticket.entity.TicketTransfer;
 import io.nugulticket.ticket.enums.TicketStatus;
+import io.nugulticket.ticket.repository.TicketRepository;
 import io.nugulticket.ticket.repository.TicketTransferRepository;
 import io.nugulticket.user.entity.User;
 import io.nugulticket.user.service.UserService;
@@ -30,6 +31,7 @@ public class TicketTransferService {
     private final TicketTransferRepository ticketTransferRepository;
     private final GenerateOrderIdUtil generateOrderIdUtil;
     private final UserService userService;
+    private final TicketRepository ticketRepository;
 
     /**
      * 양도 대기중인 Ticket에 양도 신청을 넣는 메서드
@@ -37,7 +39,7 @@ public class TicketTransferService {
      * @param ticketId 양도 신청을 넣을 TicketId
      * @return 양도 결과가 담긴 Dto객체
      */
-    @RedisDistributedLock(key = "applyTransferBeforePayment")
+    @Transactional
     public TicketNeedPaymentResponse applyTransferBeforePayment(AuthUser users, Long ticketId) {
         User user = userService.getUser(users.getId());
         Ticket ticket = ticketService.getTicket(ticketId);
@@ -113,7 +115,7 @@ public class TicketTransferService {
      * @param ticketId 양도할Ticket Id
      * @return 양도 내용이 담긴 Dto 객체
      */
-    @Transactional
+    @RedisDistributedLock(key = "applyTransferBeforePayment")
     public TicketTransferResponse ticketTransfer(AuthUser user, Long ticketId) {
         Ticket ticket = ticketService.getTicketJoinFetchSeat(ticketId);
 
@@ -124,6 +126,7 @@ public class TicketTransferService {
 
         // 티켓을 양도 대기 -> 예약 상태로 변화
         ticket.changeStatus(TicketStatus.WAITTRANSFER);
+        ticketRepository.save(ticket);
 
         return TicketTransferResponse.of(ticket);
     }
