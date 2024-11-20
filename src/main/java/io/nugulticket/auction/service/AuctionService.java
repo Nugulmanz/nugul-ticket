@@ -21,7 +21,6 @@ import java.time.LocalDate;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-@Transactional(readOnly = true)
 public class AuctionService {
     private final AuctionRepository auctionRepository;
     private final TicketService ticketService;
@@ -46,7 +45,6 @@ public class AuctionService {
      * @param reqDto 가격 정보가 담긴 Request 객체
      * @return 해당 경매의 현재 정보가 담긴 Response 객체
      */
-    @Transactional
     @RedisDistributedLock(key = "updateAuction")
     public BidActionResponse updateAction(long auctionId, BidActionRequest reqDto) {
         Auction auction = auctionRepository.findByIdWithPessimisticLock(auctionId).orElseThrow(
