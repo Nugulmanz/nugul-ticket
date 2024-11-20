@@ -14,7 +14,6 @@ public class CommunicationPaymentUtil {
     @Value("${payment.url}")
     private String paymentServerUrl;
     private final String PREPROCESS_PATH = "/preprocess";
-    private final String POSTPROCESS_PATH = "/confirm/payment";
 
 
     private WebClient getWebClient() { // localhost:8081
@@ -30,13 +29,6 @@ public class CommunicationPaymentUtil {
         return requestProcess(bodyMap, PREPROCESS_PATH);
     }
 
-    // 1. API 호출하기
-    public JSONObject postProcess(PaymentRequest paymentRequest) {
-        Map<String, Object> bodyMap = getBaseBody(paymentRequest.getAmount(), paymentRequest.getOrderId(), paymentRequest.getUserId());
-        bodyMap.put("paymentKey", paymentRequest.getPaymentKey());
-
-        return requestProcess(bodyMap, POSTPROCESS_PATH);
-    }
 
     private Map<String, Object> getBaseBody(int amount, String orderId, long userId) {
         Map<String, Object> body = new HashMap<>();
