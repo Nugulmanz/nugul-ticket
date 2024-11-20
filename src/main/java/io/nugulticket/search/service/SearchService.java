@@ -38,9 +38,10 @@ public class SearchService {
 
     /**
      * OpenSearch Java High-Level REST Client를 사용해 Elasticsearch에서 동적 쿼리를 생성하고, 특정 조건에 맞는 EventDocument를 검색하는 메서드
-     * @param page 조회할 페이지 번호
-     * @param size 한 페이지당 사이즈
-     * @param title 티켓의 공연제목 중 키워드 검색
+     *
+     * @param page      조회할 페이지 번호
+     * @param size      한 페이지당 사이즈
+     * @param title     티켓의 공연제목 중 키워드 검색
      * @param eventDate 티켓의 공연 시작일과 종료일 사이 날짜로 검색
      * @return Pageable한 SearchEventsResponse 반환
      */
@@ -183,8 +184,9 @@ public class SearchService {
 
     /**
      * 공연제목 키워드, 공연날짜로 검색하고 그 공연의 양도 가능한 티켓을 검색하는 메서드
-     * @param page 조회할 페이지 번호
-     * @param size 한 페이지당 사이즈
+     *
+     * @param page      조회할 페이지 번호
+     * @param size      한 페이지당 사이즈
      * @param keyword   티켓의 공연제목 중 키워드 검색
      * @param eventDate 티켓의 공연 시작일과 종료일 사이 날짜로 검색
      * @return Pageable한 searchTransferableTicketsResponse 반환

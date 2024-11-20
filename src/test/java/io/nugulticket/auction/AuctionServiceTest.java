@@ -1,9 +1,9 @@
 package io.nugulticket.auction;
 
-import io.nugulticket.auction.dto.bidAction.BidActionRequest;
-import io.nugulticket.auction.dto.bidAction.BidActionResponse;
-import io.nugulticket.auction.dto.createAction.CreateActionResponse;
-import io.nugulticket.auction.dto.createAction.CreateAuctionRequest;
+import io.nugulticket.auction.dto.bidAuction.BidAuctionRequest;
+import io.nugulticket.auction.dto.bidAuction.BidAuctionResponse;
+import io.nugulticket.auction.dto.createAuction.CreateAuctionRequest;
+import io.nugulticket.auction.dto.createAuction.CreateAuctionResponse;
 import io.nugulticket.auction.entity.Auction;
 import io.nugulticket.auction.repository.AuctionRepository;
 import io.nugulticket.auction.service.AuctionService;
@@ -50,7 +50,7 @@ class AuctionServiceTest {
     }
 
     @Test
-    void testCreateAction_Success() {
+    void testCreateAuction_Success() {
         // Given
         CreateAuctionRequest request = new CreateAuctionRequest();
         ReflectionTestUtils.setField(request, "ticketId", 1L);
@@ -64,7 +64,7 @@ class AuctionServiceTest {
         when(auctionRepository.save(any())).thenReturn(auction);
 
         // When
-        CreateActionResponse response = auctionService.createAction(request);
+        CreateAuctionResponse response = auctionService.createAuction(request);
 
         // Then
         assertNotNull(response);
@@ -74,10 +74,10 @@ class AuctionServiceTest {
     //여기서 when then만 조금식 바꾸면 됨
 
     @Test
-    void testUpdateAction_Success() {
+    void testUpdateAuction_Success() {
         // Given
         long auctionId = 1L;
-        BidActionRequest request = new BidActionRequest();
+        BidAuctionRequest request = new BidAuctionRequest();
         ReflectionTestUtils.setField(request, "bid", 200);
 
         // Auction 객체의 필드 값을 직접 주입
@@ -89,7 +89,7 @@ class AuctionServiceTest {
         when(auctionRepository.save(any(Auction.class))).thenReturn(mockAuction);
 
         // When
-        BidActionResponse response = auctionService.updateAction(auctionId, request);
+        BidAuctionResponse response = auctionService.updateAuction(auctionId, request);
 
         // Then
         assertNotNull(response);
@@ -98,10 +98,10 @@ class AuctionServiceTest {
     }
 
     @Test
-    void testUpdateAction_Fails_LowerBid() {
+    void testUpdateAuction_Fails_LowerBid() {
         // Given
         long auctionId = 1L;
-        BidActionRequest request = new BidActionRequest();
+        BidAuctionRequest request = new BidAuctionRequest();
         ReflectionTestUtils.setField(request, "bid", 50); // 현재 입찰가보다 낮은 값
 
         mockAuction = new Auction();
@@ -109,7 +109,7 @@ class AuctionServiceTest {
         when(auctionRepository.findByIdWithPessimisticLock(auctionId)).thenReturn(Optional.of(mockAuction));
 
         // When & Then: 예외가 발생하는지만 확인
-        assertThrows(ApiException.class, () -> auctionService.updateAction(auctionId, request));
+        assertThrows(ApiException.class, () -> auctionService.updateAuction(auctionId, request));
 
         // Repository 호출 검증
         verify(auctionRepository, times(1)).findByIdWithPessimisticLock(auctionId);
@@ -117,10 +117,10 @@ class AuctionServiceTest {
     }
 
     @Test
-    void testUpdateAction_Fails_ExpiredAuction() {
+    void testUpdateAuction_Fails_ExpiredAuction() {
         // Given
         long auctionId = 1L;
-        BidActionRequest request = new BidActionRequest();
+        BidAuctionRequest request = new BidAuctionRequest();
         ReflectionTestUtils.setField(request, "bid", 200);
 
         mockAuction = new Auction();
@@ -131,17 +131,17 @@ class AuctionServiceTest {
 
         // When & Then
         ApiException exception = assertThrows(ApiException.class, () ->
-                auctionService.updateAction(auctionId, request));
+                auctionService.updateAuction(auctionId, request));
 
         verify(auctionRepository, atLeastOnce()).findByIdWithPessimisticLock(auctionId);
         verify(auctionRepository, never()).save(any(Auction.class));
     }
 
     @Test
-    void testUpdateAction_Fails_NotFound() {
+    void testUpdateAuction_Fails_NotFound() {
         // Given
         long auctionId = 1L;
-        BidActionRequest request = new BidActionRequest();
+        BidAuctionRequest request = new BidAuctionRequest();
         ReflectionTestUtils.setField(request, "bid", 200);
 
         mockAuction = new Auction();
@@ -152,7 +152,7 @@ class AuctionServiceTest {
 
         // When & Then
         ApiException exception = assertThrows(ApiException.class, () ->
-                auctionService.updateAction(auctionId, request));
+                auctionService.updateAuction(auctionId, request));
 
 
         assertEquals(request.getBid(), 200);

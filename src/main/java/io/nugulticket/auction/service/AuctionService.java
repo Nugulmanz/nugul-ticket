@@ -27,6 +27,7 @@ public class AuctionService {
 
     /**
      * 경매를 시작하는 메서드
+     *
      * @param reqDto 경매할 티켓과 경매 시간과 관련된 정보가 담긴 Request 객체
      * @return 생성된 경매 정보가 담긴 Response 객체
      */
@@ -41,19 +42,20 @@ public class AuctionService {
 
     /**
      * 입찰을 진행하는 메서드
+     *
      * @param auctionId 입찰할 경매 ID
-     * @param reqDto 가격 정보가 담긴 Request 객체
+     * @param reqDto    가격 정보가 담긴 Request 객체
      * @return 해당 경매의 현재 정보가 담긴 Response 객체
      */
     @RedisDistributedLock(key = "updateAuction")
     public BidAuctionResponse updateAuction(long auctionId, BidAuctionRequest reqDto) {
         Auction auction = auctionRepository.findByIdWithPessimisticLock(auctionId).orElseThrow(
-                ()-> new ApiException(ErrorStatus._NOT_FOUND_AUCTION));
+                () -> new ApiException(ErrorStatus._NOT_FOUND_AUCTION));
 
-        if(auction.getCurrentBid()>=reqDto.getBid()) {
+        if (auction.getCurrentBid() >= reqDto.getBid()) {
             throw new ApiException(ErrorStatus._Lower_Than_Current_Bid);
         }
-        if(LocalDate.now().isAfter(auction.getEndAt())){
+        if (LocalDate.now().isAfter(auction.getEndAt())) {
             throw new ApiException(ErrorStatus._EXPIRED_ACTION);
         }
 
@@ -64,11 +66,12 @@ public class AuctionService {
 
     /**
      * 경매를 종료하는 메서드
+     *
      * @param auctionId 종료할 경매 ID
      */
     public void endAuction(long auctionId) {
         Auction auction = auctionRepository.findById(auctionId).orElseThrow(
-                () ->  new ApiException(ErrorStatus._NOT_FOUND_AUCTION));
+                () -> new ApiException(ErrorStatus._NOT_FOUND_AUCTION));
         auction.endAuction();
         auctionRepository.save(auction);
     }

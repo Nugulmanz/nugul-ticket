@@ -4,6 +4,7 @@ public class KoreanInitialExtractor {
 
     /**
      * 한글 문자열에서 초성 추출 메서드 ("가나다" -> "ㄱㄴㄷ" )
+     *
      * @param input 한글 문자열
      * @return 초성 문자열
      */
@@ -27,7 +28,7 @@ public class KoreanInitialExtractor {
     // 초성 문자 배열
     private static char getInitialConsonant(int index) {
         final char[] initials = {
-            'ㄱ', 'ㄲ', 'ㄴ', 'ㄷ', 'ㄸ', 'ㄹ', 'ㅁ', 'ㅂ', 'ㅃ', 'ㅅ', 'ㅆ', 'ㅇ', 'ㅈ', 'ㅉ', 'ㅊ', 'ㅋ', 'ㅌ', 'ㅍ', 'ㅎ'
+                'ㄱ', 'ㄲ', 'ㄴ', 'ㄷ', 'ㄸ', 'ㄹ', 'ㅁ', 'ㅂ', 'ㅃ', 'ㅅ', 'ㅆ', 'ㅇ', 'ㅈ', 'ㅉ', 'ㅊ', 'ㅋ', 'ㅌ', 'ㅍ', 'ㅎ'
         };
         return initials[index];
     }

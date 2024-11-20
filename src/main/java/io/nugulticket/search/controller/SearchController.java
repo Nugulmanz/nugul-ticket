@@ -23,15 +23,16 @@ public class SearchController {
 
     private final SearchService searchService;
     private final RedisService redisService;
+
     //키워드로 공연 검색
     @GetMapping("/v1/events")
     public ApiResponse<Page<SearchEventsResponse>> searchEvents(@AuthenticationPrincipal AuthUser authUser,
-                                                         @RequestParam(defaultValue = "1", required = false) int page,
-                                                         @RequestParam(defaultValue = "10", required = false) int size,
-                                                         @RequestParam(required = false) String title,
-                                                         @RequestParam(required = false) LocalDate eventDate,
-                                                         @RequestParam(required = false) String place,
-                                                         @RequestParam(required = false) String category) {
+                                                                @RequestParam(defaultValue = "1", required = false) int page,
+                                                                @RequestParam(defaultValue = "10", required = false) int size,
+                                                                @RequestParam(required = false) String title,
+                                                                @RequestParam(required = false) LocalDate eventDate,
+                                                                @RequestParam(required = false) String place,
+                                                                @RequestParam(required = false) String category) {
 
         if (authUser != null && title != null) {
             redisService.saveSearchKeyword(authUser.getId(), title);
@@ -42,14 +43,12 @@ public class SearchController {
 
     //검색하는 공연의 양도 티켓 검색
     @GetMapping("/v1/tickets")
-    public ApiResponse<Page<SearchTicketsResponse>> searchTransferableTickets (@RequestParam(defaultValue = "1", required = false) int page,
+    public ApiResponse<Page<SearchTicketsResponse>> searchTransferableTickets(@RequestParam(defaultValue = "1", required = false) int page,
                                                                               @RequestParam(defaultValue = "10", required = false) int size,
                                                                               @RequestParam(required = false) String keyword,
                                                                               @RequestParam(required = false) LocalDate eventDate) {
         return ApiResponse.ok(searchService.searchTransferableTickets(page, size, keyword, eventDate));
     }
-
-
 
 
 }

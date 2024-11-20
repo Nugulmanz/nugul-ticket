@@ -17,6 +17,6 @@ public class EventSimpleResponse {
     String place;
 
     public static EventSimpleResponse of(Event event) {
-        return new EventSimpleResponse(event.getStartDate(), event.getEndDate(),  event.getTitle(), event.getPlace());
+        return new EventSimpleResponse(event.getStartDate(), event.getEndDate(), event.getTitle(), event.getPlace());
     }
 }

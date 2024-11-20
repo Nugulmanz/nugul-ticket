@@ -35,7 +35,7 @@ public class EventDocument {
     public EventDocument(Long eventId, String category, String title, String description, String formattedStartDate, String formattedEndDate,
                          String runtime, String viewRating, Double rating, String place, Boolean bookAble, String imageUrl) {
         this.eventId = eventId;
-        this.title= title;
+        this.title = title;
         this.description = description;
         this.category = category;
         this.startDate = formattedStartDate;

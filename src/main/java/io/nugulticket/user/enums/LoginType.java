@@ -15,6 +15,6 @@ public enum LoginType {
         return Arrays.stream(LoginType.values())
                 .filter(t -> t.name().equalsIgnoreCase(type))
                 .findFirst()
-                .orElseThrow(()->new IllegalArgumentException("Invalid LoginType: " + type));
+                .orElseThrow(() -> new IllegalArgumentException("Invalid LoginType: " + type));
     }
 }

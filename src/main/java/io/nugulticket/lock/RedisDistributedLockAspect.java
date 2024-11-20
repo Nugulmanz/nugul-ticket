@@ -35,7 +35,7 @@ public class RedisDistributedLockAspect {
                 } finally {
                     log.info("fair lock finally");
 //                    if (lock.isHeldByCurrentThread()) { // 현재 스레드가 락을 보유한 경우에만 해제
-                        lock.unlock();
+                    lock.unlock();
 //                    }
                 }
             } else {

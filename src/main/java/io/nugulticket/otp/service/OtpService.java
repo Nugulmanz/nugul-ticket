@@ -29,6 +29,7 @@ public class OtpService {
 
     /**
      * QR 코드 생성을 위한 OTP 키 생성 메서드
+     *
      * @param authUser 인증된 사용자 정보
      * @return QR 코드 URL (Google Authenticator와 연동할 수 있는 URL)
      */
@@ -120,6 +121,7 @@ public class OtpService {
 
         return "계정 잠금이 해제되었습니다.";
     }
+
     /**
      * 계정 잠금 해제 코드를 재발송하는 메서드
      *

@@ -33,7 +33,7 @@ public class DummyEventGenerator {
     }
 
     public static EventDocument createDummyEvent() {
-        Long eventId =DummyEventGenerator.getNextId(); // 순차적으로 ID가 반환됨
+        Long eventId = DummyEventGenerator.getNextId(); // 순차적으로 ID가 반환됨
         String title = generateRandomKoreanTitle();
         LocalDate startDate = LocalDate.now().plusDays(RANDOM.nextInt(30)); // 오늘부터 30일 이내의 시작 날짜
         LocalDate endDate = startDate.plusDays(RANDOM.nextInt(5) + 1); // 시작 날짜 이후 1~5일 이내의 종료 날짜
@@ -53,7 +53,7 @@ public class DummyEventGenerator {
         String formattedStartDate = startDate.format(DateTimeFormatter.ISO_LOCAL_DATE);
         String formattedEndDate = endDate.format(DateTimeFormatter.ISO_LOCAL_DATE);
 
-        return new EventDocument(eventId, category, title, description,  formattedStartDate, formattedEndDate, runtime, viewRating, rating, place, bookAble, imageUrl);
+        return new EventDocument(eventId, category, title, description, formattedStartDate, formattedEndDate, runtime, viewRating, rating, place, bookAble, imageUrl);
 
     }
 
@@ -68,7 +68,6 @@ public class DummyEventGenerator {
         }
         return titleBuilder.toString();
     }
-
 
 
 }

@@ -22,7 +22,7 @@ public class CreateEventResponse {
     private LocalDateTime modifiedAt;
     private String imageUrl;
 
-    public CreateEventResponse(Event event){
+    public CreateEventResponse(Event event) {
         this.category = event.getCategory();
         this.title = event.getTitle();
         this.description = event.getDescription();

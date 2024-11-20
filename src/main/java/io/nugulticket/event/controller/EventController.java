@@ -46,7 +46,7 @@ public class EventController {
             @AuthenticationPrincipal AuthUser authUser,
             @PathVariable Long eventId) {
 
-       eventService.deleteEvent(authUser, eventId);
+        eventService.deleteEvent(authUser, eventId);
         return ApiResponse.ok(null);
     }
 

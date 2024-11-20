@@ -14,7 +14,7 @@ public class SignupResponse {
     private final String name;
     private final LocalDateTime createdAt;
 
-    public static SignupResponse of(User user){
+    public static SignupResponse of(User user) {
         return new SignupResponse(
                 user.getId(),
                 user.getEmail(),

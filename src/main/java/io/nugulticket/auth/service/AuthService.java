@@ -36,16 +36,17 @@ public class AuthService {
 
     /**
      * 회원가입 기능(USER, ADMIN 모두 수행)
+     *
      * @param signupRequest 회원가입 정보
-     * - USER : adminKey = null
-     * - ADMIN : adminKey = ADMIN_KEY
+     *                      - USER : adminKey = null
+     *                      - ADMIN : adminKey = ADMIN_KEY
      * @return SignupResponse 회원가입 된 사용자 정보
      */
     @Transactional
     public SignupResponse createUser(SignupRequest signupRequest) {
         String encodedPassword = passwordEncoders.encode(signupRequest.getPassword());
 
-        if(userService.isUser(signupRequest.getEmail())){
+        if (userService.isUser(signupRequest.getEmail())) {
             throw new ApiException(ErrorStatus._USER_ALREADY_EXISTS);
         }
 
@@ -79,16 +80,17 @@ public class AuthService {
 
     /**
      * 로그인 기능
+     *
      * @param loginRequest 로그인 정보
      * @return jwt token
      */
     public String login(LoginRequest loginRequest) {
         User user = userService.getUserFromEmail(loginRequest.getEmail());
 
-        if(!passwordEncoders.matches(loginRequest.getPassword(), user.getPassword())){
+        if (!passwordEncoders.matches(loginRequest.getPassword(), user.getPassword())) {
             throw new ApiException(ErrorStatus._INVALID_PASSWORD);
         }
-        if(user.getDeletedAt() != null){
+        if (user.getDeletedAt() != null) {
             throw new ApiException(ErrorStatus._USER_ALREADY_EXISTS);
         }
 
@@ -101,13 +103,14 @@ public class AuthService {
 
     /**
      * 회원탈퇴 기능
+     *
      * @param userId 탈퇴할 User id
      */
     @Transactional
-    public void deleteUser (Long userId) {
+    public void deleteUser(Long userId) {
         User user = userService.getUser(userId);
 
-        if(user.getDeletedAt() != null){
+        if (user.getDeletedAt() != null) {
             throw new ApiException(ErrorStatus._USER_ALREADY_EXISTS);
         }
         user.deleteAccount();

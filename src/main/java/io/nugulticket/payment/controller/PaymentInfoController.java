@@ -24,7 +24,7 @@ public class PaymentInfoController {
 
     // 결제 정보를 조회하는 메서드 (내부적으로 gRPC 통신)
     @GetMapping("/info")
-    public ResponseEntity<PaymentInfoResponse> getPaymentInfo (
+    public ResponseEntity<PaymentInfoResponse> getPaymentInfo(
             @AuthenticationPrincipal AuthUser authUser,
             @RequestBody PaymentInfoRequest request) {
 

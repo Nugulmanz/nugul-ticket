@@ -19,7 +19,7 @@ public class GetEventResponse {
     private Boolean bookAble;
     private String imageUrl;
 
-    public GetEventResponse(Event event){
+    public GetEventResponse(Event event) {
         this.category = event.getCategory();
         this.title = event.getTitle();
         this.description = event.getDescription();
