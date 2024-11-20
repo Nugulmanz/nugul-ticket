@@ -37,7 +37,7 @@ public class SearchEventRankService {
         }
 
         Double score = redisTemplate.opsForZSet().incrementScore(EVENT_RANKING_KEY, keyword, 1);
-        redisTemplate.opsForHash().put("eventIdMap", keyword, eventId.toString());
+        redisTemplate.opsForHash().put("event:Id:Map", keyword, eventId.toString());
 
         Event event = eventService.getEventFromId(eventId);
         GetEventResponse getEventResponse = new GetEventResponse(event);
@@ -73,7 +73,7 @@ public class SearchEventRankService {
      */
     public Long getEventIdByName(String eventTitle) {
 
-        Object eventIdStr = redisTemplate.opsForHash().get("eventIdMap", eventTitle);
+        Object eventIdStr = redisTemplate.opsForHash().get("event:Id:Map", eventTitle);
 
         if (eventIdStr instanceof Long) {
             return (Long) eventIdStr;

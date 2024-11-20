@@ -42,7 +42,7 @@ class SearchEventRankServiceTest {
     private EventService eventService;
 
     private static final String EVENT_RANKING_KEY = "event:ranking";
-    private static final String EVENT_ID_MAP_KEY = "eventIdMap";
+    private static final String EVENT_ID_MAP_KEY = "event:Id:Map";
 
 
     @Test
