@@ -69,6 +69,9 @@ public enum ErrorStatus implements BaseCode {
     //lock
     VERSION_CONFLICT(HttpStatus.CONFLICT, "409", "데이터가 최신 상태가 아닙니다. 새로고침 후 다시 시도해 주세요."),
 
+    //seat
+    _NOT_FOUND_SEAT(HttpStatus.NOT_FOUND, "404", "없는 좌석입니다."),
+
     //gpt
     GPT_API_BAD_REQUEST(HttpStatus.BAD_REQUEST, "400", "GPT 요청이 잘못되었습니다. 입력 데이터를 확인하세요."),
     GPT_API_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "500", "GPT API 서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요."),
