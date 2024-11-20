@@ -14,7 +14,7 @@ import java.util.Set;
 public class SearchRankService {
 
     private final RedisTemplate<String, Object> redisTemplate;
-    private static final String SEARCH_RANKING_KEY = "searchRanking";
+    private static final String SEARCH_RANKING_KEY = "search:ranking";
 
     /**
      * keyword를 삽입하고 해당 keyword에 해당하는 Score값을 반환하는 메서드

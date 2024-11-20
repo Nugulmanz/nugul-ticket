@@ -19,7 +19,7 @@ import java.util.Set;
 public class SearchEventRankService {
 
     private final RedisTemplate<String, Object> redisTemplate;
-    private static final String EVENT_RANKING_KEY = "eventRanking";
+    private static final String EVENT_RANKING_KEY = "event:ranking";
     private final EventService eventService;
 
     /**
