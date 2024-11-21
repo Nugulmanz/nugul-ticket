@@ -34,9 +34,9 @@ public class RedisDistributedLockAspect {
                     return joinPoint.proceed(); // 메서드 실행
                 } finally {
                     log.info("fair lock finally");
-//                    if (lock.isHeldByCurrentThread()) { // 현재 스레드가 락을 보유한 경우에만 해제
+                    if (lock.isHeldByCurrentThread()) { // 현재 스레드가 락을 보유한 경우에만 해제
                     lock.unlock();
-//                    }
+                    }
                 }
             } else {
                 log.info("fair lock fail");
