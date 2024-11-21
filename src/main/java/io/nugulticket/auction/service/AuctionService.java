@@ -48,7 +48,7 @@ public class AuctionService {
      * @return 해당 경매의 현재 정보가 담긴 Response 객체
      */
     @Transactional
-    @RedisDistributedLock(key = "updateAuction")
+    @RedisDistributedLock(key = "'updateAuction'+#auctionId")
     public BidAuctionResponse updateAuction(long auctionId, BidAuctionRequest reqDto) {
         Auction auction = auctionRepository.findByIdWithPessimisticLock(auctionId).orElseThrow(
                 () -> new ApiException(ErrorStatus._NOT_FOUND_AUCTION));
