@@ -79,9 +79,9 @@ public class TicketService {
      * @param authUser 현재 로그인 중인 유저 정보
      * @return 결제에 사용될 정보가 담긴 Response 객체
      */
-    @RedisDistributedLock(key = "createTicket")
+    @RedisDistributedLock(key = "'createTicket'+#reqDto.seatId")
     public TicketNeedPaymentResponse createTicket(CreateTicketRequest reqDto, AuthUser authUser) {
-        Seat seat = seatService.findSeatById(reqDto.getSeatId()); // 락 필요
+        Seat seat = seatService.findSeatById(reqDto.getSeatId());
         if (seat.isReserved()) {
             throw new ApiException(ErrorStatus._ALREADY_RESERVED);
         }
