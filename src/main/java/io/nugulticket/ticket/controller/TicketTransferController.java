@@ -47,11 +47,18 @@ public class TicketTransferController {
         return "/payment/checkout";
     }
 
+
     @ResponseBody
     @RequestMapping(value = "/{ticketId}", method = RequestMethod.DELETE)
     public ApiResponse<TicketTransferCancelResponse> cancelTransfer(@AuthenticationPrincipal AuthUser user, @PathVariable("ticketId") Long ticketId) {
         return ApiResponse.ok(ticketTransferService.cancelTransfer(user, ticketId));
     }
+
+//    @ResponseBody
+//    @RequestMapping(value = "/{ticketId}/transfer", method = RequestMethod.POST)
+//    public ApiResponse<TicketTransferResponse> createTransfer(@AuthenticationPrincipal AuthUser user, @PathVariable("ticketId") Long ticketId) {
+//        return ApiResponse.ok(ticketTransferService.ticketTransfer(user, ticketId));
+//    }
 
     @ResponseBody
     @RequestMapping(value = "/{ticketId}/transfer", method = RequestMethod.POST)
