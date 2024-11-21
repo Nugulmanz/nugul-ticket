@@ -28,8 +28,8 @@ public class EmailConfig {
         Properties javaMailProperties = new Properties();
         javaMailProperties.put("mail.transport.protocol", "smtp");
         javaMailProperties.put("mail.smtp.auth", "true");
-        javaMailProperties.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
         javaMailProperties.put("mail.smtp.starttls.enable", "true");
+        javaMailProperties.put("mail.smtp.ssl.enable", "true"); // SSL 연결 활성화
         javaMailProperties.put("mail.debug", "true");
         javaMailProperties.put("mail.smtp.ssl.trust", "smtp.naver.com");
         javaMailProperties.put("mail.smtp.ssl.protocols", "TLSv1.2");
