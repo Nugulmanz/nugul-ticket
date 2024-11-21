@@ -38,24 +38,25 @@ public class SearchEventRankService {
         }
 
         long currentTimeInSeconds = System.currentTimeMillis() / 1000;
-
-        double timeWeight = currentTimeInSeconds * 0.0001; // 가중치 비율 조정
+        double timeWeight = (currentTimeInSeconds % 10000) * 0.0001;
         double incrementScore = 1 + timeWeight;
 
         Double score = redisTemplate.opsForZSet().incrementScore(EVENT_RANKING_KEY, keyword, incrementScore);
 
         redisTemplate.expire(EVENT_RANKING_KEY, 7, TimeUnit.DAYS);
 
-        Event event = eventService.getEventFromId(eventId);
+        Event event = eventService.getEventFromId(eventId); // 이벤트 서비스에서 가져옴
         GetEventResponse getEventResponse = new GetEventResponse(event);
 
         Map<String, Object> result = new HashMap<>();
         result.put("score", score);
         result.put("eventId", eventId);
-        result.put("getEventResponse", getEventResponse);
+        result.put("eventTitle", keyword);
+        result.put("eventDetails", getEventResponse);
 
         return result;
     }
+
 
     /**
      * 상위 공연을 반환합니다.

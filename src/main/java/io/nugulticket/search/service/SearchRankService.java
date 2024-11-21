@@ -27,7 +27,7 @@ public class SearchRankService {
     public Double addKeywordAndGetScore(String keyword) {
         long currentTimeInSeconds = System.currentTimeMillis() / 1000;
 
-        double timeWeight = currentTimeInSeconds * 0.0001; // 가중치 비율 조정
+        double timeWeight = (currentTimeInSeconds % 10000) * 0.0001;
         double incrementScore = 1 + timeWeight;
 
         redisTemplate.opsForZSet().incrementScore(SEARCH_RANKING_KEY, keyword, incrementScore);
@@ -36,6 +36,7 @@ public class SearchRankService {
 
         return redisTemplate.opsForZSet().score(SEARCH_RANKING_KEY, keyword);
     }
+
 
     /**
      * 상위 검색어를 반환합니다.

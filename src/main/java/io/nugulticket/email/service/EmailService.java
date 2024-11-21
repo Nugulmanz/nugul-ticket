@@ -10,7 +10,8 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
-import java.util.Random;
+import java.security.SecureRandom;
+
 
 @Service
 @RequiredArgsConstructor
@@ -36,14 +37,14 @@ public class EmailService {
      * @return 인증에 사용될 6자리 인증번호
      */
     public String joinEmail(String email) {
-        String code = Integer.toString(makeRandomNumber());
+        String code = makeRandomNumber();
         String content = String.format(EMAIL_CONTENT_TEMPLATE, code);
         mailSend(setForm, email, EMAIL_TITLE, content);
         return code;
     }
 
     public String sendUnlockEmail(String email) {
-        String code = Integer.toString(makeRandomNumber());
+        String code = makeRandomNumber();
         String content = String.format(LOCKED_EMAIL_CONTENT_TEMPLATE, code);
         mailSend(setForm, email, LOCKED_EMAIL_TITLE, content);
         return code;
@@ -69,7 +70,6 @@ public class EmailService {
             System.out.println("이메일 발송 성공: " + toMail);
         } catch (MessagingException e) {
             System.err.println("이메일 발송 실패: " + toMail);
-            e.printStackTrace();
             throw new ApiException(ErrorStatus._EMAIL_SEND_ERROR);
         }
     }
@@ -79,12 +79,16 @@ public class EmailService {
      *
      * @return 완성된 6자리의 무작위 숫자
      */
-    public int makeRandomNumber() {
-        Random r = new Random();
-        StringBuilder randomNumber = new StringBuilder();
+    public String makeRandomNumber() {
+        String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        SecureRandom secureRandom = new SecureRandom();
+        StringBuilder randomString = new StringBuilder();
+
         for (int i = 0; i < 6; i++) {
-            randomNumber.append(r.nextInt(10));
+            int randomIndex = secureRandom.nextInt(characters.length());
+            randomString.append(characters.charAt(randomIndex));
         }
-        return Integer.parseInt(randomNumber.toString());
+
+        return randomString.toString();
     }
 }
