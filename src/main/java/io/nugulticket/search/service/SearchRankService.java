@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 
 @Service
@@ -17,29 +18,37 @@ public class SearchRankService {
     private static final String SEARCH_RANKING_KEY = "search:ranking";
 
     /**
-     * keyword를 삽입하고 해당 keyword에 해당하는 Score값을 반환하는 메서드
+     * 키워드를 추가하고 점수를 반환합니다.
+     * 시간 가중치를 점수에 반영하고 TTL을 설정합니다.
      *
-     * @param keyword 삽입할 keyword
-     * @return 해당 keyword에 해당하는 Score
+     * @param keyword 추가할 키워드
+     * @return 점수
      */
     public Double addKeywordAndGetScore(String keyword) {
+        long currentTimeInSeconds = System.currentTimeMillis() / 1000;
 
-        redisTemplate.opsForZSet().incrementScore(SEARCH_RANKING_KEY, keyword, 1);
+        double timeWeight = currentTimeInSeconds * 0.0001; // 가중치 비율 조정
+        double incrementScore = 1 + timeWeight;
+
+        redisTemplate.opsForZSet().incrementScore(SEARCH_RANKING_KEY, keyword, incrementScore);
+
+        redisTemplate.expire(SEARCH_RANKING_KEY, 7, TimeUnit.DAYS);
+
         return redisTemplate.opsForZSet().score(SEARCH_RANKING_KEY, keyword);
     }
 
     /**
-     * 1 ~ count 등수까지 조회하여 반환하는 메서드
+     * 상위 검색어를 반환합니다.
      *
-     * @param count 최대 등수
-     * @return 1 ~ count 등수까지의 공연 정보가 담긴 List 객체
+     * @param count 반환할 검색어 개수
+     * @return 상위 검색어 리스트
      */
     public List<String> getTopKeywords(int count) {
         Set<Object> topKeywords = redisTemplate.opsForZSet()
                 .reverseRange(SEARCH_RANKING_KEY, 0, count - 1);
 
-        return topKeywords.stream()
-                .map(Object::toString)
-                .toList();
+        return topKeywords != null
+                ? topKeywords.stream().map(Object::toString).toList()
+                : List.of();
     }
 }

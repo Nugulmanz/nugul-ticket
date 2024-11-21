@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 @Service
 @RequiredArgsConstructor
@@ -23,21 +24,27 @@ public class SearchEventRankService {
     private final EventService eventService;
 
     /**
-     * keyword를 삽입하고 해당 keyword에 해당하는 Score값을 반환하는 메서드
+     * 공연 키워드를 추가하고 점수를 반환합니다.
+     * 시간 가중치를 점수에 반영하고 TTL을 설정합니다.
      *
-     * @param keyword 삽입할 keyword
-     * @param eventId 삽입할 공연 Id
-     * @return Score / EventId / 공연 Response 객체 정보가 담긴 Map 객체
+     * @param keyword 공연 키워드
+     * @param eventId 공연 ID
+     * @return 점수와 공연 정보가 포함된 Map
      */
     public Map<String, Object> addKeywordAndGetScore(String keyword, Long eventId) {
-
         Long storedEventId = getEventIdByName(keyword);
         if (storedEventId == null || !storedEventId.equals(eventId)) {
             throw new ApiException(ErrorStatus.EVENT_NOT_FOUND);
         }
 
-        Double score = redisTemplate.opsForZSet().incrementScore(EVENT_RANKING_KEY, keyword, 1);
-        redisTemplate.opsForHash().put("event:Id:Map", keyword, eventId.toString());
+        long currentTimeInSeconds = System.currentTimeMillis() / 1000;
+
+        double timeWeight = currentTimeInSeconds * 0.0001; // 가중치 비율 조정
+        double incrementScore = 1 + timeWeight;
+
+        Double score = redisTemplate.opsForZSet().incrementScore(EVENT_RANKING_KEY, keyword, incrementScore);
+
+        redisTemplate.expire(EVENT_RANKING_KEY, 7, TimeUnit.DAYS);
 
         Event event = eventService.getEventFromId(eventId);
         GetEventResponse getEventResponse = new GetEventResponse(event);
@@ -51,33 +58,30 @@ public class SearchEventRankService {
     }
 
     /**
-     * 1 ~ count 등수까지 조회하여 반환하는 메서드
+     * 상위 공연을 반환합니다.
      *
-     * @param count 최대 등수
-     * @return 1 ~ count 등수까지의 공연 정보가 담긴 List 객체
+     * @param count 반환할 공연 개수
+     * @return 상위 공연 리스트
      */
     public List<String> getTopEvents(int count) {
         Set<Object> topEvents = redisTemplate.opsForZSet()
                 .reverseRange(EVENT_RANKING_KEY, 0, count - 1);
 
-        return topEvents.stream()
-                .map(Object::toString)
-                .toList();
+        return topEvents != null
+                ? topEvents.stream().map(Object::toString).toList()
+                : List.of();
     }
 
     /**
-     * 해당 공연 타이틀에 해당하는 event Id를 반환하는 메서드
+     * 공연 제목으로 Event ID를 반환합니다.
      *
-     * @param eventTitle 조회할 공연 타이틀
-     * @return 해당 공연 타이틀에 해당하는 eventID
+     * @param eventTitle 공연 제목
+     * @return Event ID
      */
     public Long getEventIdByName(String eventTitle) {
-
         Object eventIdStr = redisTemplate.opsForHash().get("event:Id:Map", eventTitle);
 
-        if (eventIdStr instanceof Long) {
-            return (Long) eventIdStr;
-        } else if (eventIdStr instanceof String) {
+        if (eventIdStr instanceof String) {
             return Long.valueOf((String) eventIdStr);
         }
         return null;
