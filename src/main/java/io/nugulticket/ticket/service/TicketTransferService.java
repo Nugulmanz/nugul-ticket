@@ -39,7 +39,7 @@ public class TicketTransferService {
      * @param ticketId 양도 신청을 넣을 TicketId
      * @return 양도 결과가 담긴 Dto객체
      */
-    @Transactional
+    @RedisDistributedLock(key = "'applyTransferBeforePayment'+#ticketId")
     public TicketNeedPaymentResponse applyTransferBeforePayment(AuthUser users, Long ticketId) {
         User user = userService.getUser(users.getId());
         Ticket ticket = ticketService.getTicket(ticketId);
@@ -115,7 +115,7 @@ public class TicketTransferService {
      * @param ticketId 양도할Ticket Id
      * @return 양도 내용이 담긴 Dto 객체
      */
-    @RedisDistributedLock(key = "applyTransferBeforePayment")
+    @Transactional
     public TicketTransferResponse ticketTransfer(AuthUser user, Long ticketId) {
         Ticket ticket = ticketService.getTicketJoinFetchSeat(ticketId);
 
