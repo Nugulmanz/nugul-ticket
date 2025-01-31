@@ -12,6 +12,9 @@ import org.springframework.expression.ExpressionParser;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.support.DefaultTransactionDefinition;
 
 import java.lang.reflect.Method;
 import java.util.concurrent.TimeUnit;
@@ -22,9 +25,11 @@ import java.util.concurrent.TimeUnit;
 public class RedisDistributedLockAspect {
 
     private final RedissonClient redissonClient;
+    private final PlatformTransactionManager transactionManager;
 
-    public RedisDistributedLockAspect(RedissonClient redissonClient) {
+    public RedisDistributedLockAspect(RedissonClient redissonClient, PlatformTransactionManager transactionManager) {
         this.redissonClient = redissonClient;
+        this.transactionManager = transactionManager;
     }
 
     private final ExpressionParser parser = new SpelExpressionParser();
@@ -54,26 +59,30 @@ public class RedisDistributedLockAspect {
 
         RLock lock = redissonClient.getFairLock(lockKey); // 공정락 생성
 
+        boolean locked = false;
         try {
-            // 락 대기 시간 @초, 락 유지 시간 @초 설정
-            if (lock.tryLock(5, 3, TimeUnit.SECONDS)) {
-                try {
-                    return joinPoint.proceed(); // 메서드 실행
-                } finally {
-                    log.info("fair lock unlock");
-                    if (lock.isHeldByCurrentThread()) { // 현재 스레드가 락을 보유한 경우에만 해제
-                    lock.unlock();
-                    }
-                }
-            } else {
-                log.info("fair lock fail");
-                throw new RuntimeException("Failed to acquire lock: " + lockKey);
+            locked = lock.tryLock(5, 10, TimeUnit.SECONDS);
+            if (!locked) throw new RuntimeException("Lock 획득 실패: " + lockKey);
+
+            TransactionStatus status = transactionManager.getTransaction(new DefaultTransactionDefinition());
+
+            try {
+                Object result = joinPoint.proceed();
+                transactionManager.commit(status);
+                return result;
+
+            } catch (Exception e) {
+                transactionManager.rollback(status);
+                throw e;
             }
         } catch (InterruptedException e) {
-            log.info("fair lock interrupted");
             Thread.currentThread().interrupt();
             throw new RuntimeException("Fair Lock execution interrupted", e);
+        } finally {
+            if (locked && lock.isHeldByCurrentThread()) {
+                lock.unlock();
+                log.info("Lock 해제 완료: {}", lockKey);
+            }
         }
-
     }
 }

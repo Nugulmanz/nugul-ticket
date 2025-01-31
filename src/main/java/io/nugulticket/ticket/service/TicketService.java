@@ -75,6 +75,9 @@ public class TicketService {
     /**
      * 티켓을 예매하는 메서드 ( 상태는 결제 대기 상태로 생성 )
      *
+     * 트랜잭션은 AOP 기반의 @RedisDistributedLock 내부에서 수동으로 처리되므로
+     * 이 메서드에서는 @Transactional을 사용하지 않습니다.
+     *
      * @param reqDto   티켓 예매에 필요한 정보가 담긴 Request 객체
      * @param authUser 현재 로그인 중인 유저 정보
      * @return 결제에 사용될 정보가 담긴 Response 객체
