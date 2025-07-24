@@ -65,24 +65,4 @@ public class SQSUtility {
     public String getType(Map<String, software.amazon.awssdk.services.sqs.model.MessageAttributeValue> sqsAttributes) {
         return sqsAttributes.get(SQSProtocol.ATTRIBUTE_NAME_TYPE).stringValue();
     }
-
-    public Map<String, software.amazon.awssdk.services.sns.model.MessageAttributeValue> convertSqsAttributesToSnsAttributes(Map<String, software.amazon.awssdk.services.sqs.model.MessageAttributeValue> sqsAttributes) {
-        Map<String, software.amazon.awssdk.services.sns.model.MessageAttributeValue> snsAttributes = new HashMap<>();
-
-        for (Map.Entry<String, software.amazon.awssdk.services.sqs.model.MessageAttributeValue> entry : sqsAttributes.entrySet()) {
-            String key = entry.getKey();
-            software.amazon.awssdk.services.sqs.model.MessageAttributeValue sqsValue = entry.getValue();
-
-            // 변환된 SNS MessageAttributeValue를 생성
-            software.amazon.awssdk.services.sns.model.MessageAttributeValue snsValue = software.amazon.awssdk.services.sns.model.MessageAttributeValue.builder()
-                    .dataType(sqsValue.dataType())
-                    .stringValue(sqsValue.stringValue())
-                    .binaryValue(sqsValue.binaryValue())
-                    .build();
-
-            snsAttributes.put(key, snsValue);
-        }
-
-        return snsAttributes;
-    }
 }

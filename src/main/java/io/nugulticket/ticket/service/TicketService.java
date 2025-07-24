@@ -67,6 +67,12 @@ public class TicketService {
         return ticketRepository.findAllEqualParamIdJoinFetchSeatAndEvent(status, userId);
     }
 
+    /**
+     * 해 해당 Id를 가진 Seat,EventTime까지 join fetch한 Ticket Entity를 반환하는 메서드
+     *
+     * @param ticketId 찾을 티켓 Id
+     * @return 해당 Id를 가진 Seat,EventTime까지 join fetch한 Ticket Entity
+     */
     @Transactional(readOnly = true)
     public Ticket getTicketJoinFetchSeatAndEventTime(Long ticketId) {
         return ticketRepository.findByIdJoinFetchSeatAndEventTime(ticketId);

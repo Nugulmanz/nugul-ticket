@@ -39,21 +39,24 @@ public class GptService {
      * @return GPT로부터 받은 답변 문자열
      */
     public String askChat(Long userId, String userQuestion) {
-        List<Object> searchKeywords = List.of();
+        List<Object> searchKeywords;
 
+        // 인증된 사용자일 경우 Redis에서 검색 키워드 가져오기
         if (userId != null) {
             searchKeywords = redisService.getSearchKeywords(userId);
         } else {
-            searchKeywords = List.of("뮤지컬", "클래식 공연", "연극");
+            searchKeywords = List.of(); // 기본 키워드 제외
         }
 
-        StringBuilder context = new StringBuilder("사용자가 관심 있는 공연 정보:\n");
+        // 질문을 포함한 context 생성
+        StringBuilder context = new StringBuilder("질문: ").append(userQuestion);
 
-        if (!searchKeywords.isEmpty()) {
-            context.append("최근 검색 키워드: ").append(searchKeywords).append("\n");
+        // 인증된 사용자이면서 검색 키워드가 있을 경우에만 context에 추가
+        if (userId != null && !searchKeywords.isEmpty()) {
+            context.insert(0, "사용자가 관심 있는 공연 정보:\n최근 검색 키워드: " + searchKeywords + "\n");
         }
-        context.append("질문: ").append(userQuestion);
 
+        // GPT API 호출을 위한 요청 구성
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.set("Authorization", "Bearer " + apiKey);
@@ -64,7 +67,7 @@ public class GptService {
                 Map.of("role", "system", "content", "당신은 공연 추천 전문 챗봇입니다."),
                 Map.of("role", "user", "content", context.toString())
         ));
-        requestBody.put("max_tokens", 200);
+        requestBody.put("max_tokens", 500);
         requestBody.put("temperature", 0.7);
 
         HttpEntity<Map<String, Object>> entity = new HttpEntity<>(requestBody, headers);

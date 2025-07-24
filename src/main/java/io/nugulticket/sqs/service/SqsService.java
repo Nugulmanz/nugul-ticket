@@ -24,8 +24,9 @@ public class SqsService {
     private final RealtimeMessageSender realtimeMessageSender;
 
     /**
-     * Json 형태로 메시지를 받을 경우 Dto로 자동으로 변환되는지 확인
-     * 결과 : OK
+     * SQS에 message가 polling 된 경우, 해당 내용을 가져오는 Listener
+     *
+     * @param message SQS에서 polling 해온 Message
      */
     @SqsListener(value = "${cloud.aws.sqs.name}")
     public void receiveMessage(Message message) throws JsonProcessingException {
@@ -44,6 +45,11 @@ public class SqsService {
         }
     }
 
+    /**
+     * 결제 승인 성공 시 실행될 메서드 ( 티켓 상태를 예매 완료로 변경 )
+     *
+     * @param messageAttribute 결제 승인 성공 시, SQS Message에 담겨온 Attribute
+     */
     private void successPayment(Map<String, MessageAttributeValue> messageAttribute) {
         SQSSuccessPayment successPaymentDto = new SQSSuccessPayment();
         successPaymentDto.fromSQSAttributes(messageAttribute);
@@ -55,6 +61,11 @@ public class SqsService {
         realtimeMessageSender.sendMessage(seat.getId(), seat.getEventTime().getId());
     }
 
+    /**
+     * 결제 승인 실패 시 실행될 메서드 ( 티켓 상태를 예매 취소로 변경 )
+     *
+     * @param messageAttribute 결제 승인 실패 시, SQS Message에 담겨온 Attribute
+     */
     private void failPayment(Map<String, MessageAttributeValue> messageAttribute) {
         SQSFailPayment failPaymentDto = new SQSFailPayment();
         failPaymentDto.fromSQSAttributes(messageAttribute);
